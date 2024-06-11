@@ -55,7 +55,6 @@ public class LaunchActivity extends BaseActivity {
         // 利用控件的postDelayed方法控制进入主页面时间
         ImageView imageView = findViewById(R.id.launcher_icon);
         imageView.postDelayed(()-> toMainActivity(this, MainActivity.class),2000);
-
     }
 
     // 覆盖返回按钮，不允许退出程序
