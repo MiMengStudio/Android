@@ -1,16 +1,21 @@
 package com.mimeng;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.graphics.Color;
+import android.widget.ImageView;
+
+import com.mimeng.BaseClass.BaseActivity;
 import com.mimeng.databinding.ActivityMainBinding;
 
-public class LaunchActivity extends AppCompatActivity {
-    private ActivityMainBinding binding;
+@SuppressLint("CustomSplashScreen")
+public class LaunchActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,21 +46,26 @@ public class LaunchActivity extends AppCompatActivity {
         }
         
         // 监听系统UI可见性变化，确保状态栏和导航栏隐藏
-        decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
-            @Override
-            public void onSystemUiVisibilityChange(int visibility) {
-                if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                    decorView.setSystemUiVisibility(uiOptions);
-                }
+        decorView.setOnSystemUiVisibilityChangeListener(visibility -> {
+            if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                decorView.setSystemUiVisibility(uiOptions);
             }
         });
 
+        // 利用控件的postDelayed方法控制进入主页面时间
+        ImageView imageView = findViewById(R.id.launcher_icon);
+        imageView.postDelayed(()-> toMainActivity(this, MainActivity.class),2000);
+
     }
 
+    // 覆盖返回按钮，不允许退出程序
+    @Override
+    public void onBackPressed() {
+    }
+
+    // 避免内存泄漏，确保在Activity销毁时释放binding
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // 避免内存泄漏，确保在Activity销毁时释放binding
-        this.binding = null;
     }
 }
