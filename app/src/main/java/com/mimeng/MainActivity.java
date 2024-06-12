@@ -5,16 +5,17 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.mimeng.BaseClass.BaseActivity;
 import com.mimeng.databinding.ActivityMainBinding;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
     private long exitTime = 0;
     private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        blackParentBar();
         // Inflate and get instance of binding
         binding = ActivityMainBinding.inflate(getLayoutInflater());
 
