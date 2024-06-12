@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.graphics.Color;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.mimeng.BaseClass.BaseActivity;
@@ -17,6 +20,7 @@ import com.mimeng.databinding.ActivityMainBinding;
 @SuppressLint("CustomSplashScreen")
 public class LaunchActivity extends BaseActivity {
 
+    @SuppressLint("ObsoleteSdkInt")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,9 +56,28 @@ public class LaunchActivity extends BaseActivity {
             }
         });
 
-        // 利用控件的postDelayed方法控制进入主页面时间
+        // 渐入渐出动画&利用控件的postDelayed方法控制进入主页面时间
         ImageView imageView = findViewById(R.id.launcher_icon);
-        imageView.postDelayed(()-> toMainActivity(this, MainActivity.class),2000);
+        Animation animation0 = AnimationUtils.loadAnimation(this,R.anim.fade_out);
+        Animation animation1 = AnimationUtils.loadAnimation(this,R.anim.fade_in);
+        imageView.startAnimation(animation0);
+        imageView.startAnimation(animation1);
+        animation1.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                imageView.postDelayed(()-> toMainActivity(LaunchActivity.this, MainActivity.class),1000);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
     }
 
     // 覆盖返回按钮，不允许退出程序
