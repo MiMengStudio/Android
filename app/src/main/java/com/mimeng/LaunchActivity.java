@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mimeng.BaseClass.BaseActivity;
 
 @SuppressLint("CustomSplashScreen")
@@ -50,9 +52,14 @@ public class LaunchActivity extends BaseActivity {
         });
 
         // 渐入渐出动画&利用控件的postDelayed方法控制进入主页面时间
+        ImageView launchBanner = findViewById(R.id.banner);
         ImageView imageView = findViewById(R.id.launcher_icon);
-        imageView.postDelayed(() -> toMainActivity(LaunchActivity.this, MainActivity.class), 3000);
+        imageView.postDelayed(() -> toMainActivity(LaunchActivity.this, MainActivity.class), 5000);
 
+        // 获取随机图片
+        Glide.with(LaunchActivity.this).load("https://t.mwm.moe/fj".trim())
+                .skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE)
+                .into(launchBanner);
     }
 
     // 覆盖返回按钮，不允许退出程序

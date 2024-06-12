@@ -12,6 +12,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.mimeng.R;
 
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+
 public class BaseActivity extends AppCompatActivity {
 
     @Override
@@ -60,5 +64,19 @@ public class BaseActivity extends AppCompatActivity {
         i.putExtras(bundle);
         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this);
         startActivity(i,options.toBundle());
+    }
+
+    /**
+     * get请求
+     * @param url       网址
+     * @param callback  回调
+     */
+    public void ApiGetMethod(String url, Callback callback){
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .build();
+        client.newCall(request).enqueue(callback);
     }
 }
