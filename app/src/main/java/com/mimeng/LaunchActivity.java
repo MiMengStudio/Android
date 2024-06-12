@@ -6,8 +6,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.mimeng.BaseClass.BaseActivity;
@@ -53,26 +51,8 @@ public class LaunchActivity extends BaseActivity {
 
         // 渐入渐出动画&利用控件的postDelayed方法控制进入主页面时间
         ImageView imageView = findViewById(R.id.launcher_icon);
-        Animation animation0 = AnimationUtils.loadAnimation(this, R.anim.fade_out);
-        Animation animation1 = AnimationUtils.loadAnimation(this, R.anim.fade_in);
-        imageView.startAnimation(animation0);
-        imageView.startAnimation(animation1);
-        animation1.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
+        imageView.postDelayed(() -> toMainActivity(LaunchActivity.this, MainActivity.class), 3000);
 
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                imageView.postDelayed(() -> toMainActivity(LaunchActivity.this, MainActivity.class), 1000);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
     }
 
     // 覆盖返回按钮，不允许退出程序

@@ -1,12 +1,27 @@
 package com.mimeng.BaseClass;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.mimeng.R;
+
 public class BaseActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        TransitionInflater inflater = TransitionInflater.from(this);
+        Transition transition = inflater.inflateTransition(R.transition.transition);
+        getWindow().setEnterTransition(transition);
+        getWindow().setExitTransition(transition);
+    }
 
     /**
      * 点击返回键时，不返回到当前Activity时使用
@@ -18,6 +33,7 @@ public class BaseActivity extends AppCompatActivity {
         Intent i = new Intent(context,tClass);
         startActivity(i);
         finish();
+        overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
     }
 
     /**
@@ -28,7 +44,8 @@ public class BaseActivity extends AppCompatActivity {
      */
     public <T> void toActivityNotData(Context context,Class<T> tClass){
         Intent i = new Intent(context,tClass);
-        startActivity(i);
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this);
+        startActivity(i,options.toBundle());
     }
 
     /**
@@ -41,6 +58,7 @@ public class BaseActivity extends AppCompatActivity {
     public <T> void toActivityHasBundle(Context context, Bundle bundle, Class<T> tClass){
         Intent i = new Intent(context,tClass);
         i.putExtras(bundle);
-        startActivity(i);
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this);
+        startActivity(i,options.toBundle());
     }
 }
