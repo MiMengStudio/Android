@@ -4,9 +4,11 @@ import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -51,12 +53,31 @@ public class LaunchActivity extends BaseActivity {
             }
         });
 
-        // 渐入渐出动画&利用控件的postDelayed方法控制进入主页面时间
-        ImageView launchBanner = findViewById(R.id.banner);
-        ImageView imageView = findViewById(R.id.launcher_icon);
-        imageView.postDelayed(() -> toMainActivity(LaunchActivity.this, MainActivity.class), 5000);
+        // 计时
+        TextView time = findViewById(R.id.timer);
+        CountDownTimer timer = new CountDownTimer(5000,1000) {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onTick(long l) {
+                long t = l / 1000;
+                time.setText("跳过("+t+")");
+            }
+
+            @Override
+            public void onFinish() {
+                toMainActivity(LaunchActivity.this, MainActivity.class);
+            }
+        };
+        timer.start();
+
+        // 跳过
+        time.setOnClickListener(view -> {
+            timer.cancel();
+            toMainActivity(LaunchActivity.this, MainActivity.class);
+        });
 
         // 获取随机图片
+        ImageView launchBanner = findViewById(R.id.banner);
         Glide.with(LaunchActivity.this).load("https://t.mwm.moe/fj".trim())
                 .skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(launchBanner);

@@ -4,6 +4,14 @@
     android:layout_height="match_parent"
     android:gravity="bottom">
 
+
+    <ImageView
+        android:id="@+id/banner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/todo"
+        android:scaleType="centerCrop" />
+
     <TextView
         android:id="@+id/timer"
         android:layout_width="70dp"
@@ -14,15 +22,7 @@
         android:background="@drawable/stik_radius_first"
         android:gravity="center"
         android:padding="5dp"
-        android:text="跳过(3)"
         android:textColor="#FFFFFF" />
-
-    <ImageView
-        android:id="@+id/banner"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:contentDescription="@string/todo"
-        android:scaleType="centerCrop" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -35,7 +35,6 @@
         android:paddingBottom="10dp">
 
         <ImageView
-            android:id="@+id/launcher_icon"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:contentDescription="@string/todo"
