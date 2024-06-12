@@ -21,7 +21,7 @@ public class LaunchActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_launch);
-        
+
         // 实现全屏显示
         View decorView = getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -43,7 +43,7 @@ public class LaunchActivity extends BaseActivity {
             lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
             getWindow().setAttributes(lp);
         }
-        
+
         // 监听系统UI可见性变化，确保状态栏和导航栏隐藏
         decorView.setOnSystemUiVisibilityChangeListener(visibility -> {
             if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
@@ -53,8 +53,8 @@ public class LaunchActivity extends BaseActivity {
 
         // 渐入渐出动画&利用控件的postDelayed方法控制进入主页面时间
         ImageView imageView = findViewById(R.id.launcher_icon);
-        Animation animation0 = AnimationUtils.loadAnimation(this,R.anim.fade_out);
-        Animation animation1 = AnimationUtils.loadAnimation(this,R.anim.fade_in);
+        Animation animation0 = AnimationUtils.loadAnimation(this, R.anim.fade_out);
+        Animation animation1 = AnimationUtils.loadAnimation(this, R.anim.fade_in);
         imageView.startAnimation(animation0);
         imageView.startAnimation(animation1);
         animation1.setAnimationListener(new Animation.AnimationListener() {
@@ -65,7 +65,7 @@ public class LaunchActivity extends BaseActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                imageView.postDelayed(()-> toMainActivity(LaunchActivity.this, MainActivity.class),1000);
+                imageView.postDelayed(() -> toMainActivity(LaunchActivity.this, MainActivity.class), 1000);
             }
 
             @Override
