@@ -1,21 +1,16 @@
 package com.mimeng;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
-import android.graphics.Color;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.mimeng.BaseClass.BaseActivity;
-import com.mimeng.databinding.ActivityMainBinding;
 
 @SuppressLint("CustomSplashScreen")
 public class LaunchActivity extends BaseActivity {
