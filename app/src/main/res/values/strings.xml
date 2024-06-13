@@ -2,5 +2,9 @@
 <resources>
     <string name="app_name">迷梦</string>
     <string name="todo">TODO</string>
-
+    <string name="title_home">首页</string>
+    <string name="title_community">社区</string>
+    <string name="title_develop">开发</string>
+    <string name="title_tools">工具</string>
+    <string name="title_user">我的</string>
 </resources>
