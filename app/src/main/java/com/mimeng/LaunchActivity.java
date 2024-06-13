@@ -23,9 +23,7 @@ public class LaunchActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_launch);
-
         setFullScreen(true);
 
         // 计时
@@ -71,14 +69,14 @@ public class LaunchActivity extends BaseActivity {
     }
 
     private void showTutorial() {
-        toMainActivity(LaunchActivity.this, GuideActivity.class);
+        toMainActivity(GuideActivity.class);
         Toast.makeText(this, "展示教程", Toast.LENGTH_SHORT).show();
         finish();
     }
 
     private void proceedToMain() {
         // 应用正常启动流程
-        toMainActivity(LaunchActivity.this, MainActivity.class);
+        toMainActivity(MainActivity.class);
         Toast.makeText(this, "进入主界面", Toast.LENGTH_SHORT).show();
     }
     

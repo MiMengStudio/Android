@@ -16,6 +16,7 @@ public class CommunityFragment extends Fragment {
 
     private FragmentCommunityBinding binding;
 
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         CommunityViewModel communityViewModel =

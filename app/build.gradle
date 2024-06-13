@@ -1,7 +1,6 @@
 
 plugins {
     id 'com.android.application'
-    
 }
 
 android {
@@ -40,16 +39,16 @@ android {
 }
 
 dependencies {
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("androidx.lifecycle:lifecycle-viewmodel:2.5.1")
-    implementation("androidx.navigation:navigation-fragment:2.5.3")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("androidx.lifecycle:lifecycle-livedata:2.5.1")
-    implementation("com.google.android.material:material:1.9.0")
-    implementation("androidx.navigation:navigation-ui:2.5.3")
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.5.1'
+    implementation 'androidx.navigation:navigation-fragment:2.5.3'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.lifecycle:lifecycle-livedata:2.5.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.navigation:navigation-ui:2.5.3'
     
-    implementation("com.squareup.okhttp3:okhttp:3.10.0")
-    implementation("com.github.bumptech.glide:glide:4.13.2") //异步加载图片
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation 'com.github.bumptech.glide:glide:4.13.2' //异步加载图片
     implementation 'io.github.justson:agentweb-core:v5.1.1-androidx'
     implementation 'io.github.justson:agentweb-filechooser:v5.1.1-androidx'
 }

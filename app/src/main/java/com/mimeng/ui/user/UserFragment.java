@@ -16,6 +16,7 @@ public class UserFragment extends Fragment {
 
     private FragmentUserBinding binding;
 
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         UserViewModel userViewModel =

@@ -16,6 +16,7 @@ public class DevelopFragment extends Fragment {
 
     private FragmentDevelopBinding binding;
 
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         DevelopViewModel developViewModel =

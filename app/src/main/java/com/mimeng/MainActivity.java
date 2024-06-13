@@ -15,13 +15,14 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 public class MainActivity extends BaseActivity {
+    public static final String PREFS_NAME = "MyPrefsFile";
+    public static final String KEY_FIRST_TIME = "isFirstTime";
+    
     private long exitTime = 0;
     private ActivityMainBinding binding;
     
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        final String PREFS_NAME = "MyPrefsFile";
-        final String KEY_FIRST_TIME = "isFirstTime";
+    protected void onCreate(Bundle savedInstanceState) {  
         super.onCreate(savedInstanceState);
         blackParentBar();
         binding = ActivityMainBinding.inflate(getLayoutInflater());
