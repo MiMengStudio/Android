@@ -1,14 +1,12 @@
 package com.mimeng;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.content.SharedPreferences;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -79,7 +77,7 @@ public class LaunchActivity extends BaseActivity {
         toMainActivity(MainActivity.class);
         Toast.makeText(this, "进入主界面", Toast.LENGTH_SHORT).show();
     }
-    
+
     // 覆盖返回按钮，不允许退出程序
     @Override
     public void onBackPressed() {

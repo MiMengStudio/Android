@@ -18,7 +18,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="40dp"
         android:layout_marginEnd="20dp"
-        android:background="?attr/colorSecondary"
+        android:background="@drawable/stik_radius_first"
         android:gravity="center"
         android:padding="5dp"
         android:textColor="?attr/colorOnSecondary" />
