@@ -1,9 +1,9 @@
 package com.mimeng;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
-import android.content.SharedPreferences;
-import androidx.appcompat.app.AppCompatActivity;
+
 import com.mimeng.BaseClass.BaseActivity;
 import com.mimeng.databinding.ActivityMainBinding;
 
@@ -13,8 +13,8 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        private static final String PREFS_NAME = "MyPrefsFile";
-    private static final String KEY_FIRST_TIME = "isFirstTime";
+        final String PREFS_NAME = "MyPrefsFile";
+        final String KEY_FIRST_TIME = "isFirstTime";
         super.onCreate(savedInstanceState);
         blackParentBar();
         // Inflate and get instance of binding
@@ -22,7 +22,7 @@ public class MainActivity extends BaseActivity {
 
         // set content view to binding's root
         setContentView(binding.getRoot());
-        
+
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         boolean isFirstTime = prefs.getBoolean(KEY_FIRST_TIME, true);
 
@@ -39,7 +39,7 @@ public class MainActivity extends BaseActivity {
             proceedToMain();
         }
     }
-    
+
     private void showTutorial() {
         // 实现展示教程的逻辑
         // 短时间显示的Toast
