@@ -5,9 +5,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class GuideActivity extends AppCompatActivity {
+    private long exitTime = 0;
     private final String PREFS_NAME = "MyPrefsFile";
     private final String KEY_GUIDE_SEEN = "hasSeenGuide";
     
@@ -42,5 +44,19 @@ public class GuideActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class); // 假设教程结束后进入MainActivity
         startActivity(intent);
         finish(); // 结束当前的GuideActivity
+    }
+    
+    @Override
+    public void onBackPressed() {
+        isDestroyAction();
+    }
+
+    private void isDestroyAction() {
+        if ((System.currentTimeMillis() - exitTime) > 2000) {
+            Toast.makeText(this, "再按一次退出应用", Toast.LENGTH_SHORT).show();
+            exitTime = System.currentTimeMillis();
+        } else {
+            finish(); // 用户两次点击返回键，退出应用
+        }
     }
 }

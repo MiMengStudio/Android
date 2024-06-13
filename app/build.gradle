@@ -46,8 +46,6 @@ dependencies {
 
     implementation("com.squareup.okhttp3:okhttp:3.10.0")
     implementation("com.github.bumptech.glide:glide:4.13.2") //异步加载图片
-    implementation("com.github.Justson.AgentWeb:agentweb-core:v5.1.1")
-    implementation("com.github.Justson.AgentWeb:agentweb-filechooser:v5.1.1")
-    implementation("com.github.Justson:Downloader:v5.1.1")
-    implementation("com.github.Justson:CoolIndicator:v1.0.0")
+    implementation 'io.github.justson:agentweb-core:v5.1.1-androidx'
+    implementation 'io.github.justson:agentweb-filechooser:v5.1.1-androidx'
 }
