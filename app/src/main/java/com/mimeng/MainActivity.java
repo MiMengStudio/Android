@@ -42,6 +42,12 @@ public class MainActivity extends BaseActivity {
             // 用户不是第一次使用，直接进入主界面或常规流程
             proceedToMain();
         }
+
+        setFullScreen(false);
+
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+        //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(binding.navView, navController);
     }
 
     private void showTutorial() {
@@ -54,15 +60,6 @@ public class MainActivity extends BaseActivity {
         // 应用正常启动流程
         Toast.makeText(this, "正常启动", Toast.LENGTH_SHORT).show();
     }
-        
-        setFullScreen(false);
-        
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-        //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(binding.navView, navController);
-    }
-    
-
 
     @Override
     public void onBackPressed() {
