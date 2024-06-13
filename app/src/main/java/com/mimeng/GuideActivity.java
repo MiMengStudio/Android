@@ -22,14 +22,12 @@ public class GuideActivity extends BaseActivity {
         btnFinishGuide = findViewById(R.id.btnSkip); // 使用实际的按钮ID
 
         // 设置按钮点击事件
-        btnFinishGuide.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        btnFinishGuide.setOnClickListener(v -> {
                 markGuideAsSeen(); // 标记教程已看
                 proceedToMain(); // 进入主界面
                 finish();
             }
-        });
+        );
     }
 
     private void markGuideAsSeen() {
