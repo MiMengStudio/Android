@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Build;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.view.View;
@@ -94,5 +95,41 @@ public class BaseActivity extends AppCompatActivity {
                 View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//设置状态栏字体颜色
+    }
+    
+    /**
+     * 全屏且适配全面屏刘海
+     */
+    public void setFullScreen(boolean hideSystemUI) {
+        // 实现全屏显示
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                | View.SYSTEM_UI_FLAG_FULLSCREEN;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // 状态栏颜色设置为透明，适用于Android 6.0及以上版本
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
+
+        // 适配刘海屏
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            WindowManager.LayoutParams lp = getWindow().getAttributes();
+            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+            getWindow().setAttributes(lp);
+        }
+        
+        if (hideSystemUI) {
+            decorView.setSystemUiVisibility(uiOptions);
+            // 监听系统UI可见性变化，确保状态栏和导航栏隐藏
+            decorView.setOnSystemUiVisibilityChangeListener(
+                    visibility -> {
+                        if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                            decorView.setSystemUiVisibility(uiOptions);
+                        }
+                    });
+            }
     }
 }
