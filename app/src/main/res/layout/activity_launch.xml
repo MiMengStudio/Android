@@ -21,7 +21,7 @@
         android:background="@drawable/stik_radius_first"
         android:gravity="center"
         android:padding="5dp"
-        android:textColor="?attr/colorOnSecondary" />
+        android:textColor="#ECECEC" />
 
     <LinearLayout
         android:layout_width="match_parent"
