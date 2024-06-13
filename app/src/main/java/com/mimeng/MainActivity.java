@@ -24,6 +24,7 @@ public class MainActivity extends BaseActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         
+        setFullScreen(false);
         
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
