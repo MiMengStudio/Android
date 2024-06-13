@@ -34,12 +34,11 @@ public class BaseActivity extends AppCompatActivity {
 
     /**
      * 点击返回键时，不返回到当前Activity时使用
-     * @param context 上下文
      * @param tClass  跳转到目标类
      * @param <T>     泛型
      */
-    public <T> void toMainActivity(Context context, Class<T> tClass){
-        Intent i = new Intent(context,tClass);
+    public <T> void toMainActivity(Class<T> tClass){
+        Intent i = new Intent(this,tClass);
         startActivity(i);
         finish();
         overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
@@ -47,25 +46,23 @@ public class BaseActivity extends AppCompatActivity {
 
     /**
      * 不传任何参数跳转
-     * @param context 上下文
      * @param tClass  跳转到目标类
      * @param <T>     泛型
      */
-    public <T> void toActivityNotData(Context context,Class<T> tClass){
-        Intent i = new Intent(context,tClass);
+    public <T> void toActivityNotData(Class<T> tClass){
+        Intent i = new Intent(this,tClass);
         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this);
         startActivity(i,options.toBundle());
     }
 
     /**
      * 带参数跳转
-     * @param context 上下文
      * @param bundle  bundle对象
      * @param tClass  跳转到目标类
      * @param <T>     泛型
      */
-    public <T> void toActivityHasBundle(Context context, Bundle bundle, Class<T> tClass){
-        Intent i = new Intent(context,tClass);
+    public <T> void toActivityHasBundle( Bundle bundle, Class<T> tClass){
+        Intent i = new Intent(this,tClass);
         i.putExtras(bundle);
         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this);
         startActivity(i,options.toBundle());

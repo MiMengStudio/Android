@@ -55,6 +55,7 @@ public class LaunchActivity extends BaseActivity {
         // 获取随机图片
         ImageView launchBanner = findViewById(R.id.banner);
         Glide.with(LaunchActivity.this).load("https://t.mwm.moe/fj".trim())
+                .placeholder(R.mipmap.banner_loading)
                 .skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(launchBanner);
     }
@@ -70,14 +71,14 @@ public class LaunchActivity extends BaseActivity {
     }
 
     private void showTutorial() {
-        toMainActivity(LaunchActivity.this, GuideActivity.class);
+        toMainActivity(GuideActivity.class);
         Toast.makeText(this, "展示教程", Toast.LENGTH_SHORT).show();
         finish();
     }
 
     private void proceedToMain() {
         // 应用正常启动流程
-        toMainActivity(LaunchActivity.this, MainActivity.class);
+        toMainActivity(MainActivity.class);
         Toast.makeText(this, "进入主界面", Toast.LENGTH_SHORT).show();
     }
     

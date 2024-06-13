@@ -1,18 +1,17 @@
 package com.mimeng;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-import androidx.appcompat.app.AppCompatActivity;
 
-public class GuideActivity extends AppCompatActivity {
-    private long exitTime = 0;
+import com.mimeng.BaseClass.BaseActivity;
+
+public class GuideActivity extends BaseActivity {
     private final String PREFS_NAME = "MyPrefsFile";
     private final String KEY_GUIDE_SEEN = "hasSeenGuide";
-    
+    private long exitTime = 0;
     private Button btnFinishGuide; // 假设按钮的ID是btnFinishGuide
 
     @Override
@@ -41,11 +40,9 @@ public class GuideActivity extends AppCompatActivity {
     }
 
     private void proceedToMain() {
-        Intent intent = new Intent(this, MainActivity.class); // 假设教程结束后进入MainActivity
-        startActivity(intent);
-        finish(); // 结束当前的GuideActivity
+        toMainActivity(MainActivity.class);
     }
-    
+
     @Override
     public void onBackPressed() {
         isDestroyAction();
