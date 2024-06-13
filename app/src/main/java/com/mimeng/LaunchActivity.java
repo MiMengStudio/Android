@@ -55,6 +55,7 @@ public class LaunchActivity extends BaseActivity {
         // 获取随机图片
         ImageView launchBanner = findViewById(R.id.banner);
         Glide.with(LaunchActivity.this).load("https://t.mwm.moe/fj".trim())
+                .placeholder(R.mipmap.banner_loading)
                 .skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(launchBanner);
     }
