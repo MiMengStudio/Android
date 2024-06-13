@@ -28,7 +28,7 @@ public class GuideActivity extends AppCompatActivity {
                 proceedToMain(); // 进入主界面
                 finish();
             }
-        });
+        );
     }
 
     private void markGuideAsSeen() {
