@@ -4,15 +4,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
-import com.mimeng.BaseClass.BaseActivity;
-import com.mimeng.databinding.ActivityMainBinding;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
+
+import com.mimeng.BaseClass.BaseActivity;
+import com.mimeng.databinding.ActivityMainBinding;
 
 public class MainActivity extends BaseActivity {
     public static final String PREFS_NAME = "MyPrefsFile";
@@ -59,7 +56,7 @@ public class MainActivity extends BaseActivity {
 
     private void proceedToMain() {
         // 应用正常启动流程
-        Toast.makeText(this, "正常启动", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, "正常启动", Toast.LENGTH_SHORT).show();
     }
 
     @Override

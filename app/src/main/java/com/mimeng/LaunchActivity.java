@@ -1,15 +1,16 @@
 package com.mimeng;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mimeng.BaseClass.BaseActivity;
 
 @SuppressLint("CustomSplashScreen")
@@ -48,12 +49,18 @@ public class LaunchActivity extends BaseActivity {
             isBeginner();
         });
 
-        // 获取随机图片
+        // 设置渐显效果
         ImageView launchBanner = findViewById(R.id.banner);
-        Glide.with(LaunchActivity.this).load("https://t.mwm.moe/fj".trim())
-                .placeholder(R.mipmap.banner_loading)
-                .skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE)
-                .into(launchBanner);
+        launchBanner.setAlpha(0f);
+        launchBanner.postDelayed(() -> {
+            ObjectAnimator alpha = ObjectAnimator.ofFloat(launchBanner, "alpha", 0f, 1f);
+            AnimatorSet animatorSet = new AnimatorSet();
+            animatorSet.playTogether(alpha);
+            animatorSet.setDuration(800);
+            animatorSet.setInterpolator(new AccelerateInterpolator());
+            animatorSet.start();
+        }, 700);
+
     }
 
     private void isBeginner() {
@@ -75,7 +82,6 @@ public class LaunchActivity extends BaseActivity {
     private void proceedToMain() {
         // 应用正常启动流程
         toMainActivity(MainActivity.class);
-        Toast.makeText(this, "进入主界面", Toast.LENGTH_SHORT).show();
     }
 
     // 覆盖返回按钮，不允许退出程序
