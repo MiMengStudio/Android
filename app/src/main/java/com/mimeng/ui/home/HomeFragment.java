@@ -7,32 +7,39 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
-import com.mimeng.databinding.FragmentHomeBinding;
+import com.mimeng.R;
 
 public class HomeFragment extends Fragment {
 
-    private FragmentHomeBinding binding;
+    /**
+     * 建议采用直接引入布局文件即可，不用使用View Model，那样太麻烦了
+     * 不引用ViewModel需要重载几个抽象方法：onCreateView、onViewCreate
+     */
 
+    // 这个方法用来绑定布局
+    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        HomeViewModel homeViewModel =
-                new ViewModelProvider(this).get(HomeViewModel.class);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // 这个是原始的，注释掉它，使用LayoutInflater方法
+        // return super.onCreateView(inflater, container, savedInstanceState);
 
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+        return LayoutInflater.from(requireActivity()).inflate(R.layout.fragment_home,container,false);
+    }
 
-        final TextView textView = binding.textHome;
-        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-        return root;
+    // 这个方法用来绑定布局中的控件(Id)
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        // 下面我将做个如何使用TextView控件的示例，要找到控件id，必须使用onViewCreated的形参(view)
+        TextView textView = view.findViewById(R.id.text_home);
+        textView.setText("这是首页");
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    public void onDestroy() {
+        super.onDestroy();
     }
 }
