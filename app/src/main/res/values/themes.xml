@@ -8,4 +8,11 @@
         <!-- 用于Android 5.0及以上版本的全屏 -->
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
+
+    <style name="ActivityTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:statusBarColor">@color/colorPrimary</item>
+        <item name="android:navigationBarColor">@color/colorPrimary</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    </style>
+
 </resources>
