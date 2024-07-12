@@ -31,9 +31,9 @@
 
         <activity
             android:name=".MainActivity"
-            android:theme="@style/ActivityTheme." />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".GuideActivity"
-            android:theme="@style/ActivityTheme" />
+            android:theme="@style/AppTheme" />
     </application>
 </manifest>

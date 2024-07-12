@@ -4,20 +4,106 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="24dp"
     tools:context=".ui.home.HomeFragment">
 
-    <TextView
-        android:id="@+id/text_home"
-        android:text="@string/app_name"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:ignore="MissingConstraints">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="80dp">
+
+            <com.youth.banner.Banner
+                android:id="@+id/home_banner"
+                android:layout_width="match_parent"
+                android:layout_height="210dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                app:banner_loop_time="3000"
+                app:banner_radius="16dp"
+                tools:ignore="MissingConstraints"
+                tools:layout_editor_absoluteY="24dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:cardBackgroundColor="@color/md_theme_background"
+        tools:ignore="MissingConstraints">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:elevation="2dp"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="1dp"
+            tools:layout_editor_absoluteY="1dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:orientation="horizontal">
+
+
+                <RelativeLayout
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="0dp"
+                    android:layout_margin="10dp">
+
+                    <ImageView
+                        android:id="@+id/signIn"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_centerInParent="true"
+                        android:src="@mipmap/ic_calendar_icon" />
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/signInRedPoint"
+                        android:layout_width="8dp"
+                        android:layout_height="8dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_margin="2dp"
+                        android:elevation="0dp"
+                        app:cardBackgroundColor="#FF0000"
+                        app:cardCornerRadius="8dp" />
+
+                </RelativeLayout>
+
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/user"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+
+                    android:layout_marginEnd="10dp"
+                    android:src="@mipmap/ic_default_head"
+                    app:shapeAppearanceOverlay="@style/roundedImageView" />
+
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
