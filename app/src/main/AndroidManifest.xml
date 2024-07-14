@@ -35,5 +35,8 @@
         <activity
             android:name=".GuideActivity"
             android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ResourceManagementActivity"
+            android:theme="@style/AppTheme" />
     </application>
 </manifest>

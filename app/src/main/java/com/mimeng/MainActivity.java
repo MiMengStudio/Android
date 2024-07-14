@@ -22,6 +22,7 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {  
         super.onCreate(savedInstanceState);
         blackParentBar();
+        setFullScreen(false);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -41,10 +42,7 @@ public class MainActivity extends BaseActivity {
             proceedToMain();
         }
 
-        setFullScreen(false);
-
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-        //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
     }
 
