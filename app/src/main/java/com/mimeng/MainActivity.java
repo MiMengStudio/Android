@@ -80,7 +80,7 @@ public class MainActivity extends BaseActivity {
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
             View v = getCurrentFocus();
-            if (isShouldHideInput(v)) {
+            if (isShouldHideInput(v,ev)) {
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (imm != null) {
                     assert v != null;
@@ -100,15 +100,22 @@ public class MainActivity extends BaseActivity {
      * @param v 视图
      * @return 返回
      */
-    public  boolean isShouldHideInput(View v) {
-        if ((v instanceof EditText)) {
-            int[] leftTop = { 0, 0 };
-            //获取输入框当前的location位置
-            v.getLocationInWindow(leftTop);
-            v.clearFocus();
-            return true;
-        }
-        return false;
+    public  boolean isShouldHideInput(View v,MotionEvent event) {
+            if ((v instanceof EditText)) {
+                int[] leftTop = { 0, 0 };
+                //获取输入框当前的location位置
+                v.getLocationInWindow(leftTop);
+                int left = leftTop[0];
+                int top = leftTop[1];
+                int bottom = top + v.getHeight();
+                int right = left + v.getWidth();
+                v.clearFocus();
+                // 点击的是输入框区域，保留点击EditText的事件
+                return !(event.getX() > left) || !(event.getX() < right)
+                        || !(event.getY() > top) || !(event.getY() < bottom);
+            }
+            return false;
+
     }
 
     @Override

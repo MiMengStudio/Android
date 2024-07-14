@@ -64,14 +64,12 @@ public class HomeFragment extends Fragment {
         resourceManagement.setOnClickListener(v -> {
             // 创建一个新的Intent来打开ResourceManagementActivity
             Intent intent = new Intent(view.getContext(), ResourceManagementActivity.class);
-
             // 使用动画资源ID创建ActivityOptions
             ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
                     v.getContext(),
                     R.anim.slide_in_right,
                     R.anim.slide_out_left
             );
-
             // 使用Intent和动画选项启动新的Activity
             ActivityCompat.startActivity(view.getContext(), intent, options.toBundle());
         });
