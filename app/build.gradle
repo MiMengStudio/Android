@@ -54,5 +54,6 @@ dependencies {
     implementation 'io.github.justson:agentweb-filechooser:v5.1.1-androidx'
     implementation 'cn.hutool:hutool-all:5.8.26'
     implementation 'io.github.youth5201314:banner:2.2.3' //轮播组件
+    implementation 'com.google.code.gson:gson:2.11.0' //json解析
 
 }
