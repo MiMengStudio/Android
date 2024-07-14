@@ -15,6 +15,9 @@
         tools:ignore="MissingConstraints">
 
         <LinearLayout
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -57,9 +60,9 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:layout_weight="1"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:orientation="vertical">
 
                         <androidx.cardview.widget.CardView
                             android:id="@+id/module"
@@ -82,9 +85,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:textSize="18sp"
+                            android:text="模块"
                             android:textColor="@color/font_color"
-                            android:text="模块">
+                            android:textSize="18sp">
 
                         </TextView>
 
@@ -93,9 +96,9 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:layout_weight="1"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:orientation="vertical">
 
                         <androidx.cardview.widget.CardView
                             android:layout_width="60dp"
@@ -117,9 +120,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:textSize="18sp"
+                            android:text="模块"
                             android:textColor="@color/font_color"
-                            android:text="模块">
+                            android:textSize="18sp">
 
                         </TextView>
 
@@ -128,9 +131,9 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:layout_weight="1"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:orientation="vertical">
 
                         <androidx.cardview.widget.CardView
                             android:layout_width="60dp"
@@ -152,9 +155,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:textSize="16sp"
+                            android:text="模块"
                             android:textColor="@color/font_color"
-                            android:text="模块">
+                            android:textSize="16sp">
 
                         </TextView>
 
@@ -163,9 +166,9 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:layout_weight="1"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:orientation="vertical">
 
                         <androidx.cardview.widget.CardView
                             android:id="@+id/resourceManagement"
@@ -188,10 +191,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:textSize="16sp"
-                            android:textColor="@color/font_color"
                             android:text="资源管理
-">
+"
+                            android:textColor="@color/font_color"
+                            android:textSize="16sp">
 
                         </TextView>
 
