@@ -2,6 +2,7 @@ package com.mimeng;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -98,24 +99,17 @@ public class MainActivity extends BaseActivity {
     /**
      * 隐藏软键盘(EditText)
      * @param v 视图
+     * @param event 触摸\点击事件
      * @return 返回
      */
-    public  boolean isShouldHideInput(View v,MotionEvent event) {
-            if ((v instanceof EditText)) {
-                int[] leftTop = { 0, 0 };
-                //获取输入框当前的location位置
-                v.getLocationInWindow(leftTop);
-                int left = leftTop[0];
-                int top = leftTop[1];
-                int bottom = top + v.getHeight();
-                int right = left + v.getWidth();
-                v.clearFocus();
-                // 点击的是输入框区域，保留点击EditText的事件
-                return !(event.getX() > left) || !(event.getX() < right)
-                        || !(event.getY() > top) || !(event.getY() < bottom);
-            }
-            return false;
-
+    public boolean isShouldHideInput(View v, MotionEvent event) {
+        if (v instanceof EditText) {
+            Rect rect = new Rect();
+            v.getGlobalVisibleRect(rect);
+            // 如果点击事件在EditText的范围内，则不隐藏软键盘
+            return !rect.contains((int) event.getRawX(), (int) event.getRawY());
+        }
+        return false;
     }
 
     @Override
