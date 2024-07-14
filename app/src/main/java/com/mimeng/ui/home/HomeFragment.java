@@ -1,17 +1,13 @@
 package com.mimeng.ui.home;
 
-import static androidx.core.content.ContextCompat.getSystemService;
-
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,12 +15,12 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 
+import com.mimeng.R;
 import com.mimeng.ResourceManagementActivity;
 import com.youth.banner.Banner;
 import com.youth.banner.adapter.BannerImageAdapter;
 import com.youth.banner.holder.BannerImageHolder;
 import com.youth.banner.indicator.CircleIndicator;
-import com.mimeng.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,11 +36,17 @@ public class HomeFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
+    @SuppressLint({"InternalInsetResource", "DiscouragedApi"})
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         EditText searchEdit = view.findViewById(R.id.search_edit);
+
+        int offsetId = requireActivity().getResources().getIdentifier("status_bar_height", "dimen", "android");
+        int statusBarHeight = requireActivity().getResources().getDimensionPixelOffset(offsetId) / 5;
+        RelativeLayout home_fragment_tool = view.findViewById(R.id.home_fragment_tool);
+        home_fragment_tool.setPadding(0, statusBarHeight, 0, 0);
 
         // 初始化轮播图和数据
         banner = view.findViewById(R.id.home_banner);

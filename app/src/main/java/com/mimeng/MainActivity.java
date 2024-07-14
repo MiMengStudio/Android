@@ -2,7 +2,9 @@ package com.mimeng;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -50,6 +52,7 @@ public class MainActivity extends BaseActivity {
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupWithNavController(binding.navView, navController);
+
     }
 
     private void showTutorial() {
@@ -111,6 +114,8 @@ public class MainActivity extends BaseActivity {
         }
         return false;
     }
+
+
 
     @Override
     protected void onDestroy() {
