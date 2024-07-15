@@ -1,9 +1,12 @@
 package com.mimeng;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -31,14 +34,16 @@ import java.util.zip.ZipInputStream;
 public class ResourceManagementActivity extends BaseActivity {
 
   private static final String TAG = "ResourceManagementActivity";
-
+  private Handler mHandler;  
+    
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     blackParentBar();
     setFullScreen(false);
     setContentView(R.layout.activity_resource_management);
-
+    
+    mHandler = new ManagerHandler(this);
     ImageButton backButton = findViewById(R.id.back);
     backButton.setOnClickListener(
         v -> {
@@ -61,41 +66,54 @@ public class ResourceManagementActivity extends BaseActivity {
     super.onActivityResult(requestCode, resultCode, result);
     if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
       Uri uri = Objects.requireNonNull(result.getData(), "No URI returned from file picker");
-      new Thread(() -> {
-         // 使用try-with-resources自动管理资源
-        try (InputStream inputStream = getContentResolver().openInputStream(uri);
-          ZipInputStream zipInputStream = new ZipInputStream(inputStream)) {
-            ZipEntry entry;
-            while ((entry = zipInputStream.getNextEntry()) != null) {
-                String fileName = entry.getName();
-                if (fileName.substring(fileName.lastIndexOf("/") + 1).equalsIgnoreCase("info.json")) {
-                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                    IOUtils.copy(zipInputStream, outputStream);
-                    // 将字节流转换为字符串
-                    String jsonContent = new String(outputStream.toByteArray(), StandardCharsets.UTF_8);
-                    if (!jsonContent.isEmpty()) {
+      new Thread(
+              () -> {
+                // 使用try-with-resources自动管理资源
+                Message msg = Message.obtain();    
+                try (InputStream inputStream = getContentResolver().openInputStream(uri);
+                    ZipInputStream zipInputStream = new ZipInputStream(inputStream)) {
+                  ZipEntry entry;
+                  
+                  msg.what = ManagerHandler.MSG_TOAST_SHORT;      
+                  while ((entry = zipInputStream.getNextEntry()) != null) {
+                    String fileName = entry.getName();
+                    if (fileName
+                        .equalsIgnoreCase("info.json")) {
+                      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                      IOUtils.copy(zipInputStream, outputStream);
+                      // 将字节流转换为字符串
+                      String jsonContent =
+                          new String(outputStream.toByteArray(), StandardCharsets.UTF_8);
+                      if (!jsonContent.isEmpty()) {
                         Gson gson = new Gson();
-                        ResourcePackInfo resPackInfo = gson.fromJson(jsonContent, ResourcePackInfo.class);
+                        ResourcePackInfo resPackInfo =
+                            gson.fromJson(jsonContent, ResourcePackInfo.class);
                         // 检查资源类型
                         if ("ItemResourcePack".equals(resPackInfo.getType())) {
-                            // 处理找到的ResourcePackInfo
-                            Toast.makeText(this, "导入成功", Toast.LENGTH_SHORT).show();
-                            getAllResultFile(uri);
+                          // 处理找到的ResourcePackInfo
+                          msg.obj = "导入成功";
+                          getAllResultFile(uri);
                         } else {
-                            Toast.makeText(this, "该文件不是道具图片素材包，请重新选择", Toast.LENGTH_SHORT).show();
+                          msg.obj = "该文件不是道具图片素材包，请重新选择";       
                         }
-                    } else {
-                        Toast.makeText(this, "info.json为空", Toast.LENGTH_SHORT).show();
+                        mHandler.sendMessage(msg);              
+                      } else {
+                        msg.obj = "info.json为空";
+                        mHandler.sendMessage(msg);
+                      }
+                      break; // 找到info.json后退出循环
                     }
-                    break; // 找到info.json后退出循环
+                    zipInputStream.closeEntry();
+                  }
+                    
+                } catch (IOException e) {
+                  msg.obj = "读取文件时发生错误";
+                  mHandler.sendMessage(msg);      
+                  Log.e(TAG, "Error when reading files", e);
                 }
-                zipInputStream.closeEntry();
-            }
-        } catch (IOException e) {
-            Toast.makeText(this, "读取文件时发生错误", Toast.LENGTH_SHORT).show();
-            Log.e(TAG, "Error when reading files", e);
-        }          
-      }, "ResourceReader").start();
+              },
+              "ResourceReader")
+          .start();
     }
   }
 
@@ -104,34 +122,51 @@ public class ResourceManagementActivity extends BaseActivity {
       ZipEntry zipEntry = zis.getNextEntry();
 
       File privateDir =
-          new File(getApplicationContext().getExternalFilesDir(null).getAbsoluteFile() + "/");
+          new File(getApplicationContext().getExternalFilesDir("res/item").getAbsolutePath());
       if (!privateDir.exists()) {
         privateDir.mkdirs();
       }
 
       while (zipEntry != null) {
         String entryName = zipEntry.getName();
-        File file2 = new File(zipEntry.getName());
-        if (entryName.startsWith(file2.getParent())
-            && !zipEntry.isDirectory()) {
-
-          String nextPath = "resources" + entryName.replaceAll(".*(?=/[^/]*$)", "");
-          File newFile = new File(privateDir, nextPath);
-
-          if (entryName.startsWith("src/urces/res/")) {
-            Log.i("getAllResultFile: ", "路径：" + entryName.replaceAll(".*(?=/[^/]*$)", ""));
-            new File(newFile.getParent()).mkdirs();
+        if(!zipEntry.isDirectory()) {
+            File targetFile = new File(privateDir, entryName);
+            targetFile.getParentFile().mkdirs();        
             try (BufferedOutputStream bos =
-                new BufferedOutputStream(new FileOutputStream(newFile))) {
+                new BufferedOutputStream(new FileOutputStream(targetFile))) {
               IOUtils.copy(zis, bos);
             }
-          }
         }
         zipEntry = zis.getNextEntry();
       }
       zis.closeEntry();
     } catch (Exception e) {
       Log.e("getAllResultFile: ", "错误：", e);
+    }
+  }
+
+  private static class ManagerHandler extends Handler {
+    private WeakReference<ResourceManagementActivity> mResRef;
+    static final int MSG_TOAST_LONG = 0;
+    static final int MSG_TOAST_SHORT = 1;
+    ManagerHandler(ResourceManagementActivity ctx) {
+      this.mResRef = new WeakReference<>(ctx);
+    }
+
+    @Override
+    public void handleMessage(Message msg) {
+      Context ctx = mResRef.get();
+      if (ctx == null) return;
+      switch (msg.what) {
+          case MSG_TOAST_SHORT:
+                Toast.makeText(ctx, msg.obj.toString(), Toast.LENGTH_SHORT).show();
+                return;
+          case MSG_TOAST_LONG:
+                Toast.makeText(ctx, msg.obj.toString(), Toast.LENGTH_LONG).show();
+                return;
+                
+      }
+      super.handleMessage(msg);
     }
   }
 }
