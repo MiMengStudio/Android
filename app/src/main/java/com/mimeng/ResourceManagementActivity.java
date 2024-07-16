@@ -1,17 +1,16 @@
 package com.mimeng;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,6 +18,7 @@ import androidx.cardview.widget.CardView;
 
 import com.google.gson.Gson;
 import com.mimeng.BaseClass.BaseActivity;
+import com.mimeng.BaseClass.BaseDialog;
 import com.mimeng.resourcepack.ResourcePackInfo;
 import com.mimeng.utils.IOUtils;
 
@@ -38,6 +38,8 @@ public class ResourceManagementActivity extends BaseActivity {
     private static final String TAG = "ResourceManagementActivity";
     private Handler mHandler;
     private ProgressBar progressBar;
+    private TextView progressText;
+    private TextView imp_state_text;
     private long size = 0;
 
     @Override
@@ -46,6 +48,8 @@ public class ResourceManagementActivity extends BaseActivity {
         blackParentBar();
         setFullScreen(false);
         setContentView(R.layout.activity_resource_management);
+
+        imp_state_text = findViewById(R.id.item_res_info);
 
         mHandler = new ManagerHandler(this);
         ImageButton backButton = findViewById(R.id.back);
@@ -112,12 +116,11 @@ public class ResourceManagementActivity extends BaseActivity {
                     mHandler.sendMessage(msg);
                     Log.e(TAG, "Error when reading files", e);
                 }
-            },
-                    "ResourceReader")
-                    .start();
+            }, "ResourceReader").start();
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private void getAllResultFile(Uri uri, long totalSize) {
         Message msg = Message.obtain();
         msg.what = ManagerHandler.MSG_SHOW_PROGRESS;
@@ -137,18 +140,22 @@ public class ResourceManagementActivity extends BaseActivity {
                     size += zipEntry.getSize();
                     File targetFile = new File(privateDir, entryName);
                     targetFile.getParentFile().mkdirs();
-                    try (BufferedOutputStream bos =
-                                 new BufferedOutputStream(new FileOutputStream(targetFile))) {
+                    try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(targetFile))) {
                         IOUtils.copy(zis, bos);
                     }
                 }
-                mHandler.post(() -> progressBar.setProgress((int) ((size * 100) / totalSize)));
+                mHandler.post(() -> {
+                    int pro_size = (int) ((size * 100) / totalSize);
+                    progressBar.setProgress(pro_size);
+                    progressText.setText("导入资源中，请稍等...("+pro_size+"%)");
+                });
             }
             zis.closeEntry();
 
         } catch (Exception e) {
             Log.e("getAllResultFile: ", "错误：", e);
         }
+        size = 0;
         Message dismiss = Message.obtain();
         dismiss.what = ManagerHandler.MSG_DISMISS;
         mHandler.sendMessage(dismiss);
@@ -159,12 +166,13 @@ public class ResourceManagementActivity extends BaseActivity {
         static final int MSG_SHOW_PROGRESS = 2;
         static final int MSG_DISMISS = 3;
         private final WeakReference<ResourceManagementActivity> mResRef;
-        private AlertDialog dialog;
+        private BaseDialog dialog;
 
         ManagerHandler(ResourceManagementActivity ctx) {
             this.mResRef = new WeakReference<>(ctx);
         }
 
+        @SuppressLint("ResourceAsColor")
         @Override
         public void handleMessage(@NonNull Message msg) {
             ResourceManagementActivity ctx = mResRef.get();
@@ -174,18 +182,16 @@ public class ResourceManagementActivity extends BaseActivity {
                     Toast.makeText(ctx, msg.obj.toString(), Toast.LENGTH_SHORT).show();
                     return;
                 case MSG_SHOW_PROGRESS:
-                    View view = LayoutInflater.from(ctx).inflate(R.layout.alert_progress_bar, null);
-                    ctx.progressBar = view.findViewById(R.id.alert_progress_bar);
-
-                    dialog = new AlertDialog.Builder(ctx)
-                            .setTitle("正在解压...")
-                            .setView(view).create();
-                    dialog.setCanceledOnTouchOutside(false);
+                    dialog = new BaseDialog(ctx, R.style.base_dialog, R.layout.alert_progress_bar);
                     dialog.show();
+                    ctx.progressBar = dialog.findViewById(R.id.alert_progress_bar);
+                    ctx.progressText = dialog.findViewById(R.id.progress_text);
                     return;
                 case MSG_DISMISS:
                     Log.i(TAG, "Dismiss dialog");
                     dialog.dismiss();
+                    ctx.imp_state_text.setText("已导入");
+                    ctx.imp_state_text.setTextColor(R.color.md_theme_primaryContainer_mediumContrast);
                     return;
             }
             super.handleMessage(msg);
