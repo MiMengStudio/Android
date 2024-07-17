@@ -99,16 +99,23 @@
             android:layout_height="60dp"
             android:elevation="2dp">
 
-
             <ImageButton
                 android:id="@+id/back"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="8dp"
-                android:background="@drawable/ic_arrow_left">
+                android:background="@drawable/ic_arrow_left"/>
 
-            </ImageButton>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:text="资源导入"
+                android:textColor="@color/font_color"
+                android:layout_centerInParent="true"
+                android:textSize="20sp"/>
 
         </RelativeLayout>
 

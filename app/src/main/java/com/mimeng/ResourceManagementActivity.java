@@ -2,6 +2,7 @@ package com.mimeng;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 
 import com.google.gson.Gson;
 import com.mimeng.BaseClass.BaseActivity;
@@ -25,8 +27,12 @@ import com.mimeng.utils.IOUtils;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.lang.ref.WeakReference;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -50,6 +56,7 @@ public class ResourceManagementActivity extends BaseActivity {
         setContentView(R.layout.activity_resource_management);
 
         imp_state_text = findViewById(R.id.item_res_info);
+        checkAndSetResourcePackInfo(); // 检测资源包导入情况
 
         mHandler = new ManagerHandler(this);
         ImageButton backButton = findViewById(R.id.back);
@@ -119,6 +126,37 @@ public class ResourceManagementActivity extends BaseActivity {
             }, "ResourceReader").start();
         }
     }
+
+    @SuppressLint("SetTextI18n")
+    private void checkAndSetResourcePackInfo() {
+        File jsonFile = new File(getExternalFilesDir(null), "res/item/info.json");
+        Log.d(TAG, "File exists: " + jsonFile.exists() + ", Path: " + jsonFile.getAbsolutePath());
+        if (jsonFile.exists()) {
+            try {
+                FileInputStream fis = new FileInputStream(jsonFile);
+                Reader reader = new InputStreamReader(fis, StandardCharsets.UTF_8);
+                Gson gson = new Gson();
+                ResourcePackInfo resourcePackInfo = gson.fromJson(reader, ResourcePackInfo.class);
+                fis.close();
+                reader.close();
+
+                // 显示ResourcePackInfo的内容
+                imp_state_text.setText("已导入：" + resourcePackInfo.getName() + " v" + resourcePackInfo.getVersion());
+                imp_state_text.setTextColor(ContextCompat.getColor(this, R.color.md_theme_primary)); // 假设正常文本颜色为主题主色
+            } catch (IOException e) {
+                e.printStackTrace();
+                runOnUiThread(() -> {
+                    imp_state_text.setText("读取info.json失败");
+                    imp_state_text.setTextColor(ContextCompat.getColor(this, R.color.md_theme_error));
+                });
+            }
+        } else {
+            // 文件不存在，设置文本和颜色
+            imp_state_text.setText("未导入");
+            imp_state_text.setTextColor(ContextCompat.getColor(this, R.color.md_theme_error));
+        }
+    }
+
 
     @SuppressLint("SetTextI18n")
     private void getAllResultFile(Uri uri, long totalSize) {
@@ -191,7 +229,7 @@ public class ResourceManagementActivity extends BaseActivity {
                     Log.i(TAG, "Dismiss dialog");
                     dialog.dismiss();
                     ctx.imp_state_text.setText("已导入");
-                    ctx.imp_state_text.setTextColor(R.color.md_theme_primaryContainer_mediumContrast);
+                    ctx.imp_state_text.setTextColor(R.color.md_theme_primary);
                     return;
             }
             super.handleMessage(msg);
