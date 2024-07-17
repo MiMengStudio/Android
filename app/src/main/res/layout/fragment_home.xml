@@ -15,11 +15,11 @@
         tools:ignore="MissingConstraints">
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:clickable="true"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingTop="70dp">
 
@@ -30,9 +30,9 @@
                 <com.youth.banner.Banner
                     android:id="@+id/home_banner"
                     android:layout_width="match_parent"
-                    android:layout_marginTop="5dp"
                     android:layout_height="0dp"
                     android:layout_marginLeft="8dp"
+                    android:layout_marginTop="5dp"
                     android:layout_marginRight="8dp"
                     app:banner_loop_time="3000"
                     app:banner_radius="16dp"
@@ -88,7 +88,7 @@
                             android:layout_marginTop="4dp"
                             android:text="模块"
                             android:textColor="@color/font_color"
-                            android:textSize="18sp">
+                            android:textSize="16sp">
 
                         </TextView>
 
@@ -123,7 +123,7 @@
                             android:layout_marginTop="4dp"
                             android:text="模块"
                             android:textColor="@color/font_color"
-                            android:textSize="18sp">
+                            android:textSize="16sp">
 
                         </TextView>
 
@@ -192,8 +192,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:text="资源管理
-"
+                            android:text="资源管理"
                             android:textColor="@color/font_color"
                             android:textSize="16sp">
 
@@ -219,12 +218,13 @@
             android:id="@+id/home_fragment_tool"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:elevation="2dp">
+            android:elevation="2dp"
+            android:padding="5dp">
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
+                android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="110dp"
@@ -236,7 +236,7 @@
                     android:id="@+id/search_edit"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/white"
+                    android:background="@color/background_white"
                     android:hint="搜索"
                     android:paddingLeft="16dp" />
 
@@ -298,7 +298,6 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_marginTop="10dp"
-
                     android:layout_marginEnd="10dp"
                     android:src="@mipmap/ic_default_head"
                     app:shapeAppearanceOverlay="@style/roundedImageView" />
