@@ -1,8 +1,11 @@
 <resources>
     <color name="colorPrimary">#79BD9A</color>
+    <color name="icon_black">#2c2c2c</color>
+    <color name="icon_white">#e6e6e6</color>
     <color name="font_color">#2c2c2c</color>
+    <color name="font_title_white">#FAFAFA</color>
     <color name="background_white">#FFFFFF</color>
-    <color name="md_theme_primary">#226A4C</color>
+    <color name="md_theme_primary">#79BD9A</color>
     <color name="md_theme_onPrimary">#FFFFFF</color>
     <color name="md_theme_primaryContainer">#AAF2CB</color>
     <color name="md_theme_onPrimaryContainer">#002113</color>
