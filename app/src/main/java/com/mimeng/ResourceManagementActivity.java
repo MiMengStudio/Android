@@ -81,9 +81,9 @@ public class ResourceManagementActivity extends BaseActivity {
             Uri uri = Objects.requireNonNull(result.getData(), "No URI returned from file picker");
             Log.i(TAG, uri + "  " + uri.getPath());
             new Thread(() -> {
-                // 使用try-with-resources自动管理资源
                 Message msg = Message.obtain();
                 msg.what = ManagerHandler.MSG_TOAST_SHORT;
+                // 使用try-with-resources自动管理资源    
                 try (InputStream is = getContentResolver().openInputStream(uri);
                      ZipInputStream zis = new ZipInputStream(is)) {
                     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -112,17 +112,14 @@ public class ResourceManagementActivity extends BaseActivity {
                         } else {
                             msg.obj = "该文件不是道具图片素材包，请重新选择";
                         }
-                        mHandler.sendMessage(msg);
                     } else {
                         msg.obj = "info.json为空";
-                        mHandler.sendMessage(msg);
                     }
-
                 } catch (Exception e) {
                     msg.obj = "读取文件时发生错误";
-                    mHandler.sendMessage(msg);
                     Log.e(TAG, "Error when reading files", e);
                 }
+                mHandler.sendMessage(msg);    
             }, "ResourceReader").start();
         }
     }
@@ -132,23 +129,17 @@ public class ResourceManagementActivity extends BaseActivity {
         File jsonFile = new File(getExternalFilesDir(null), "res/item/info.json");
         Log.d(TAG, "File exists: " + jsonFile.exists() + ", Path: " + jsonFile.getAbsolutePath());
         if (jsonFile.exists()) {
-            try {
-                FileInputStream fis = new FileInputStream(jsonFile);
-                Reader reader = new InputStreamReader(fis, StandardCharsets.UTF_8);
+            try(Reader reader = new InputStreamReader(new FileInputStream(jsonFile), StandardCharsets.UTF_8)) {
                 Gson gson = new Gson();
                 ResourcePackInfo resourcePackInfo = gson.fromJson(reader, ResourcePackInfo.class);
-                fis.close();
-                reader.close();
-
                 // 显示ResourcePackInfo的内容
                 imp_state_text.setText("已导入：" + resourcePackInfo.getName() + " v" + resourcePackInfo.getVersion());
                 imp_state_text.setTextColor(ContextCompat.getColor(this, R.color.md_theme_primary)); // 假设正常文本颜色为主题主色
             } catch (IOException e) {
+                Log.e(TAG, "Error when reading info.json", e);
                 e.printStackTrace();
-                runOnUiThread(() -> {
-                    imp_state_text.setText("读取info.json失败");
-                    imp_state_text.setTextColor(ContextCompat.getColor(this, R.color.md_theme_error));
-                });
+                imp_state_text.setText("读取info.json失败");
+                imp_state_text.setTextColor(ContextCompat.getColor(this, R.color.md_theme_error));
             }
         } else {
             // 文件不存在，设置文本和颜色
@@ -175,7 +166,7 @@ public class ResourceManagementActivity extends BaseActivity {
             while ((zipEntry = zis.getNextEntry()) != null) {
                 String entryName = zipEntry.getName();
                 if (!zipEntry.isDirectory()) {
-                    size += zipEntry.getSize();
+                    size += zipEntry.getCompressedSize();
                     File targetFile = new File(privateDir, entryName);
                     targetFile.getParentFile().mkdirs();
                     try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(targetFile))) {
