@@ -1,0 +1,12 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient
+        android:angle="0"
+        android:centerX="0.5"
+        android:centerY="0.5"
+        android:endColor="#F0D3A0"
+        android:gradientRadius="50%"
+        android:startColor="#FFF7C0"
+        android:type="linear" />
+    <corners
+        android:radius="20dp" /> <!-- 这里的10dp是圆角的半径 -->
+</shape>
