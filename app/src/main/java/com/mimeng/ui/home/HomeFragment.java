@@ -15,6 +15,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 
+import com.mimeng.BaseClass.BaseFragment;
 import com.mimeng.R;
 import com.mimeng.ResourceManagementActivity;
 import com.youth.banner.Banner;
@@ -25,7 +26,7 @@ import com.youth.banner.indicator.CircleIndicator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends BaseFragment {
 
     private Banner banner;
     private List<Integer> bannerData;
@@ -43,10 +44,9 @@ public class HomeFragment extends Fragment {
 
         EditText searchEdit = view.findViewById(R.id.search_edit);
 
-        int offsetId = requireActivity().getResources().getIdentifier("status_bar_height", "dimen", "android");
-        int statusBarHeight = requireActivity().getResources().getDimensionPixelOffset(offsetId) / 5;
+
         RelativeLayout home_fragment_tool = view.findViewById(R.id.home_fragment_tool);
-        home_fragment_tool.setPadding(0, statusBarHeight, 0, 0);
+        home_fragment_tool.setPadding(0, getStatusBarHeight(), 0, 0);
 
         // 初始化轮播图和数据
         banner = view.findViewById(R.id.home_banner);

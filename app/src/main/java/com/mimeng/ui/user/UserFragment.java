@@ -8,22 +8,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
-import com.just.agentweb.AgentWeb;
+import com.mimeng.BaseClass.BaseFragment;
 import com.mimeng.R;
 import com.mimeng.WebViewActivity;
-import com.mimeng.databinding.FragmentUserBinding;
 import com.mimeng.user.Account;
 
-public class UserFragment extends Fragment {
+public class UserFragment extends BaseFragment {
     public static final int REQUEST_LOGIN = 1;
-    private FragmentUserBinding binding;
 
     @Nullable
     @Override
@@ -34,8 +29,13 @@ public class UserFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        LinearLayout fragment_user_top = view.findViewById(R.id.fragment_user_top);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0,getStatusBarHeight()*5,0,0);
+        fragment_user_top.setLayoutParams(params);
+
         // 获取 Account 信息
-        Account account = Account.get(UserFragment.this.getActivity());
+        Account account = Account.get(UserFragment.this.requireActivity());
         if (account != null) {
             Log.d("Account", "Retrieved Account Info: " + account.toString());
             // TODO 用户相关功能
