@@ -2,7 +2,6 @@ package com.mimeng;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -190,7 +189,8 @@ public class ResourceManagementActivity extends BaseActivity {
         mHandler.sendMessage(dismiss);
     }
 
-    private static class ManagerHandler extends Handler {
+    @SuppressLint("HandlerLeak")
+    private class ManagerHandler extends Handler {
         static final int MSG_TOAST_SHORT = 1;
         static final int MSG_SHOW_PROGRESS = 2;
         static final int MSG_DISMISS = 3;
@@ -201,7 +201,6 @@ public class ResourceManagementActivity extends BaseActivity {
             this.mResRef = new WeakReference<>(ctx);
         }
 
-        @SuppressLint("ResourceAsColor")
         @Override
         public void handleMessage(@NonNull Message msg) {
             ResourceManagementActivity ctx = mResRef.get();
@@ -220,7 +219,7 @@ public class ResourceManagementActivity extends BaseActivity {
                     Log.i(TAG, "Dismiss dialog");
                     dialog.dismiss();
                     ctx.imp_state_text.setText("已导入");
-                    ctx.imp_state_text.setTextColor(R.color.md_theme_primary);
+                    ctx.imp_state_text.setTextColor(ContextCompat.getColor(ResourceManagementActivity.this, R.color.md_theme_primary));
                     return;
             }
             super.handleMessage(msg);

@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.just.agentweb.AgentWeb;
-import com.just.agentweb.AgentWebConfig;
 import com.just.agentweb.WebViewClient;
 import com.mimeng.BaseClass.BaseActivity;
 import com.mimeng.user.Account;
@@ -60,7 +59,7 @@ public class WebViewActivity extends BaseActivity {
         });
     }
 
-    private WebViewClient mWebViewClient = new WebViewClient() {
+    private final WebViewClient mWebViewClient = new WebViewClient() {
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
@@ -78,7 +77,7 @@ public class WebViewActivity extends BaseActivity {
     };
 
     public class AndroidInterface {
-        private Context mContext; // 添加一个 Context 对象的引用
+        private final Context mContext; // 添加一个 Context 对象的引用
 
         public AndroidInterface(Context context) {
             mContext = context; // 在构造函数中初始化 Context 对象
