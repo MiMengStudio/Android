@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -20,6 +21,7 @@ import com.mimeng.R;
 import com.mimeng.WebViewActivity;
 import com.mimeng.databinding.FragmentUserBinding;
 import com.mimeng.user.Account;
+import com.squareup.picasso.Picasso;
 
 public class UserFragment extends Fragment {
     public static final int REQUEST_LOGIN = 1;
@@ -39,6 +41,20 @@ public class UserFragment extends Fragment {
         if (account != null) {
             Log.d("Account", "Retrieved Account Info: " + account.toString());
             // TODO 用户相关功能
+            ImageView headImage = view.findViewById(R.id.head);
+            Picasso.get()
+                    .load("https://q1.qlogo.cn/g?b=qq&nk=" + account.getQQ()+ "&s=100")
+                    .placeholder(R.drawable.ic_default_head)
+                    .error(R.drawable.ic_default_head)
+                    .into(headImage);
+            TextView userNameText = view.findViewById(R.id.user_name);
+            userNameText.setText(account.getName());
+            long currentTimeMillis = System.currentTimeMillis();
+            long vipDateMillis = account.getVipDate();
+            if (currentTimeMillis < vipDateMillis) {
+                ImageView userVipImage = view.findViewById(R.id.user_vip);
+                userVipImage.setImageResource(R.drawable.ic_vip_activat);
+            }
         } else {
             Log.d("Account", "No Account Info found.");
         }
@@ -58,6 +74,7 @@ public class UserFragment extends Fragment {
                 String accountInfo = data.getStringExtra("accountInfo");
                 if (accountInfo != null) {
                     // 更新 UI 或处理登录结果
+
                     Log.d("UserFragment", "Received login result: " + accountInfo);
                 }
             }

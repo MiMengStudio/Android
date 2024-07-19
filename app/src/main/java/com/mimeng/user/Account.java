@@ -64,11 +64,11 @@ public class Account {
         this.name = name;
     }
 
-    public String getQq() {
+    public String getQQ() {
         return qq;
     }
 
-    public void setQq(String qq) {
+    public void setQQ(String qq) {
         this.qq = qq;
     }
 

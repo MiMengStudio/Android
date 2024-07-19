@@ -3,11 +3,14 @@ package com.mimeng.ui.home;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,6 +20,9 @@ import androidx.fragment.app.Fragment;
 
 import com.mimeng.R;
 import com.mimeng.ResourceManagementActivity;
+import com.mimeng.ui.user.UserFragment;
+import com.mimeng.user.Account;
+import com.squareup.picasso.Picasso;
 import com.youth.banner.Banner;
 import com.youth.banner.adapter.BannerImageAdapter;
 import com.youth.banner.holder.BannerImageHolder;
@@ -42,6 +48,21 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         EditText searchEdit = view.findViewById(R.id.search_edit);
+
+        // 获取 Account 信息
+        Account account = Account.get(HomeFragment.this.getActivity());
+        if (account != null) {
+            Log.d("Account", "Retrieved Account Info: " + account.toString());
+            // TODO 用户相关功能
+            ImageView userImage = view.findViewById(R.id.user);
+            Picasso.get()
+                    .load("https://q1.qlogo.cn/g?b=qq&nk=" + account.getQQ()+ "&s=100")
+                    .placeholder(R.drawable.ic_default_head)
+                    .error(R.drawable.ic_default_head)
+                    .into(userImage);
+        } else {
+            Log.d("Account", "No Account Info found.");
+        }
 
         int offsetId = requireActivity().getResources().getIdentifier("status_bar_height", "dimen", "android");
         int statusBarHeight = requireActivity().getResources().getDimensionPixelOffset(offsetId) / 5;
