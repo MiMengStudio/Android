@@ -303,7 +303,7 @@
                     android:layout_height="40dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
-                    android:src="@mipmap/ic_default_head"
+                    android:src="@drawable/ic_default_head"
                     app:shapeAppearanceOverlay="@style/roundedImageView" />
 
 

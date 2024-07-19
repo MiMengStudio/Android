@@ -54,7 +54,7 @@
                     android:layout_height="60dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="20dp"
-                    android:src="@mipmap/ic_default_head"
+                    android:src="@drawable/ic_default_head"
                     app:shapeAppearanceOverlay="@style/roundedImageView" />
 
                 <LinearLayout
