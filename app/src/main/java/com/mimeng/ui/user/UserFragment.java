@@ -1,5 +1,6 @@
 package com.mimeng.ui.user;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,7 +22,7 @@ import com.mimeng.databinding.FragmentUserBinding;
 import com.mimeng.user.Account;
 
 public class UserFragment extends Fragment {
-
+    public static final int REQUEST_LOGIN = 1;
     private FragmentUserBinding binding;
 
     @Nullable
@@ -45,9 +46,22 @@ public class UserFragment extends Fragment {
         View user_info = view.findViewById(R.id.user_info);
         user_info.setOnClickListener(view1 -> {
             Intent intent = new Intent(UserFragment.this.getActivity(), WebViewActivity.class);
-            //intent.putExtra("url", "https://account.mimeng.fun");
             intent.putExtra("url", "https://account.mimeng.fun?origin=MiMengAndroidAPP");
-            startActivity(intent);
+            startActivityForResult(intent, REQUEST_LOGIN);
         });
     }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_LOGIN && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                String accountInfo = data.getStringExtra("accountInfo");
+                if (accountInfo != null) {
+                    // 更新 UI 或处理登录结果
+                    Log.d("UserFragment", "Received login result: " + accountInfo);
+                }
+            }
+        }
+    }
+
 }

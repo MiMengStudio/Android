@@ -1,6 +1,8 @@
 package com.mimeng;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -91,6 +93,9 @@ public class WebViewActivity extends BaseActivity {
 
             // 保存 Account 对象到 SharedPreferences
             Account.save(mContext, account);
+            Intent intent = new Intent();
+            intent.putExtra("accountInfo", "登录成功信息");
+            setResult(Activity.RESULT_OK, intent);
             finish();
         }
     }
