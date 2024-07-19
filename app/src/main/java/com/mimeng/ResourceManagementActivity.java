@@ -189,8 +189,7 @@ public class ResourceManagementActivity extends BaseActivity {
         mHandler.sendMessage(dismiss);
     }
 
-    @SuppressLint("HandlerLeak")
-    private class ManagerHandler extends Handler {
+    private static class ManagerHandler extends Handler {
         static final int MSG_TOAST_SHORT = 1;
         static final int MSG_SHOW_PROGRESS = 2;
         static final int MSG_DISMISS = 3;
@@ -219,7 +218,7 @@ public class ResourceManagementActivity extends BaseActivity {
                     Log.i(TAG, "Dismiss dialog");
                     dialog.dismiss();
                     ctx.imp_state_text.setText("已导入");
-                    ctx.imp_state_text.setTextColor(ContextCompat.getColor(ResourceManagementActivity.this, R.color.md_theme_primary));
+                    ctx.imp_state_text.setTextColor(ContextCompat.getColor(ctx, R.color.md_theme_primary));
                     return;
             }
             super.handleMessage(msg);
