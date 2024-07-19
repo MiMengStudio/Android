@@ -18,6 +18,7 @@ import com.mimeng.BaseClass.BaseFragment;
 import com.mimeng.R;
 import com.mimeng.WebViewActivity;
 import com.mimeng.user.Account;
+import com.mimeng.user.AccountManager;
 import com.squareup.picasso.Picasso;
 
 public class UserFragment extends BaseFragment {
@@ -29,6 +30,7 @@ public class UserFragment extends BaseFragment {
         return inflater.inflate(R.layout.fragment_user, container, false);
     }
 
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -38,21 +40,15 @@ public class UserFragment extends BaseFragment {
         fragment_user_top.setLayoutParams(params);
 
         // 获取 Account 信息
-        Account account = Account.get(UserFragment.this.requireActivity());
-        if (account != null) {
+        if (AccountManager.hasLoggedIn()) {
+            Account account = AccountManager.get();
             Log.d("Account", "Retrieved Account Info: " + account);
             // TODO 用户相关功能
             ImageView headImage = view.findViewById(R.id.head);
-            Picasso.get()
-                    .load("https://q1.qlogo.cn/g?b=qq&nk=" + account.getQQ()+ "&s=100")
-                    .placeholder(R.drawable.ic_default_head)
-                    .error(R.drawable.ic_default_head)
-                    .into(headImage);
+            AccountManager.loadUserIcon(headImage);
             TextView userNameText = view.findViewById(R.id.user_name);
             userNameText.setText(account.getName());
-            long currentTimeMillis = System.currentTimeMillis();
-            long vipDateMillis = account.getVipDate();
-            if (currentTimeMillis < vipDateMillis) {
+            if (account.isVip()) {
                 ImageView userVipImage = view.findViewById(R.id.user_vip);
                 userVipImage.setImageResource(R.drawable.ic_vip_activat);
             }
@@ -68,6 +64,7 @@ public class UserFragment extends BaseFragment {
         });
     }
 
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_LOGIN && resultCode == Activity.RESULT_OK) {

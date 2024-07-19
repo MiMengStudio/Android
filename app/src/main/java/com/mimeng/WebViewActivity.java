@@ -17,6 +17,7 @@ import com.just.agentweb.AgentWeb;
 import com.just.agentweb.WebViewClient;
 import com.mimeng.BaseClass.BaseActivity;
 import com.mimeng.user.Account;
+import com.mimeng.user.AccountManager;
 
 public class WebViewActivity extends BaseActivity {
     private AgentWeb mAgentWeb;
@@ -91,7 +92,7 @@ public class WebViewActivity extends BaseActivity {
             Account account = gson.fromJson(accountInfo, Account.class);
 
             // 保存 Account 对象到 SharedPreferences
-            Account.save(mContext, account);
+            AccountManager.save(mContext, account);
             Intent intent = new Intent();
             intent.putExtra("accountInfo", "登录成功信息");
             setResult(Activity.RESULT_OK, intent);

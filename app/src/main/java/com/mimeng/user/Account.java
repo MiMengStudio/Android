@@ -103,6 +103,13 @@ public class Account {
     public void setMiniuid(String miniuid) {
         this.miniuid = miniuid;
     }
+    
+    /**
+      * 根据当前时间判断当前用户是否是vip
+      */
+    public boolean isVip() {
+        return System.currentTimeMillis() < getVipDate();
+    }
 
     // toString 方法
     @Override
@@ -120,32 +127,4 @@ public class Account {
                 '}';
     }
 
-    /**
-     * 保存 Account 对象到 SharedPreferences
-     * @param context Context 对象
-     * @param account Account 对象
-     */
-    public static void save(Context context, Account account) {
-        Gson gson = new Gson();
-        String json = gson.toJson(account);
-        SharedPreferences sharedPreferences = context.getSharedPreferences("AccountPrefs", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("account", json);
-        editor.apply();
-    }
-
-    /**
-     * 从 SharedPreferences 获取 Account 对象
-     * @param context Context 对象
-     * @return 返回 Account 对象
-     */
-    public static Account get(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("AccountPrefs", Context.MODE_PRIVATE);
-        String json = sharedPreferences.getString("account", null);
-        if (json != null) {
-            Gson gson = new Gson();
-            return gson.fromJson(json, Account.class);
-        }
-        return null;
-    }
 }

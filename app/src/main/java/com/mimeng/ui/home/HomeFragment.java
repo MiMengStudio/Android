@@ -22,6 +22,7 @@ import com.mimeng.R;
 import com.mimeng.ResourceManagementActivity;
 import com.mimeng.ui.user.UserFragment;
 import com.mimeng.user.Account;
+import com.mimeng.user.AccountManager;
 import com.squareup.picasso.Picasso;
 import com.youth.banner.Banner;
 import com.youth.banner.adapter.BannerImageAdapter;
@@ -50,17 +51,12 @@ public class HomeFragment extends Fragment {
 
         EditText searchEdit = view.findViewById(R.id.search_edit);
 
-        // 获取 Account 信息
-        Account account = Account.get(HomeFragment.this.requireActivity());
-        if (account != null) {
-            Log.d("Account", "Retrieved Account Info: " + account.toString());
+        if (AccountManager.hasLoggedIn()) {
+            Account account = AccountManager.get();
+            Log.d("Account", "Retrieved Account Info: " + account);
             // TODO 用户相关功能
             ImageView userImage = view.findViewById(R.id.user);
-            Picasso.get()
-                    .load("https://q1.qlogo.cn/g?b=qq&nk=" + account.getQQ()+ "&s=100")
-                    .placeholder(R.drawable.ic_default_head)
-                    .error(R.drawable.ic_default_head)
-                    .into(userImage);
+            AccountManager.loadUserIcon(userImage);
         } else {
             Log.d("Account", "No Account Info found.");
         }
