@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,7 +40,7 @@ public class UserFragment extends BaseFragment {
         // 获取 Account 信息
         Account account = Account.get(UserFragment.this.requireActivity());
         if (account != null) {
-            Log.d("Account", "Retrieved Account Info: " + account.toString());
+            Log.d("Account", "Retrieved Account Info: " + account);
             // TODO 用户相关功能
             ImageView headImage = view.findViewById(R.id.head);
             Picasso.get()
