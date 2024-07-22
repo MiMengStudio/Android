@@ -1,9 +1,12 @@
 package com.mimeng.BaseClass;
 
 import android.annotation.SuppressLint;
+import android.os.Bundle;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 public class BaseFragment extends Fragment {
@@ -18,15 +21,13 @@ public class BaseFragment extends Fragment {
         return requireActivity().getResources().getDimensionPixelOffset(offsetId) / 5;
     }
 
-    /**
-     * 设置上边距的距离
-     * @param v view元素
-     * @param index 偏移率
-     */
-    public void setLayoutMarginTop(View v, int index) {
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0, getStatusBarHeight() * index, 0, 0);
-        v.setLayoutParams(params);
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        // 适配异形ui屏
+        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+        if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
+            ((ViewGroup.MarginLayoutParams) layoutParams).topMargin = getStatusBarHeight() * 5;
+        }
     }
-
 }
