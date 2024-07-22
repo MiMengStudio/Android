@@ -9,9 +9,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +44,7 @@ public class WebViewActivity extends BaseActivity {
         Log.d("WebViewActivity", "URL: " + url);
 
         Toolbar toolbar = findViewById(R.id.web_activity_toolbar);
+        setLayoutMarginTop(toolbar,3);
         setSupportActionBar(toolbar);
 
         View webView = findViewById(R.id.web_view);
@@ -64,7 +67,7 @@ public class WebViewActivity extends BaseActivity {
             }
         });
 
-        ImageButton close = findViewById(R.id.close);
+        ImageView close = findViewById(R.id.close);
         close.setOnClickListener(view -> finish());
     }
 
