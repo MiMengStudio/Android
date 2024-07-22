@@ -1,45 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="4dp"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
+        android:id="@+id/web_activity_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/web_activity_toolbar"
         android:background="@color/md_theme_background">
-          <ImageButton
-              android:id="@+id/back"
-              android:layout_width="28dp"
-              android:layout_height="28dp"
-              android:background="@drawable/ic_arrow_left"
-              android:layout_marginLeft="8dp"/>
 
-           <ImageButton
-                android:id="@+id/close"
-                android:layout_gravity="left"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_marginLeft="18dp"
-                android:background="@drawable/ic_close" />
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/ic_arrow_left"
+            android:contentDescription="@string/todo"
+            app:tint="@color/icon_black"/>
+
+        <ImageView
+            android:id="@+id/close"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="start"
+            android:layout_marginStart="18dp"
+            android:src="@drawable/ic_close"
+            android:contentDescription="@string/todo"
+            app:tint="@color/icon_black" />
 
 
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:maxWidth="240dp"
-                android:text="加载中..."
-                android:lines="1"
-                android:ellipsize="end"
-                android:textColor="@color/font_color"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:ellipsize="end"
+            android:lines="1"
+            android:maxWidth="240dp"
+            android:text="加载中..."
+            android:textColor="@color/font_color"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
     </androidx.appcompat.widget.Toolbar>
 

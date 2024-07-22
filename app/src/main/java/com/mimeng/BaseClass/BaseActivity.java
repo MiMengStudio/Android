@@ -1,5 +1,6 @@
 package com.mimeng.BaseClass;
 
+import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.Color;
@@ -9,6 +10,7 @@ import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,11 +34,12 @@ public class BaseActivity extends AppCompatActivity {
 
     /**
      * 点击返回键时，不返回到当前Activity时使用
-     * @param tClass  跳转到目标类
-     * @param <T>     泛型
+     *
+     * @param tClass 跳转到目标类
+     * @param <T>    泛型
      */
-    public <T> void toMainActivity(Class<T> tClass){
-        Intent i = new Intent(this,tClass);
+    public <T> void toMainActivity(Class<T> tClass) {
+        Intent i = new Intent(this, tClass);
         startActivity(i);
         finish();
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -44,36 +47,39 @@ public class BaseActivity extends AppCompatActivity {
 
     /**
      * 不传任何参数跳转
-     * @param tClass  跳转到目标类
-     * @param <T>     泛型
+     *
+     * @param tClass 跳转到目标类
+     * @param <T>    泛型
      */
-    public <T> void toActivityNotData(Class<T> tClass){
-        Intent i = new Intent(this,tClass);
+    public <T> void toActivityNotData(Class<T> tClass) {
+        Intent i = new Intent(this, tClass);
         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this);
         startActivity(i, options.toBundle());
     }
 
     /**
      * 带参数跳转
-     * @param bundle  bundle对象
-     * @param tClass  跳转到目标类
-     * @param <T>     泛型
+     *
+     * @param bundle bundle对象
+     * @param tClass 跳转到目标类
+     * @param <T>    泛型
      */
 
 
-    public <T> void toActivityHasBundle(Bundle bundle, Class<T> tClass){
+    public <T> void toActivityHasBundle(Bundle bundle, Class<T> tClass) {
         Intent i = new Intent(this, tClass);
         i.putExtras(bundle);
         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this);
-        startActivity(i,options.toBundle());
+        startActivity(i, options.toBundle());
     }
 
     /**
      * get请求
-     * @param url       网址
-     * @param callback  回调
+     *
+     * @param url      网址
+     * @param callback 回调
      */
-    public void apiGetMethod(String url, Callback callback){
+    public void apiGetMethod(String url, Callback callback) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(url)
@@ -92,7 +98,7 @@ public class BaseActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//设置状态栏字体颜色
     }
-    
+
     /**
      * 全屏且适配全面屏刘海
      */
@@ -106,7 +112,7 @@ public class BaseActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN;
 
-        
+
         // 状态栏颜色设置为透明，适用于Android 6.0及以上版本
         getWindow().setStatusBarColor(Color.TRANSPARENT);
 
@@ -116,7 +122,7 @@ public class BaseActivity extends AppCompatActivity {
             lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
             getWindow().setAttributes(lp);
         }
-        
+
         if (hideSystemUI) {
             decorView.setSystemUiVisibility(uiOptions);
             // 监听系统UI可见性变化，确保状态栏和导航栏隐藏
@@ -126,6 +132,29 @@ public class BaseActivity extends AppCompatActivity {
                             decorView.setSystemUiVisibility(uiOptions);
                         }
                     });
-            }
+        }
     }
+
+    /**
+     * 获取状态栏高度偏移5dp
+     *
+     * @return 返回高度
+     */
+    public int getStatusBarHeight() {
+        @SuppressLint("InternalInsetResource")
+        int offsetId = this.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        return this.getResources().getDimensionPixelOffset(offsetId) / 5;
+    }
+
+    /**
+     * 设置上边距的距离
+     * @param v view元素
+     * @param index 偏移率
+     */
+    public void setLayoutMarginTop(View v, int index) {
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0, getStatusBarHeight() * index, 0, 0);
+        v.setLayoutParams(params);
+    }
+
 }
