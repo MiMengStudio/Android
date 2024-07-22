@@ -1,5 +1,6 @@
 package com.mimeng.ui.user;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -31,14 +32,13 @@ public class UserFragment extends BaseFragment {
         return inflater.inflate(R.layout.fragment_user, container, false);
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         LinearLayout fragment_user_top = view.findViewById(R.id.fragment_user_top);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0, getStatusBarHeight() * 5, 0, 0);
-        fragment_user_top.setLayoutParams(params);
+        setLayoutMarginTop(fragment_user_top,5);
 
         // 获取 Account 信息
         if (AccountManager.hasLoggedIn()) {
