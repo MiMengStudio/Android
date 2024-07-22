@@ -3,14 +3,21 @@ package com.mimeng;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.gson.Gson;
 import com.just.agentweb.AgentWeb;
@@ -18,9 +25,11 @@ import com.just.agentweb.WebViewClient;
 import com.mimeng.BaseClass.BaseActivity;
 import com.mimeng.user.Account;
 import com.mimeng.user.AccountManager;
+import com.mimeng.utils.ClipboardUtils;
 
 public class WebViewActivity extends BaseActivity {
     private AgentWeb mAgentWeb;
+    private String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,13 +38,11 @@ public class WebViewActivity extends BaseActivity {
         setFullScreen(false);
         setContentView(R.layout.activity_web_view);
 
-        String url = getIntent().getStringExtra("url"); // 获取传递的URL参数
-        Boolean showMenu = getIntent().getBooleanExtra("showMenu", true); // 获取是否显示菜单参数
-
-        ImageButton menu = findViewById(R.id.menu);
-        menu.setVisibility(showMenu ? View.VISIBLE : View.GONE); // 根据参数决定是否显示菜单
-
+        this.url = getIntent().getStringExtra("url"); // 获取传递的URL参数
         Log.d("WebViewActivity", "URL: " + url);
+
+        Toolbar toolbar = findViewById(R.id.web_activity_toolbar);
+        setSupportActionBar(toolbar);
 
         View webView = findViewById(R.id.web_view);
         mAgentWeb = AgentWeb.with(this)
@@ -44,13 +51,12 @@ public class WebViewActivity extends BaseActivity {
                 .setWebViewClient(mWebViewClient)
                 .createAgentWeb()
                 .ready()
-                .go(url); // 加载传递的URL
+                .go(this.url); // 加载传递的URL
 
         // 添加 JavaScript 接口
         mAgentWeb.getJsInterfaceHolder().addJavaObject("android", new AndroidInterface(this));
 
-        ImageButton back = findViewById(R.id.back);
-        back.setOnClickListener(view -> {
+        findViewById(R.id.back).setOnClickListener(view -> {
             if (mAgentWeb != null && mAgentWeb.getWebCreator().getWebView().canGoBack()) {
                 mAgentWeb.getWebCreator().getWebView().goBack(); // 后退
             } else {
@@ -59,9 +65,34 @@ public class WebViewActivity extends BaseActivity {
         });
 
         ImageButton close = findViewById(R.id.close);
-        close.setOnClickListener(view -> {
+        close.setOnClickListener(view -> finish());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // 获取是否显示菜单参数
+        if (getIntent().getBooleanExtra("showMenu", true)) {
+            getMenuInflater().inflate(R.menu.webview_menu, menu);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.copy_link) {
+            ClipboardUtils.copyToClipboard(this, this.url);
+            Toast.makeText(this, "已复制", Toast.LENGTH_SHORT).show();
+            return true;
+        } else if (item.getItemId() == R.id.open_in_browser) {
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(url));
+            startActivity(intent);
+            // 在返回应用后关闭Activity
             finish();
-        });
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private final WebViewClient mWebViewClient = new WebViewClient() {

@@ -70,4 +70,13 @@
         <item name="android:windowCloseOnTouchOutside">false</item>
     </style>
 
+    <style name="WebViewActivity.Theme" parent="AppTheme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="actionOverflowButtonStyle">@style/WebViewActivity.Style.Toolbar.OverflowButtonStyle</item>
+    </style>
+
+    <style name="WebViewActivity.Style.Toolbar.OverflowButtonStyle" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_elipsis</item>
+    </style>
+
 </resources>

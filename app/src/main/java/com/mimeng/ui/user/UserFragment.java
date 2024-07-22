@@ -21,7 +21,6 @@ import com.mimeng.R;
 import com.mimeng.WebViewActivity;
 import com.mimeng.user.Account;
 import com.mimeng.user.AccountManager;
-import com.squareup.picasso.Picasso;
 
 public class UserFragment extends BaseFragment {
     public static final int REQUEST_LOGIN = 1;
@@ -58,7 +57,7 @@ public class UserFragment extends BaseFragment {
             Log.d("Account", "No Account Info found.");
         }
 
-        View user_info = view.findViewById(R.id.user_info);
+        LinearLayout user_info = view.findViewById(R.id.user_info);
         user_info.setOnClickListener(view1 -> {
             Intent intent = new Intent(UserFragment.this.getActivity(), WebViewActivity.class);
             intent.putExtra("url", "https://account.mimeng.fun?origin=MiMengAndroidAPP");
@@ -97,9 +96,7 @@ public class UserFragment extends BaseFragment {
         });
 
         View joinGroup = view.findViewById(R.id.join_qq_group);
-        joinGroup.setOnClickListener(view1 -> {
-            joinQQGroup("G4thHaZyCI");
-        });
+        joinGroup.setOnClickListener(view1 -> joinQQGroup("G4thHaZyCI"));
 
         View getHelp = view.findViewById(R.id.help_and_feedback);
 
@@ -114,6 +111,7 @@ public class UserFragment extends BaseFragment {
 
     public void joinQQGroup(String key) {
         Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
         intent.setData(Uri.parse("mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26k%3D" + key));
         try {
             startActivity(intent);

@@ -46,6 +46,7 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".WebViewActivity"
-            android:theme="@style/AppTheme" />
+            android:label=""
+            android:theme="@style/WebViewActivity.Theme" />
     </application>
 </manifest>
