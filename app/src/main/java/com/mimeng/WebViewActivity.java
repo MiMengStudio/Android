@@ -30,6 +30,10 @@ public class WebViewActivity extends BaseActivity {
         setContentView(R.layout.activity_web_view);
 
         String url = getIntent().getStringExtra("url"); // 获取传递的URL参数
+        Boolean showMenu = getIntent().getBooleanExtra("showMenu", true); // 获取是否显示菜单参数
+
+        ImageButton menu = findViewById(R.id.menu);
+        menu.setVisibility(showMenu ? View.VISIBLE : View.GONE); // 根据参数决定是否显示菜单
 
         Log.d("WebViewActivity", "URL: " + url);
 

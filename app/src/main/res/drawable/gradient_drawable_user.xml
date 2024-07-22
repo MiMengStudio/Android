@@ -6,6 +6,6 @@
         android:centerY="0.5"
         android:endColor="@color/colorPrimary"
         android:gradientRadius="50%"
-        android:startColor="@color/md_theme_background"
+        android:startColor="@color/background_white"
         android:type="linear" />
 </shape>

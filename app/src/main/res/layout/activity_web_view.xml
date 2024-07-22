@@ -45,6 +45,8 @@
                 android:layout_centerInParent="true"
                 android:maxWidth="240dp"
                 android:text="加载中..."
+                android:lines="1"
+                android:ellipsize="end"
                 android:textColor="@color/font_color"
                 android:textSize="20sp"
                 android:textStyle="bold" />
