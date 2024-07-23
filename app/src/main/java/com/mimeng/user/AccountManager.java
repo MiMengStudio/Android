@@ -87,8 +87,8 @@ public class AccountManager {
     protected static void updateAccountSignInTime(@NonNull Consumer<Integer> callback) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url(ACCOUNT_SERVICE_URL + "?act=isSignedIn?id=" +
-                        loggedIn.get_id() + "?token=" + loggedIn.getToken())
+                .url(ACCOUNT_SERVICE_URL + "?act=isSignedIn&id=" +
+                        loggedIn.getAccount() + "&token=" + loggedIn.getToken())
                 .get().build();
         Log.i(TAG, "Request to server for sign in info");
         client.newCall(request).enqueue(new Callback() {
@@ -102,7 +102,7 @@ public class AccountManager {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     try {
-                        JSONObject obj = new JSONObject(response.toString());
+                        JSONObject obj = new JSONObject(response.body().string());
                         if (obj.has("lastSignDate")) {
                             long time = obj.getLong("lastSignDate");
                             Log.d(TAG, "Update sign in date" + time);
@@ -114,7 +114,7 @@ public class AccountManager {
                         callback.accept(-1);
                     }
                 } else {
-                    Log.e(TAG, "Failed to GET Account Sign In Info, Code " + response.code());
+                    Log.e(TAG, "Failed to GET Account Sign In Info, Code " + response.code() + response.body().string());
                     callback.accept(-1);
                 }
             }
@@ -155,9 +155,10 @@ public class AccountManager {
     public static void performSigningIn(@NonNull Consumer<SignInInfo> callback) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url(ACCOUNT_SERVICE_URL + "?act=signIn?id=" +
-                        loggedIn.get_id() + "?token=" + loggedIn.getToken())
+                .url(ACCOUNT_SERVICE_URL + "?act=signIn&id=" +
+                        loggedIn.getAccount() + "&token=" + loggedIn.getToken())
                 .get().build();
+        Log.i(TAG, "Performing sign in");
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -169,10 +170,11 @@ public class AccountManager {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     try {
-                        JSONObject obj = new JSONObject(response.toString());
+                        JSONObject obj = new JSONObject(response.body().string());
                         switch (obj.getInt("code")) {
                             case 0:
                                 callback.accept(SignInInfo.SIGNED_SUCCESSFUL);
+                                break;
                             case 1:
                                 callback.accept(SignInInfo.SIGNED_IN);
                                 break;
@@ -187,7 +189,7 @@ public class AccountManager {
                         callback.accept(SignInInfo.UNKNOWN_ERROR);
                     }
                 } else {
-                    Log.e(TAG, "Failed to Sign In, Code " + response.code());
+                    Log.e(TAG, "Failed to Sign In, Code " + response.code() + response.body().string());
                     callback.accept(SignInInfo.UNKNOWN_ERROR);
                 }
             }

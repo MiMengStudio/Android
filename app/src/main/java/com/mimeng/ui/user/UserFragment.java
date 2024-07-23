@@ -32,9 +32,6 @@ public class UserFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_user, container, false);
-        loadUserLayout(view);
-
         binding = FragmentUserBinding.inflate(inflater, container, false);
 
         binding.userInfo.setOnClickListener(view1 -> {
@@ -87,14 +84,18 @@ public class UserFragment extends BaseFragment {
         }
 
         binding.fragmentUserSignInLayout.setOnClickListener(_v -> {
+                Log.d("F", "OnclickListener");
             if (AccountManager.hasLoggedIn()) {
+                    Log.d("F", "has lohh e");
                 AccountManager.performSigningIn(this::reloadSignInLayout);
             } else {
                 Toast.makeText(requireActivity(), "你还没登录呢", Toast.LENGTH_SHORT).show();
             }
         });
 
-        return view;
+        loadUserLayout(binding.getRoot());
+        
+        return binding.getRoot();
     }
 
     private void joinQQGroup(String key) {
