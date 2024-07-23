@@ -9,10 +9,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -44,7 +42,7 @@ public class WebViewActivity extends BaseActivity {
         Log.d("WebViewActivity", "URL: " + url);
 
         Toolbar toolbar = findViewById(R.id.web_activity_toolbar);
-        setLayoutMarginTop(toolbar,3);
+        resetLayoutTopMargin(toolbar, 3);
         setSupportActionBar(toolbar);
 
         View webView = findViewById(R.id.web_view);
@@ -59,16 +57,19 @@ public class WebViewActivity extends BaseActivity {
         // 添加 JavaScript 接口
         mAgentWeb.getJsInterfaceHolder().addJavaObject("android", new AndroidInterface(this));
 
-        findViewById(R.id.back).setOnClickListener(view -> {
-            if (mAgentWeb != null && mAgentWeb.getWebCreator().getWebView().canGoBack()) {
-                mAgentWeb.getWebCreator().getWebView().goBack(); // 后退
-            } else {
-                finish(); // 关闭当前页面
-            }
-        });
+        findViewById(R.id.back).setOnClickListener(view -> onBackPressed());
 
         ImageView close = findViewById(R.id.close);
         close.setOnClickListener(view -> finish());
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mAgentWeb != null && mAgentWeb.getWebCreator().getWebView().canGoBack()) {
+            mAgentWeb.getWebCreator().getWebView().goBack(); // 后退
+        } else {
+            finish(); // 关闭当前页面
+        }
     }
 
     @Override
@@ -122,6 +123,7 @@ public class WebViewActivity extends BaseActivity {
             mContext = context; // 在构造函数中初始化 Context 对象
         }
 
+        @SuppressWarnings("unused")
         @JavascriptInterface
         public void updateUserInfo(String accountInfo) {
             Log.d("WebViewActivity", "updateUserInfo called from JavaScript");

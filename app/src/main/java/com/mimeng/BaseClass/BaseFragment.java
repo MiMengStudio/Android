@@ -1,32 +1,40 @@
 package com.mimeng.BaseClass;
 
-import android.annotation.SuppressLint;
+import android.os.Bundle;
 import android.view.View;
-import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.mimeng.App;
 
 public class BaseFragment extends Fragment {
 
-    /**
-     * 获取状态栏高度偏移5dp
-     * @return 返回高度
-     */
-    public int getStatusBarHeight(){
-        @SuppressLint("InternalInsetResource")
-        int offsetId = requireActivity().getResources().getIdentifier("status_bar_height", "dimen", "android");
-        return requireActivity().getResources().getDimensionPixelOffset(offsetId) / 5;
+    private int topMarginTimes = 5;
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        resetLayoutTopMargin(view, topMarginTimes);
+    }
+
+    protected void resetLayoutTopMargin(@NonNull View root, int topMarginTimes) {
+        App.resetLayoutTopMargin(getContext(), root, topMarginTimes);
+    }
+
+    protected int getTopMarginTimes() {
+        return topMarginTimes;
     }
 
     /**
-     * 设置上边距的距离
-     * @param v view元素
-     * @param index 偏移率
+     * 设置上边距的距离, Default to 5
+     * @param topMarginTimes 偏移率
      */
-    public void setLayoutMarginTop(View v, int index) {
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0, getStatusBarHeight() * index, 0, 0);
-        v.setLayoutParams(params);
+    protected void setTopMarginTimes(int topMarginTimes) {
+        this.topMarginTimes = topMarginTimes;
+        if (getView() != null) {
+            resetLayoutTopMargin(getView(), topMarginTimes);
+        }
     }
-
 }

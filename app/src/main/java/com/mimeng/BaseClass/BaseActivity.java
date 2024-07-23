@@ -12,9 +12,11 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.mimeng.App;
 import com.mimeng.R;
 
 import okhttp3.Callback;
@@ -64,8 +66,6 @@ public class BaseActivity extends AppCompatActivity {
      * @param tClass 跳转到目标类
      * @param <T>    泛型
      */
-
-
     public <T> void toActivityHasBundle(Bundle bundle, Class<T> tClass) {
         Intent i = new Intent(this, tClass);
         i.putExtras(bundle);
@@ -135,26 +135,7 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * 获取状态栏高度偏移5dp
-     *
-     * @return 返回高度
-     */
-    public int getStatusBarHeight() {
-        @SuppressLint("InternalInsetResource")
-        int offsetId = this.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        return this.getResources().getDimensionPixelOffset(offsetId) / 5;
+    protected void resetLayoutTopMargin(@NonNull View root, int topMarginTimes) {
+        App.resetLayoutTopMargin(this, root, topMarginTimes);
     }
-
-    /**
-     * 设置上边距的距离
-     * @param v view元素
-     * @param index 偏移率
-     */
-    public void setLayoutMarginTop(View v, int index) {
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0, getStatusBarHeight() * index, 0, 0);
-        v.setLayoutParams(params);
-    }
-
 }
