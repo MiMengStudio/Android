@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,13 +18,16 @@ import androidx.annotation.Nullable;
 import com.mimeng.BaseClass.BaseFragment;
 import com.mimeng.R;
 import com.mimeng.WebViewActivity;
+import com.mimeng.databinding.FragmentUserBinding;
 import com.mimeng.user.Account;
 import com.mimeng.user.AccountManager;
+import com.mimeng.user.SignInInfo;
 
 import java.util.Locale;
 
 public class UserFragment extends BaseFragment {
     public static final int REQUEST_LOGIN = 1;
+    private FragmentUserBinding binding;
 
     @Nullable
     @Override
@@ -33,10 +35,11 @@ public class UserFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_user, container, false);
         loadUserLayout(view);
 
-        LinearLayout user_info = view.findViewById(R.id.user_info);
-        user_info.setOnClickListener(view1 -> {
+        binding = FragmentUserBinding.inflate(inflater, container, false);
+
+        binding.userInfo.setOnClickListener(view1 -> {
             Intent intent = new Intent(UserFragment.this.getActivity(), WebViewActivity.class);
-            intent.putExtra("url", "https://account.mimeng.fun?origin=MiMengAndroidAPP");
+            intent.putExtra("url", AccountManager.LOGIN_IN_URL);
             intent.putExtra("showMenu", false);
             startActivityForResult(intent, REQUEST_LOGIN);
         });
@@ -44,14 +47,12 @@ public class UserFragment extends BaseFragment {
         //价格表
         int[][] priceTable = {{19, 9}, {49, 24}, {178, 84}, {298, 168}};
         View[] vips = {
-                view.findViewById(R.id.vip_one_month),
-                view.findViewById(R.id.vip_three_month),
-                view.findViewById(R.id.vip_one_year),
-                view.findViewById(R.id.vip_forever)
+                binding.vipOneMonth,
+                binding.vipThreeMonth,
+                binding.vipOneYear,
+                binding.vipForever
         };
         final View[] vipSelected = {vips[0]};
-        TextView actualPriceText = view.findViewById(R.id.price_actual);
-        TextView discountedPriceText = view.findViewById(R.id.price_discounted);
         for (int vipIndex = 0; vipIndex < vips.length; ++vipIndex) {
             View vip = vips[vipIndex];
             int newPrice = priceTable[vipIndex][1],
@@ -60,29 +61,39 @@ public class UserFragment extends BaseFragment {
                 vipSelected[0].setBackgroundResource(R.color.background_white);
                 vipSelected[0] = vip;
                 vip.setBackgroundResource(R.drawable.bg_vip_buy);
-                actualPriceText.setText(String.format(Locale.getDefault(), "%d", newPrice));
-                discountedPriceText.setText(String.format(Locale.getDefault(), "已优惠￥%d", oldPrice - newPrice));
+                binding.priceActual.setText(String.format(Locale.getDefault(), "%d", newPrice));
+                binding.priceDiscounted.setText(String.format(Locale.getDefault(), "已优惠￥%d", oldPrice - newPrice));
             });
         }
 
-        View buyVip = view.findViewById(R.id.vip_buy);
-        buyVip.setOnClickListener(view1 -> {
+        binding.vipBuy.setOnClickListener(view1 -> {
             // TODO: 购买会员
             Toast.makeText(UserFragment.this.getActivity(), "支付系统维护中，请加Q群联系客服购买", Toast.LENGTH_LONG).show();
             Log.d("UserFragment", "Buy VIP button clicked");
         });
 
-        View joinGroup = view.findViewById(R.id.join_qq_group);
-        joinGroup.setOnClickListener(view1 -> joinQQGroup("G4thHaZyCI"));
+        binding.joinQqGroup.setOnClickListener(view1 -> joinQQGroup("G4thHaZyCI"));
 
-        View getHelp = view.findViewById(R.id.help_and_feedback);
-        getHelp.setOnClickListener(view1 -> {
+        binding.helpAndFeedback.setOnClickListener(view1 -> {
                     Intent intent = new Intent(UserFragment.this.getActivity(), WebViewActivity.class);
                     intent.putExtra("url", "https://support.qq.com/products/405243");
                     intent.putExtra("showMenu", true);
                     startActivity(intent);
                 }
         );
+
+        if (AccountManager.hasLoggedIn()) {
+            AccountManager.requireSignIn(this::reloadSignInLayout);
+        }
+
+        binding.fragmentUserSignInLayout.setOnClickListener(_v -> {
+            if (AccountManager.hasLoggedIn()) {
+                AccountManager.performSigningIn(this::reloadSignInLayout);
+            } else {
+                Toast.makeText(requireActivity(), "你还没登录呢", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         return view;
     }
 
@@ -94,6 +105,28 @@ public class UserFragment extends BaseFragment {
             startActivity(intent);
         } catch (Exception e) {
             Toast.makeText(UserFragment.this.getActivity(), "未安装手Q或安装的版本不支持", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void reloadSignInLayout(SignInInfo info) {
+        switch (info) {
+            case SIGNED_SUCCESSFUL:
+                requireActivity().runOnUiThread(
+                        () -> Toast.makeText(requireActivity(),
+                                "签到成功", Toast.LENGTH_SHORT).show());
+            case SIGNED_IN: // fall through
+                requireActivity().runOnUiThread(
+                        () -> binding.fragmentUserSignInTextView.setText("已签到"));
+                break;
+            case NEED_SIGN_IN:
+                requireActivity().runOnUiThread(
+                        () -> binding.fragmentUserSignInTextView.setText("未签到"));
+                break;
+            default:
+                requireActivity().runOnUiThread(
+                        () -> Toast.makeText(requireActivity(),
+                                info.getErrorMsg(), Toast.LENGTH_SHORT).show()
+                );
         }
     }
 
