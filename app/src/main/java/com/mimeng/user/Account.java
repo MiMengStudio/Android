@@ -1,8 +1,6 @@
 package com.mimeng.user;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import com.google.gson.Gson;
+import androidx.annotation.NonNull;
 
 public class Account {
     private String _id;
@@ -14,6 +12,9 @@ public class Account {
     private boolean internal;
     private long vipDate;
     private String miniuid;
+
+    /** {@see AccountManager#SignInResult} */
+    private long signInDate;
 
     // 无参构造函数
     public Account() {}
@@ -29,6 +30,7 @@ public class Account {
         this.internal = internal;
         this.vipDate = vipDate;
         this.miniuid = miniuid;
+
     }
 
     // Getter 和 Setter 方法
@@ -111,7 +113,7 @@ public class Account {
         return System.currentTimeMillis() < getVipDate();
     }
 
-    // toString 方法
+    @NonNull
     @Override
     public String toString() {
         return "Account{" +
@@ -124,7 +126,15 @@ public class Account {
                 ", internal=" + internal +
                 ", vipDate=" + vipDate +
                 ", miniuid='" + miniuid + '\'' +
+                ", signInDate=" + signInDate +
                 '}';
     }
 
+    public long getSignInDate() {
+        return signInDate;
+    }
+
+    public void setSignInDate(long signInDate) {
+        this.signInDate = signInDate;
+    }
 }
