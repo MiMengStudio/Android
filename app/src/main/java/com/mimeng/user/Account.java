@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 public class Account {
     private String _id;
-    private String account;
+    private String id;
     private String token;
     private String name;
     private String qq;
@@ -20,9 +20,9 @@ public class Account {
     public Account() {}
 
     // 全参构造函数
-    public Account(String _id, String account, String token, String name, String qq, long date, boolean internal, long vipDate, String miniuid) {
+    public Account(String _id, String id, String token, String name, String qq, long date, boolean internal, long vipDate, String miniuid) {
         this._id = _id;
-        this.account = account;
+        this.id = id;
         this.token = token;
         this.name = name;
         this.qq = qq;
@@ -42,12 +42,12 @@ public class Account {
         this._id = _id;
     }
 
-    public String getAccount() {
-        return account;
+    public String getID() {
+        return id;
     }
 
-    public void setAccount(String account) {
-        this.account = account;
+    public void setAccount(String id) {
+        this.id = id;
     }
 
     public String getToken() {
@@ -118,7 +118,7 @@ public class Account {
     public String toString() {
         return "Account{" +
                 "_id='" + _id + '\'' +
-                ", account='" + account + '\'' +
+                ", id='" + id + '\'' +
                 ", token='" + token + '\'' +
                 ", name='" + name + '\'' +
                 ", qq='" + qq + '\'' +

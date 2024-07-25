@@ -115,13 +115,24 @@ public class UserFragment extends BaseFragment {
                 requireActivity().runOnUiThread(
                         () -> Toast.makeText(requireActivity(),
                                 "签到成功", Toast.LENGTH_SHORT).show());
+                // 注意：这里应该添加一个 break; 否则会执行下面的代码
+                break;
             case SIGNED_IN: // fall through
+                // 设置文本颜色
                 requireActivity().runOnUiThread(
-                        () -> binding.fragmentUserSignInTextView.setText("已签到"));
+                        () -> binding.fragmentUserSignInTextView.setTextColor(
+                                requireContext().getResources().getColor(R.color.colorPrimary, null)
+                        )
+                );
+                // 设置文本内容
+                requireActivity().runOnUiThread(
+                        () -> binding.fragmentUserSignInTextView.setText("已签到")
+                );
                 break;
             case NEED_SIGN_IN:
                 requireActivity().runOnUiThread(
-                        () -> binding.fragmentUserSignInTextView.setText("未签到"));
+                        () -> binding.fragmentUserSignInTextView.setText("未签到")
+                );
                 break;
             default:
                 requireActivity().runOnUiThread(
