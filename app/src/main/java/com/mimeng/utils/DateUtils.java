@@ -3,10 +3,7 @@ package com.mimeng.utils;
 import java.util.Calendar;
 
 public final class DateUtils {
-    public static boolean isSameDay(Long unixTime1, Long unixTime2) {
-        if (unixTime1 == null || unixTime2 == null) {
-            return false;
-        }
+    public static boolean isSameDay(long unixTime1, long unixTime2) {
         Calendar a = Calendar.getInstance();
         a.setTimeInMillis(unixTime1);
         Calendar b = Calendar.getInstance();

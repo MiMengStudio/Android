@@ -18,6 +18,9 @@ public class App extends Application {
         super.onCreate();
         instance = this;
         AccountManager.tryLoadFromStorage(this);
+        if (AccountManager.hasLoggedIn()) {
+            AccountManager.updateAccountSignInTime();
+        }
     }
 
     /**
