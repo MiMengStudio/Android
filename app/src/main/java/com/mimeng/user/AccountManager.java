@@ -35,7 +35,7 @@ public class AccountManager {
 
     private static final CopyOnWriteArrayList<AccountSignInTimeListener> listeners = new CopyOnWriteArrayList<>();
     @Nullable
-    private static SignInInfo lastSignInInfo;
+    private static SignInInfo lastSignInInfo = null;
 
     /**
      * 保存 Account 对象到 SharedPreferences
@@ -138,6 +138,8 @@ public class AccountManager {
                             long time = obj.getLong("lastSignDate");
                             Log.d(TAG, "Update sign in date" + time);
                             loggedIn.setSignInDate(time);
+                        } else {
+                            notifyListenersUpdateSignInDate();
                         }
                     } catch (JSONException e) {
                         Log.e(TAG, "Json Syntax Error " + response, e);
@@ -176,6 +178,7 @@ public class AccountManager {
             public void onFailure(Call call, IOException e) {
                 Log.e(TAG, "Failed to GET Account Sign In Info", e);
                 lastSignInInfo = SignInInfo.UNKNOWN_ERROR;
+                notifyListenersUpdateSignInDate();
             }
 
             @Override
@@ -186,9 +189,11 @@ public class AccountManager {
                         switch (obj.getInt("code")) {
                             case 0:
                                 lastSignInInfo = SignInInfo.SIGNED_SUCCESSFUL;
+                                loggedIn.setSignInDate(obj.getLong("date"));
                                 break;
                             case 1:
                                 lastSignInInfo = SignInInfo.SIGNED_IN;
+                                loggedIn.setSignInDate(obj.getLong("date"));
                                 break;
                             case 2:
                                 lastSignInInfo = SignInInfo.INVALID_TOKEN;
@@ -196,14 +201,16 @@ public class AccountManager {
                             case 3:
                                 lastSignInInfo = SignInInfo.USER_NOT_FOUND;
                         }
-                        loggedIn.setSignInDate(obj.getLong("date"));
+                        notifyListenersUpdateSignInDate();
                     } catch (JSONException e) {
                         Log.e(TAG, "Json Syntax Error " + response, e);
                         lastSignInInfo = SignInInfo.UNKNOWN_ERROR;
+                        notifyListenersUpdateSignInDate();
                     }
                 } else {
                     Log.e(TAG, "Failed to Sign In, Code " + response.code() + response.body().string());
                     lastSignInInfo = SignInInfo.UNKNOWN_ERROR;
+                    notifyListenersUpdateSignInDate();
                 }
             }
         });

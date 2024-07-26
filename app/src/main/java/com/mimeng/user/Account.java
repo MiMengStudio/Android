@@ -17,7 +17,7 @@ public class Account {
     public Account() {}
 
     // 全参构造函数
-    public Account(String _id, String id, String token, String name, String qq, long date, boolean internal, long vipDate, String miniuid) {
+    public Account(String id, String token, String name, String qq, long date, boolean internal, long vipDate, String miniuid) {
         this.id = id;
         this.token = token;
         this.name = name;
