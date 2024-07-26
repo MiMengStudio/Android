@@ -28,6 +28,7 @@ import okhttp3.Response;
 public class AccountManager {
     public static final String LOGIN_IN_URL = "https://account.mimeng.fun?origin=MiMengAndroidAPP";
     public static final String ACCOUNT_SERVICE_URL = "https://cloud.mimeng.fun/account";
+    //public static final String ACCOUNT_SERVICE_URL = "http://127.0.0.1:3000/account";
     private static final String TAG = "AccountManager";
     @Nullable
     private static Account loggedIn; // 缓存全局已登录账号
@@ -88,7 +89,7 @@ public class AccountManager {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(ACCOUNT_SERVICE_URL + "?act=isSignedIn&id=" +
-                        loggedIn.getAccount() + "&token=" + loggedIn.getToken())
+                        loggedIn.getID() + "&token=" + loggedIn.getToken())
                 .get().build();
         Log.i(TAG, "Request to server for sign in info");
         client.newCall(request).enqueue(new Callback() {
@@ -156,7 +157,7 @@ public class AccountManager {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(ACCOUNT_SERVICE_URL + "?act=signIn&id=" +
-                        loggedIn.getAccount() + "&token=" + loggedIn.getToken())
+                        loggedIn.getID() + "&token=" + loggedIn.getToken())
                 .get().build();
         Log.i(TAG, "Performing sign in");
         client.newCall(request).enqueue(new Callback() {

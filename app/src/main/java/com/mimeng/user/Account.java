@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 public class Account {
     private String _id;
-    private String account;
+    private String id;
     private String token;
     private String name;
     private String qq;
@@ -12,17 +12,15 @@ public class Account {
     private boolean internal;
     private long vipDate;
     private String miniuid;
-
-    /** {@see AccountManager#SignInResult} */
     private long signInDate;
 
     // 无参构造函数
     public Account() {}
 
     // 全参构造函数
-    public Account(String _id, String account, String token, String name, String qq, long date, boolean internal, long vipDate, String miniuid) {
+    public Account(String _id, String id, String token, String name, String qq, long date, boolean internal, long vipDate, String miniuid) {
         this._id = _id;
-        this.account = account;
+        this.id = id;
         this.token = token;
         this.name = name;
         this.qq = qq;
@@ -30,7 +28,6 @@ public class Account {
         this.internal = internal;
         this.vipDate = vipDate;
         this.miniuid = miniuid;
-
     }
 
     // Getter 和 Setter 方法
@@ -42,12 +39,12 @@ public class Account {
         this._id = _id;
     }
 
-    public String getAccount() {
-        return account;
+    public String getID() {
+        return id;
     }
 
-    public void setAccount(String account) {
-        this.account = account;
+    public void setAccount(String id) {
+        this.id = id;
     }
 
     public String getToken() {
@@ -105,6 +102,15 @@ public class Account {
     public void setMiniuid(String miniuid) {
         this.miniuid = miniuid;
     }
+
+    public long getSignInDate() {
+        return signInDate;
+    }
+
+    public void setSignInDate(long signInDate) {
+        this.signInDate = signInDate;
+    }
+
     
     /**
       * 根据当前时间判断当前用户是否是vip
@@ -118,7 +124,7 @@ public class Account {
     public String toString() {
         return "Account{" +
                 "_id='" + _id + '\'' +
-                ", account='" + account + '\'' +
+                ", id='" + id + '\'' +
                 ", token='" + token + '\'' +
                 ", name='" + name + '\'' +
                 ", qq='" + qq + '\'' +
@@ -128,13 +134,5 @@ public class Account {
                 ", miniuid='" + miniuid + '\'' +
                 ", signInDate=" + signInDate +
                 '}';
-    }
-
-    public long getSignInDate() {
-        return signInDate;
-    }
-
-    public void setSignInDate(long signInDate) {
-        this.signInDate = signInDate;
     }
 }

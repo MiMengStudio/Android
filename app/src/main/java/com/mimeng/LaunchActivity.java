@@ -18,6 +18,8 @@ public class LaunchActivity extends BaseActivity {
     private final String PREFS_NAME = "MyPrefsFile";
     private final String KEY_GUIDE_SEEN = "hasSeenGuide"; // 仅保留是否看过教程的键
 
+    //设置preferences
+
     @SuppressLint("ObsoleteSdkInt")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
