@@ -9,21 +9,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.fragment.app.Fragment;
 
+import com.mimeng.BaseClass.BaseFragment;
 import com.mimeng.R;
 import com.mimeng.ResourceManagementActivity;
-import com.mimeng.ui.user.UserFragment;
+import com.mimeng.ui.search.SearchPage;
 import com.mimeng.user.Account;
 import com.mimeng.user.AccountManager;
-import com.squareup.picasso.Picasso;
 import com.youth.banner.Banner;
 import com.youth.banner.adapter.BannerImageAdapter;
 import com.youth.banner.holder.BannerImageHolder;
@@ -31,9 +28,8 @@ import com.youth.banner.indicator.CircleIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends BaseFragment {
 
     private Banner banner;
     private List<Integer> bannerData;
@@ -50,6 +46,9 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         EditText searchEdit = view.findViewById(R.id.search_edit);
+        LinearLayout goSearch = view.findViewById(R.id.search);
+
+        goSearch.setOnClickListener(view1 -> toActivity(SearchPage.class));
 
         if (AccountManager.hasLoggedIn()) {
             Account account = AccountManager.get();

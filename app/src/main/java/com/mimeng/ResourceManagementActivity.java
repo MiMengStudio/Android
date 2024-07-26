@@ -172,6 +172,10 @@ public class ResourceManagementActivity extends BaseActivity {
                         IOUtils.copy(zis, bos);
                     }
                 }
+
+                // 存入数据库
+                IOUtils.sqlInsert(ResourceManagementActivity.this,privateDir+"/"+entryName);
+
                 mHandler.post(() -> {
                     int pro_size = (int) ((size * 100) / totalSize);
                     progressBar.setProgress(pro_size);
