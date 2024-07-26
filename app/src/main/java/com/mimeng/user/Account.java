@@ -12,8 +12,6 @@ public class Account {
     private boolean internal;
     private long vipDate;
     private String miniuid;
-
-    /** {@see AccountManager#SignInResult} */
     private long signInDate;
 
     // 无参构造函数
@@ -30,7 +28,6 @@ public class Account {
         this.internal = internal;
         this.vipDate = vipDate;
         this.miniuid = miniuid;
-
     }
 
     // Getter 和 Setter 方法
@@ -105,6 +102,15 @@ public class Account {
     public void setMiniuid(String miniuid) {
         this.miniuid = miniuid;
     }
+
+    public long getSignInDate() {
+        return signInDate;
+    }
+
+    public void setSignInDate(long signInDate) {
+        this.signInDate = signInDate;
+    }
+
     
     /**
       * 根据当前时间判断当前用户是否是vip
@@ -128,13 +134,5 @@ public class Account {
                 ", miniuid='" + miniuid + '\'' +
                 ", signInDate=" + signInDate +
                 '}';
-    }
-
-    public long getSignInDate() {
-        return signInDate;
-    }
-
-    public void setSignInDate(long signInDate) {
-        this.signInDate = signInDate;
     }
 }

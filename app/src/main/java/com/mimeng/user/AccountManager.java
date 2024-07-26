@@ -27,8 +27,8 @@ import okhttp3.Response;
 
 public class AccountManager {
     public static final String LOGIN_IN_URL = "https://account.mimeng.fun?origin=MiMengAndroidAPP";
-    //public static final String ACCOUNT_SERVICE_URL = "https://cloud.mimeng.fun/account";
-    public static final String ACCOUNT_SERVICE_URL = "http://127.0.0.1:3000/account";
+    public static final String ACCOUNT_SERVICE_URL = "https://cloud.mimeng.fun/account";
+    //public static final String ACCOUNT_SERVICE_URL = "http://127.0.0.1:3000/account";
     private static final String TAG = "AccountManager";
     @Nullable
     private static Account loggedIn; // 缓存全局已登录账号
@@ -40,9 +40,7 @@ public class AccountManager {
      */
     public static void save(Context context, Account account) {
         Gson gson = new Gson();
-        //String json = gson.toJson(account);
-        //暂时用这个代替
-        String json = "{\"_id\":\"6698e3738edc6ff92b0a1175\",\"id\":\"Test123\",\"token\":\"qlUcXKBd0Isr0wH3xpH2HalD2S6TQ1RcbQqT9SKZXfN16IPzJHrCBQ18bhycDScv\",\"name\":\"测试账号\",\"qq\":\"3224815186\",\"date\":1721295731006,\"miniuid\":\"158087577\",\"vipDate\":1730304438875,\"integral\":4,\"signInDate\":1721900911481}";
+        String json = gson.toJson(account);
         SharedPreferences sharedPreferences = context.getSharedPreferences("AccountPrefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("account", json);
@@ -57,9 +55,7 @@ public class AccountManager {
      */
     public static void tryLoadFromStorage(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("AccountPrefs", Context.MODE_PRIVATE);
-        //String json = sharedPreferences.getString("account", null);
-        //暂时用这个代替
-        String json = "{\"_id\":\"6698e3738edc6ff92b0a1175\",\"id\":\"Test123\",\"token\":\"qlUcXKBd0Isr0wH3xpH2HalD2S6TQ1RcbQqT9SKZXfN16IPzJHrCBQ18bhycDScv\",\"name\":\"测试账号\",\"qq\":\"3224815186\",\"date\":1721295731006,\"miniuid\":\"158087577\",\"vipDate\":1730304438875,\"integral\":4,\"signInDate\":1721900911481}";
+        String json = sharedPreferences.getString("account", null);
         if (json != null) {
             // Gson解析也是有开销的，能缓存就缓存
             Gson gson = new Gson();
