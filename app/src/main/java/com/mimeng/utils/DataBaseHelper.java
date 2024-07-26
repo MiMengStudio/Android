@@ -11,7 +11,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     public static String TABLE_NAME = "data_search_table";
     private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "(" +
-            "id INTEGER PRIMARY KEY AUTOINCREMENT,icon_path varchar(255),icon_name varchar(255));";
+            "id INTEGER PRIMARY KEY AUTOINCREMENT, icon_path varchar(255), icon_name varchar(255));";
 
     public DataBaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

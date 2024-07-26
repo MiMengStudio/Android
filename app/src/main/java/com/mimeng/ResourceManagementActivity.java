@@ -2,6 +2,7 @@ package com.mimeng;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,6 +22,8 @@ import com.google.gson.Gson;
 import com.mimeng.BaseClass.BaseActivity;
 import com.mimeng.BaseClass.BaseDialog;
 import com.mimeng.resourcepack.ResourcePackInfo;
+import com.mimeng.utils.DataBaseHelper;
+import com.mimeng.utils.DataBaseUtils;
 import com.mimeng.utils.IOUtils;
 
 import java.io.BufferedOutputStream;
@@ -118,7 +121,7 @@ public class ResourceManagementActivity extends BaseActivity {
                     msg.obj = "读取文件时发生错误";
                     Log.e(TAG, "Error when reading files", e);
                 }
-                mHandler.sendMessage(msg);    
+                mHandler.sendMessage(msg);
             }, "ResourceReader").start();
         }
     }
@@ -128,7 +131,7 @@ public class ResourceManagementActivity extends BaseActivity {
         File jsonFile = new File(getExternalFilesDir(null), "res/item/info.json");
         Log.d(TAG, "File exists: " + jsonFile.exists() + ", Path: " + jsonFile.getAbsolutePath());
         if (jsonFile.exists()) {
-            try(Reader reader = new InputStreamReader(new FileInputStream(jsonFile), StandardCharsets.UTF_8)) {
+            try (Reader reader = new InputStreamReader(new FileInputStream(jsonFile), StandardCharsets.UTF_8)) {
                 Gson gson = new Gson();
                 ResourcePackInfo resourcePackInfo = gson.fromJson(reader, ResourcePackInfo.class);
                 // 显示ResourcePackInfo的内容
@@ -174,12 +177,17 @@ public class ResourceManagementActivity extends BaseActivity {
                 }
 
                 // 存入数据库
-                IOUtils.sqlInsert(ResourceManagementActivity.this,privateDir+"/"+entryName);
+                DataBaseUtils dataBaseUtils = new DataBaseUtils(ResourceManagementActivity.this);
+                ContentValues values = new ContentValues();
+                values.put("icon_name", entryName);
+                values.put("icon_path", privateDir + "/" + entryName);
+                dataBaseUtils.insertOverwriteData(values, DataBaseHelper.TABLE_NAME);
+
 
                 mHandler.post(() -> {
                     int pro_size = (int) ((size * 100) / totalSize);
                     progressBar.setProgress(pro_size);
-                    progressText.setText("导入资源中，请稍等...("+pro_size+"%)");
+                    progressText.setText("导入资源中，请稍等...(" + pro_size + "%)");
                 });
             }
             zis.closeEntry();
