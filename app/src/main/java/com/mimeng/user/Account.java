@@ -3,7 +3,6 @@ package com.mimeng.user;
 import androidx.annotation.NonNull;
 
 public class Account {
-    private String _id;
     private String id;
     private String token;
     private String name;
@@ -18,8 +17,7 @@ public class Account {
     public Account() {}
 
     // 全参构造函数
-    public Account(String _id, String id, String token, String name, String qq, long date, boolean internal, long vipDate, String miniuid) {
-        this._id = _id;
+    public Account(String id, String token, String name, String qq, long date, boolean internal, long vipDate, String miniuid) {
         this.id = id;
         this.token = token;
         this.name = name;
@@ -31,19 +29,11 @@ public class Account {
     }
 
     // Getter 和 Setter 方法
-    public String get_id() {
-        return _id;
-    }
-
-    public void set_id(String _id) {
-        this._id = _id;
-    }
-
     public String getID() {
         return id;
     }
 
-    public void setAccount(String id) {
+    public void setID(String id) {
         this.id = id;
     }
 
@@ -107,8 +97,9 @@ public class Account {
         return signInDate;
     }
 
-    public void setSignInDate(long signInDate) {
+    protected void setSignInDate(long signInDate) {
         this.signInDate = signInDate;
+        AccountManager.notifyListenersUpdateSignInDate();
     }
 
     
@@ -123,7 +114,6 @@ public class Account {
     @Override
     public String toString() {
         return "Account{" +
-                "_id='" + _id + '\'' +
                 ", id='" + id + '\'' +
                 ", token='" + token + '\'' +
                 ", name='" + name + '\'' +

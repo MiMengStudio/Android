@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,6 +38,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.ref.WeakReference;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -165,6 +167,7 @@ public class ResourceManagementActivity extends BaseActivity {
             if (!privateDir.exists()) {
                 privateDir.mkdirs();
             }
+
             while ((zipEntry = zis.getNextEntry()) != null) {
                 String entryName = zipEntry.getName();
                 if (!zipEntry.isDirectory()) {
@@ -175,21 +178,15 @@ public class ResourceManagementActivity extends BaseActivity {
                         IOUtils.copy(zis, bos);
                     }
                 }
-
-                // 存入数据库
-                DataBaseUtils dataBaseUtils = new DataBaseUtils(ResourceManagementActivity.this);
-                ContentValues values = new ContentValues();
-                values.put("icon_name", entryName);
-                values.put("icon_path", privateDir + "/" + entryName);
-                dataBaseUtils.insertOverwriteData(values, DataBaseHelper.TABLE_NAME);
-
-
+                
                 mHandler.post(() -> {
                     int pro_size = (int) ((size * 100) / totalSize);
                     progressBar.setProgress(pro_size);
                     progressText.setText("导入资源中，请稍等...(" + pro_size + "%)");
                 });
+
             }
+
             zis.closeEntry();
 
         } catch (Exception e) {

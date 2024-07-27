@@ -8,8 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,13 +20,13 @@ import com.mimeng.databinding.FragmentUserBinding;
 import com.mimeng.user.Account;
 import com.mimeng.user.AccountManager;
 import com.mimeng.user.SignInInfo;
-import com.mimeng.utils.DateUtils;
 
 import java.util.Locale;
 
 public class UserFragment extends BaseFragment {
     public static final int REQUEST_LOGIN = 1;
     private FragmentUserBinding binding;
+    private final AccountManager.AccountSignInTimeListener listener = this::reloadSignInLayout;
 
     @Nullable
     @Override
@@ -80,22 +78,17 @@ public class UserFragment extends BaseFragment {
                 }
         );
 
-        if (AccountManager.hasLoggedIn()) {
-            AccountManager.requireSignIn(this::reloadSignInLayout);
-        }
+        AccountManager.addSignInDateUpdateListener(listener);
 
         binding.fragmentUserSignInLayout.setOnClickListener(_v -> {
-                Log.d("F", "OnclickListener");
             if (AccountManager.hasLoggedIn()) {
-                    Log.d("F", "has lohh e");
-                AccountManager.performSigningIn(this::reloadSignInLayout);
+                AccountManager.performSigningIn();
             } else {
                 Toast.makeText(requireActivity(), "你还没登录呢", Toast.LENGTH_SHORT).show();
             }
         });
 
-        loadUserLayout(binding.getRoot(), false);
-        
+        loadUserLayout();
         return binding.getRoot();
     }
 
@@ -116,24 +109,26 @@ public class UserFragment extends BaseFragment {
                 requireActivity().runOnUiThread(
                         () -> Toast.makeText(requireActivity(),
                                 "签到成功", Toast.LENGTH_SHORT).show());
-                // 注意：这里应该添加一个 break; 否则会执行下面的代码
-                break;
+                // 签到成功的同时也更新UserFragment的UI
             case SIGNED_IN: // fall through
-                // 设置文本颜色
                 requireActivity().runOnUiThread(
-                        () -> binding.fragmentUserSignInTextView.setTextColor(
-                                requireContext().getResources().getColor(R.color.colorPrimary, null)
-                        )
-                );
-                // 设置文本内容
-                requireActivity().runOnUiThread(
-                        () -> binding.fragmentUserSignInTextView.setText("已签到")
+                        () -> {
+                            // 设置文本颜色
+                            binding.fragmentUserSignInTextView.setTextColor(
+                                    requireContext().getResources().getColor(R.color.colorPrimary, null));
+                            // 设置文本内容
+                            binding.fragmentUserSignInTextView.setText("已签到");
+                        }
                 );
                 break;
             case NEED_SIGN_IN:
                 requireActivity().runOnUiThread(
                         () -> binding.fragmentUserSignInTextView.setText("未签到")
                 );
+                break;
+            case INVALID_TOKEN:
+            case USER_NOT_FOUND:
+            case UNKNOWN_ERROR:
                 break;
             default:
                 requireActivity().runOnUiThread(
@@ -143,29 +138,18 @@ public class UserFragment extends BaseFragment {
         }
     }
 
-    private void loadUserLayout(@NonNull View root, Boolean isFirstTimeLogin) {
+    private void loadUserLayout() {
         // 获取 Account 信息
         if (AccountManager.hasLoggedIn()) {
             Account account = AccountManager.get();
             Log.d("Account", "Retrieved Account Info: " + account);
             // TODO 用户相关功能
-            ImageView headImage = root.findViewById(R.id.head);
-            AccountManager.loadUserIcon(headImage);
+            AccountManager.loadUserIcon(binding.head);
 
-            TextView userNameText = root.findViewById(R.id.user_name);
-            userNameText.setText(account.getName());
+            binding.userName.setText(account.getName());
             if (account.isVip()) {
-                ImageView userVipImage = root.findViewById(R.id.user_vip);
-                userVipImage.setImageResource(R.drawable.ic_vip_activat);
+                binding.userVip.setImageResource(R.drawable.ic_vip_activat);
             }
-            TextView signInTextView = root.findViewById(R.id.fragment_user_sign_in_text_view);
-            long currentTime = System.currentTimeMillis();
-
-            if (isFirstTimeLogin && DateUtils.isSameDay(currentTime, account.getSignInDate())) {
-                signInTextView.setText("已签到");
-                signInTextView.setTextColor(requireContext().getResources().getColor(R.color.colorPrimary, null));
-            }
-
         } else {
             Log.d("Account", "No Account Info found.");
         }
@@ -180,10 +164,16 @@ public class UserFragment extends BaseFragment {
                 if (accountInfo != null) {
                     // 更新 UI 或处理登录结果
                     Log.d("UserFragment", "Received login result: " + accountInfo);
-                    loadUserLayout(requireView(), true);
+                    loadUserLayout();
                 }
             }
         }
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        AccountManager.removeSignInDateUpdateListener(listener);
+    }
 }
