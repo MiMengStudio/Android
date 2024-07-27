@@ -36,8 +36,5 @@ public class SearchPage extends BaseActivity {
             Log.e(TAG, "run: " + e);
         }
 
-        TextView test = findViewById(R.id.test);
-        test.setText(values);
-
     }
 }
