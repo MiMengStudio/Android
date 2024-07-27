@@ -94,6 +94,10 @@ public class AccountManager {
         for (AccountSignInTimeListener listener : listeners) {
             listener.onReceive(lastSignInInfo);
         }
+        
+        if (lastSignInInfo == SignInInfo.SIGNED_SUCCESSFUL) {
+            lastSignInInfo = SignInInfo.SIGNED_IN;
+        }
     }
 
     /**
