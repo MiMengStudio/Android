@@ -1,5 +1,6 @@
 package com.mimeng.ui.home;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +14,7 @@ import androidx.annotation.Nullable;
 import com.mimeng.BaseClass.BaseFragment;
 import com.mimeng.R;
 import com.mimeng.ResourceManagementActivity;
+import com.mimeng.SearchActivity;
 import com.mimeng.databinding.FragmentHomeBinding;
 import com.mimeng.user.Account;
 import com.mimeng.user.AccountManager;
@@ -63,6 +65,12 @@ public class HomeFragment extends BaseFragment {
 
         banner.setIndicator(new CircleIndicator(inflater.getContext()));
         banner.start();
+
+        binding.search.setOnClickListener(v -> {
+            Intent intent = new Intent(inflater.getContext(), SearchActivity.class);
+            startActivity(intent);
+            ((Activity) inflater.getContext()).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        });
 
         binding.resourceManagement.setOnClickListener(v -> {
             // 创建一个新的Intent来打开ResourceManagementActivity

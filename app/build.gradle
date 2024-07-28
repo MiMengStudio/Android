@@ -47,6 +47,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata:2.5.1'
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation 'androidx.navigation:navigation-ui:2.5.3'
     
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
@@ -57,6 +58,6 @@ dependencies {
     implementation 'io.github.youth5201314:banner:2.2.3' //轮播组件
     implementation 'com.google.code.gson:gson:2.11.0' //json解析
     implementation 'com.github.Dimezis:BlurView:version-2.0.3' //高斯模糊
-    implementation 'com.squareup.picasso:picasso:2.8'
-    implementation 'androidx.cardview:cardview:1.0.0'//图片加载库
+    implementation 'com.squareup.picasso:picasso:2.8'//图片加载库
+    implementation 'androidx.cardview:cardview:1.0.0'
 }
