@@ -9,13 +9,11 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import com.mimeng.BaseClass.BaseFragment;
 import com.mimeng.R;
 import com.mimeng.ResourceManagementActivity;
 import com.mimeng.databinding.FragmentHomeBinding;
-import com.mimeng.ui.search.SearchPage;
 import com.mimeng.user.Account;
 import com.mimeng.user.AccountManager;
 import com.youth.banner.Banner;
@@ -71,8 +69,6 @@ public class HomeFragment extends BaseFragment {
             Intent intent = new Intent(inflater.getContext(), ResourceManagementActivity.class);
             startActivity(intent);
         });
-
-        binding.search.setOnClickListener(v -> toActivity(SearchPage.class));
 
         return binding.getRoot();
     }

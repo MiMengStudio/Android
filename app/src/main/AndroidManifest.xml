@@ -50,8 +50,5 @@
             android:name=".WebViewActivity"
             android:label=""
             android:theme="@style/WebViewActivity.Theme" />
-        <activity
-            android:name=".ui.search.SearchPage"
-            android:theme="@style/AppTheme" />
     </application>
 </manifest>
