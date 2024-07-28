@@ -8,10 +8,10 @@ import androidx.annotation.Nullable;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "mi_meng";
-    private static final int DATABASE_VERSION = 2;
-    public static String TABLE_NAME = "data_search_table";
+    private static final int DATABASE_VERSION = 3;
+    public static String TABLE_NAME = "search_history";
     private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "(" +
-            "id INTEGER PRIMARY KEY AUTOINCREMENT, icon_path varchar(255), icon_name varchar(255));";
+            "id INTEGER PRIMARY KEY AUTOINCREMENT, content varchar(255));";
 
     public DataBaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
