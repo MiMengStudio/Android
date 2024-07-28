@@ -2,7 +2,9 @@ package com.mimeng;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,6 +23,8 @@ import com.google.gson.Gson;
 import com.mimeng.BaseClass.BaseActivity;
 import com.mimeng.BaseClass.BaseDialog;
 import com.mimeng.resourcepack.ResourcePackInfo;
+import com.mimeng.utils.DataBaseHelper;
+import com.mimeng.utils.DataBaseUtils;
 import com.mimeng.utils.IOUtils;
 
 import java.io.BufferedOutputStream;
@@ -34,6 +38,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.ref.WeakReference;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -118,7 +123,7 @@ public class ResourceManagementActivity extends BaseActivity {
                     msg.obj = "读取文件时发生错误";
                     Log.e(TAG, "Error when reading files", e);
                 }
-                mHandler.sendMessage(msg);    
+                mHandler.sendMessage(msg);
             }, "ResourceReader").start();
         }
     }
@@ -128,7 +133,7 @@ public class ResourceManagementActivity extends BaseActivity {
         File jsonFile = new File(getExternalFilesDir(null), "res/item/info.json");
         Log.d(TAG, "File exists: " + jsonFile.exists() + ", Path: " + jsonFile.getAbsolutePath());
         if (jsonFile.exists()) {
-            try(Reader reader = new InputStreamReader(new FileInputStream(jsonFile), StandardCharsets.UTF_8)) {
+            try (Reader reader = new InputStreamReader(new FileInputStream(jsonFile), StandardCharsets.UTF_8)) {
                 Gson gson = new Gson();
                 ResourcePackInfo resourcePackInfo = gson.fromJson(reader, ResourcePackInfo.class);
                 // 显示ResourcePackInfo的内容
@@ -162,6 +167,7 @@ public class ResourceManagementActivity extends BaseActivity {
             if (!privateDir.exists()) {
                 privateDir.mkdirs();
             }
+
             while ((zipEntry = zis.getNextEntry()) != null) {
                 String entryName = zipEntry.getName();
                 if (!zipEntry.isDirectory()) {
@@ -172,12 +178,15 @@ public class ResourceManagementActivity extends BaseActivity {
                         IOUtils.copy(zis, bos);
                     }
                 }
+                
                 mHandler.post(() -> {
                     int pro_size = (int) ((size * 100) / totalSize);
                     progressBar.setProgress(pro_size);
-                    progressText.setText("导入资源中，请稍等...("+pro_size+"%)");
+                    progressText.setText("导入资源中，请稍等...(" + pro_size + "%)");
                 });
+
             }
+
             zis.closeEntry();
 
         } catch (Exception e) {

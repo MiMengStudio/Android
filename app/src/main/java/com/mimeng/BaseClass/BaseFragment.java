@@ -1,5 +1,7 @@
 package com.mimeng.BaseClass;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -36,5 +38,15 @@ public class BaseFragment extends Fragment {
         if (getView() != null) {
             resetLayoutTopMargin(getView(), topMarginTimes);
         }
+    }
+
+    /**
+     * 跳转到其他页面
+     * @param c 类
+     * @param <T> 泛型
+     */
+    protected <T> void toActivity( Class<T> c ){
+        Intent i = new Intent(requireActivity(),c);
+        requireActivity().startActivity(i);
     }
 }

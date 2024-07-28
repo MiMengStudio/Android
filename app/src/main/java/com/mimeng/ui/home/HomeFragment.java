@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
+import com.mimeng.BaseClass.BaseFragment;
 import com.mimeng.R;
 import com.mimeng.ResourceManagementActivity;
 import com.mimeng.SearchActivity;
@@ -26,7 +26,7 @@ import com.youth.banner.indicator.CircleIndicator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends BaseFragment {
     private final AccountManager.AccountSignInTimeListener listener = info -> {
         switch (info) {
             case SIGNED_SUCCESSFUL:
