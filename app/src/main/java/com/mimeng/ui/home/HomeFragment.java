@@ -74,8 +74,7 @@ public class HomeFragment extends BaseFragment {
 
         binding.resourceManagement.setOnClickListener(v -> {
             // 创建一个新的Intent来打开ResourceManagementActivity
-            Intent intent = new Intent(inflater.getContext(), ResourceManagementActivity.class);
-            startActivity(intent);
+            toActivity(ResourceManagementActivity.class);
         });
 
         return binding.getRoot();

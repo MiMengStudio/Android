@@ -9,10 +9,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import androidx.annotation.NonNull;
-
 import com.mimeng.BaseClass.BaseActivity;
-import com.mimeng.R;
 import com.mimeng.databinding.ActivitySearchBinding;
 
 
@@ -29,15 +26,13 @@ public class SearchActivity extends BaseActivity {
         binding = ActivitySearchBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.back.setOnClickListener(view -> {
-            finish();
-        });
+        binding.back.setOnClickListener(view -> finish());
 
         binding.searchEdit.requestFocus();
 
         binding.search.setOnClickListener(v -> {
             String search = binding.searchEdit.getText().toString();
-            if (search.length() > 0) {
+            if (!search.isEmpty()) {
                 Intent intent = new Intent(this, SearchResultActivity.class);
                 intent.putExtra("search", search);
                 startActivity(intent);
