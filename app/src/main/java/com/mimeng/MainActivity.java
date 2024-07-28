@@ -81,43 +81,6 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-            View v = getCurrentFocus();
-            if (isShouldHideInput(v,ev)) {
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (imm != null) {
-                    assert v != null;
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                }
-            }
-            return super.dispatchTouchEvent(ev);
-        }
-        if (getWindow().superDispatchTouchEvent(ev)) {
-            return true;
-        }
-        return super.dispatchTouchEvent(ev);
-    }
-
-    /**
-     * 隐藏软键盘(EditText)
-     * @param v 视图
-     * @param event 触摸\点击事件
-     * @return 返回
-     */
-    public boolean isShouldHideInput(View v, MotionEvent event) {
-        if (v instanceof EditText) {
-            Rect rect = new Rect();
-            v.getGlobalVisibleRect(rect);
-            // 如果点击事件在EditText的范围内，则不隐藏软键盘
-            return !rect.contains((int) event.getRawX(), (int) event.getRawY());
-        }
-        return false;
-    }
-
-
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         binding = null; // 避免内存泄漏

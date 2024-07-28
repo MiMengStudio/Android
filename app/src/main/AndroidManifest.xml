@@ -45,6 +45,12 @@
             android:name=".ResourceManagementActivity"
             android:theme="@style/AppTheme" />
         <activity
+            android:name=".SearchActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".SearchResultActivity"
+            android:theme="@style/AppTheme" />
+        <activity
             android:name=".WebViewActivity"
             android:label=""
             android:theme="@style/WebViewActivity.Theme" />
