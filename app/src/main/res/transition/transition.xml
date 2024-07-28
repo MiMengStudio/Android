@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <transitionSet xmlns:android="http://schemas.android.com/apk/res/android">
-    <fade>
+    <fade android:fadingMode="fade_in" android:duration="300">
+        <targets>
+            <target android:targetId="@+id/container" />
+        </targets>
+    </fade>
+
+    <fade android:fadingMode="fade_out" android:duration="300">
         <targets>
             <target android:targetId="@+id/container" />
         </targets>
