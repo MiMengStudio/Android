@@ -71,7 +71,7 @@
                         android:singleLine="true"
                         android:text="请登录"
                         android:textColor="@color/font_color"
-                        android:textSize="20sp"
+                        android:textSize="20dp"
                         android:textStyle="bold">
 
                     </TextView>
