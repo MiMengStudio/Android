@@ -72,8 +72,8 @@
                 android:layout_height="24dp"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="0dp"
-                app:cardBackgroundColor="@color/background_white"
-                app:strokeColor="@color/font_color_grey"
+                app:cardBackgroundColor="@color/colorPrimary"
+                app:strokeColor="@color/colorPrimary"
                 app:strokeWidth="1dp">
 
                 <LinearLayout
@@ -86,14 +86,14 @@
                         android:layout_height="18dp"
                         android:translationX="-2dp"
                         android:src="@drawable/ic_select"
-                        app:tint="@color/font_color_grey" />
+                        app:tint="@color/font_color_white" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="已关注"
                         android:textSize="14dp"
-                        android:textColor="@color/font_color_grey"/>
+                        android:textColor="@color/font_color_white"/>
 
                 </LinearLayout>
 
