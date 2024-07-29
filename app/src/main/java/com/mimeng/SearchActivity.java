@@ -31,6 +31,7 @@ import java.util.List;
 public class SearchActivity extends BaseActivity {
 
     private ActivitySearchBinding binding;
+    private DataBaseUtils dataBaseUtils;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +43,10 @@ public class SearchActivity extends BaseActivity {
         setContentView(binding.getRoot());
 
         // 创建数据库对象
-        DataBaseUtils dataBaseUtils = new DataBaseUtils(this);
+        dataBaseUtils = new DataBaseUtils(this);
+        // 打开数据库
+        dataBaseUtils.open();
+
         binding.back.setOnClickListener(view -> finish());
 
         binding.searchEdit.requestFocus();
@@ -73,11 +77,9 @@ public class SearchActivity extends BaseActivity {
                 binding.scrollView2.setVisibility(View.GONE);
 
                 try {
-                    dataBaseUtils.open();
                     ContentValues values = new ContentValues();
                     values.put("content", search);
                     dataBaseUtils.insertData(values, DataBaseHelper.TABLE_NAME);
-                    dataBaseUtils.closeDatabase();
                 } catch (Exception e) {
                     Log.e("SearchActivity: ", "数据写入失败：" + e);
                 }
@@ -98,9 +100,7 @@ public class SearchActivity extends BaseActivity {
         binding.tabLayout.setupWithViewPager(viewPager);
 
         // 清空历史记录
-        binding.clearHistory.setOnClickListener(v -> {
-            dataBaseUtils.clearTableData(DataBaseHelper.TABLE_NAME);
-        });
+        binding.clearHistory.setOnClickListener(v -> dataBaseUtils.clearTableData(DataBaseHelper.TABLE_NAME));
     }
 
     @Override
@@ -143,5 +143,6 @@ public class SearchActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         binding = null;
+        dataBaseUtils.closeDatabase();
     }
 }
