@@ -7,6 +7,7 @@
     <color name="font_color_grey">#F7F7F7</color>
     <color name="font_title_white">#FAFAFA</color>
     <color name="font_title_black">#e6e6e6</color>
+    <color name="image_background">#2C2C2C</color>
     <color name="background_white">#0D120F</color>
     <color name="md_theme_primary">#8ED5B0</color>
     <color name="md_theme_onPrimary">#003824</color>

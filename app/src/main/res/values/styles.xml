@@ -4,4 +4,9 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item> <!-- 设置圆形 -->
     </style>
+    <style name="roundedCornerImageView">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12.5%</item> <!-- 设置圆形 -->
+    </style>
+
 </resources>
