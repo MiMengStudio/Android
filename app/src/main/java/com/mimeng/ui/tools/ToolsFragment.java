@@ -17,10 +17,8 @@ public class ToolsFragment extends Fragment {
     private FragmentToolsBinding binding;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        ToolsViewModel toolsViewModel =
-                new ViewModelProvider(this).get(ToolsViewModel.class);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        ToolsViewModel toolsViewModel = new ViewModelProvider(this).get(ToolsViewModel.class);
 
         binding = FragmentToolsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();

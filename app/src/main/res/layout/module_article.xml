@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginTop="10dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -16,22 +17,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:background="#F6F6F6"
             android:padding="12dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="left|center">
+                android:gravity="start|center">
 
                 <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/ar_heard"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginEnd="20dp"
                     android:src="@drawable/ic_default_head"
                     app:shapeAppearanceOverlay="@style/roundedImageView" />
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="vertical">
@@ -41,6 +44,7 @@
                         android:layout_height="wrap_content">
 
                         <TextView
+                            android:id="@+id/ar_user_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
@@ -52,7 +56,7 @@
                             android:textStyle="bold" />
 
                         <com.google.android.material.card.MaterialCardView
-                            android:layout_marginLeft="4dp"
+                            android:layout_marginStart="4dp"
                             android:layout_width="40dp"
                             android:layout_height="18dp"
                             android:layout_gravity="center"
@@ -74,7 +78,7 @@
                         </com.google.android.material.card.MaterialCardView>
 
                         <com.google.android.material.card.MaterialCardView
-                            android:layout_marginLeft="4dp"
+                            android:layout_marginStart="4dp"
                             android:layout_width="40dp"
                             android:layout_height="18dp"
                             android:layout_gravity="center"
@@ -96,7 +100,7 @@
                         </com.google.android.material.card.MaterialCardView>
 
                         <com.google.android.material.card.MaterialCardView
-                            android:layout_marginLeft="4dp"
+                            android:layout_marginStart="4dp"
                             android:layout_width="40dp"
                             android:layout_height="18dp"
                             android:layout_gravity="center"
@@ -120,6 +124,7 @@
                     </LinearLayout>
 
                     <TextView
+                        android:id="@+id/ar_up_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -133,13 +138,14 @@
                     android:layout_width="28dp"
                     android:layout_height="28dp"
                     android:layout_gravity="top"
-                    android:layout_marginRight="8dp"
+                    android:layout_marginEnd="8dp"
                     android:src="@drawable/ic_elipsis"
                     android:translationY="-8dp" />
 
             </LinearLayout>
 
             <TextView
+                android:id="@+id/ar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -155,7 +161,7 @@
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.card.MaterialCardView
-                    android:layout_marginRight="4dp"
+                    android:layout_marginEnd="4dp"
                     android:layout_width="wrap_content"
                     android:layout_height="24dp"
                     android:layout_gravity="center"
@@ -178,7 +184,7 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
-                    android:layout_marginRight="4dp"
+                    android:layout_marginEnd="4dp"
                     android:layout_width="wrap_content"
                     android:layout_height="24dp"
                     android:layout_gravity="center"
@@ -203,6 +209,7 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/ar_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -254,17 +261,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center">
+                    android:gravity="center"
+                    tools:ignore="UseCompoundDrawables">
 
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
+                        android:contentDescription="@string/todo"
                         android:src="@drawable/ic_like" />
 
                     <TextView
+                        android:id="@+id/ar_like_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="4dp"
+                        android:layout_marginStart="4dp"
                         android:text="0"
                         android:textColor="@color/font_color"
                         android:textSize="14dp"
@@ -276,17 +286,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center">
+                    android:gravity="center"
+                    tools:ignore="UseCompoundDrawables">
 
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
+                        android:contentDescription="@string/todo"
                         android:src="@drawable/ic_comment" />
 
                     <TextView
+                        android:id="@+id/ar_comment_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="4dp"
+                        android:layout_marginStart="4dp"
                         android:text="0"
                         android:textColor="@color/font_color"
                         android:textSize="14dp"
@@ -298,7 +311,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center">
+                    android:gravity="center"
+                    tools:ignore="UseCompoundDrawables">
 
                     <ImageView
                         android:layout_width="24dp"
@@ -306,9 +320,10 @@
                         android:src="@drawable/ic_share" />
 
                     <TextView
+                        android:id="@+id/ar_shares_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="4dp"
+                        android:layout_marginStart="4dp"
                         android:text="0"
                         android:textColor="@color/font_color"
                         android:textSize="14dp"
