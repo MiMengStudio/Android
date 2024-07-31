@@ -16,6 +16,10 @@ import com.mimeng.R;
 
 import java.util.Map;
 
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+
 public class BaseFragment extends Fragment {
 
     private int topMarginTimes = 5;
@@ -81,5 +85,20 @@ public class BaseFragment extends Fragment {
         });
         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(requireActivity());
         requireActivity().startActivity(i, options.toBundle());
+    }
+
+    /**
+     * get请求
+     *
+     * @param url      网址
+     * @param callback 回调
+     */
+    public void apiGetMethod(String url, Callback callback) {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .build();
+        client.newCall(request).enqueue(callback);
     }
 }

@@ -17,6 +17,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.mimeng.Adapter.FragmentPageAdapter;
 import com.mimeng.BaseClass.BaseActivity;
+import com.mimeng.Fragment.SearchArticleFragment;
 import com.mimeng.databinding.ActivitySearchBinding;
 import com.mimeng.ui.community.CommunityFragment;
 import com.mimeng.ui.tools.ToolsFragment;
@@ -32,6 +33,7 @@ public class SearchActivity extends BaseActivity {
 
     private ActivitySearchBinding binding;
     private DataBaseUtils dataBaseUtils;
+    private final SearchArticleFragment searchArticleFragment = new SearchArticleFragment();
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +77,12 @@ public class SearchActivity extends BaseActivity {
             if (!search.isEmpty()) {
                 binding.tableParent.setVisibility(View.VISIBLE);
                 binding.scrollView2.setVisibility(View.GONE);
+                binding.tableParent.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        searchArticleFragment.search(search);
+                    }
+                },500);
 
                 try {
                     ContentValues values = new ContentValues();
@@ -90,13 +98,12 @@ public class SearchActivity extends BaseActivity {
         String[] titles = new String[]{"综合", "文章", "图鉴", "用户"};
         List<Fragment> fragments = new ArrayList<>();
         fragments.add(new ToolsFragment());
-        fragments.add(new CommunityFragment());
+        fragments.add(searchArticleFragment);
         fragments.add(new CommunityFragment());
         fragments.add(new UserFragment());
         FragmentPageAdapter pageAdapter = new FragmentPageAdapter(getSupportFragmentManager(), fragments, titles);
         ViewPager viewPager = binding.viewPager;
         viewPager.setAdapter(pageAdapter);
-        viewPager.setOffscreenPageLimit(2);
         binding.tabLayout.setupWithViewPager(viewPager);
 
         // 清空历史记录
