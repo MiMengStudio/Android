@@ -28,6 +28,7 @@ public class ArticleEntity implements Serializable {
     private String _id;
     private int id;
     private String author;
+    private String name;
     private String head;
     private long publishDate;
     private long updateDate;
@@ -65,6 +66,14 @@ public class ArticleEntity implements Serializable {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getHead() {
