@@ -2,7 +2,8 @@
     <color name="colorPrimary">#339565</color>
     <color name="icon_black">#e6e6e6</color>
     <color name="icon_white">#2c2c2c</color>
-    <color name="font_color">#e6e6e6</color>
+    <color name="article_car_color">#2c2c2c</color>
+    <color name="font_color">#DBDBDB</color>
     <color name="font_color_white">#000000</color>
     <color name="font_color_grey">#F7F7F7</color>
     <color name="font_title_white">#FAFAFA</color>

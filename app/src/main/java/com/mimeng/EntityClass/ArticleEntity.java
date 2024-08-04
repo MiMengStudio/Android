@@ -180,7 +180,7 @@ public class ArticleEntity implements Serializable {
         this.tags = tags;
     }
 
-    public List<?> getImages() {
+    public List<String> getImages() {
         return images;
     }
 
