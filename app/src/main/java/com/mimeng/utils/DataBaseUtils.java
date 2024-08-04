@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 public class DataBaseUtils {
     private final String TAG = "DataBaseUtils";
     private final DataBaseHelper dataBaseHelper;
@@ -33,9 +35,14 @@ public class DataBaseUtils {
      * @param sql 数据库语句
      * @return 返回查询的内容
      */
-    public Cursor select(String sql) {
+    public ArrayList<String> select(String sql,String columnName) {
         open();
-        return database.rawQuery(sql, null);
+        Cursor cursor = database.rawQuery(sql,null);
+        ArrayList<String> values = new ArrayList<>();
+        while (cursor.moveToNext()){
+            values.add(cursor.getString(cursor.getColumnIndexOrThrow(columnName)));
+        }
+        return values;
     }
 
     /**

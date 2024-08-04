@@ -1,5 +1,6 @@
 package com.mimeng;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Rect;
@@ -7,14 +8,22 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.flexbox.FlexDirection;
+import com.google.android.flexbox.FlexboxLayout;
+import com.google.android.flexbox.FlexboxLayoutManager;
+import com.mimeng.Adapter.FlexRecyclerAdapter;
 import com.mimeng.Adapter.FragmentPageAdapter;
 import com.mimeng.BaseClass.BaseActivity;
 import com.mimeng.Fragment.SearchArticleFragment;
@@ -31,9 +40,10 @@ import java.util.List;
 
 public class SearchActivity extends BaseActivity {
 
+    private final SearchArticleFragment searchArticleFragment = new SearchArticleFragment();
     private ActivitySearchBinding binding;
     private DataBaseUtils dataBaseUtils;
-    private final SearchArticleFragment searchArticleFragment = new SearchArticleFragment();
+    private FlexRecyclerAdapter adapter;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,22 +78,31 @@ public class SearchActivity extends BaseActivity {
                 if (s.length() == 0) {
                     binding.tableParent.setVisibility(View.GONE);
                     binding.scrollView2.setVisibility(View.VISIBLE);
+                    SearchHistory();
                 }
             }
         });
 
+        // 设置流式布局列表
+        RecyclerView recyclerView = binding.searchHistory;
+        FlexboxLayoutManager manager = new FlexboxLayoutManager(SearchActivity.this);
+        manager.setFlexDirection(FlexDirection.ROW);
+        adapter = new FlexRecyclerAdapter(this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(manager);
+        // 查询历史记录
+        SearchHistory();
+        // 根据点击搜索历史的关键词进行搜索
+        adapter.setOnChangeListener(keyWord -> {
+            searchBegin(keyWord);
+            binding.searchEdit.setText(keyWord);
+        });
+
+        // 搜索按钮点击事件
         binding.search.setOnClickListener(v -> {
             String search = binding.searchEdit.getText().toString();
             if (!search.isEmpty()) {
-                binding.tableParent.setVisibility(View.VISIBLE);
-                binding.scrollView2.setVisibility(View.GONE);
-                binding.tableParent.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        searchArticleFragment.search(search);
-                    }
-                },500);
-
+                searchBegin(search);
                 try {
                     ContentValues values = new ContentValues();
                     values.put("content", search);
@@ -91,7 +110,6 @@ public class SearchActivity extends BaseActivity {
                 } catch (Exception e) {
                     Log.e("SearchActivity: ", "数据写入失败：" + e);
                 }
-
             }
         });
 
@@ -103,11 +121,51 @@ public class SearchActivity extends BaseActivity {
         fragments.add(new UserFragment());
         FragmentPageAdapter pageAdapter = new FragmentPageAdapter(getSupportFragmentManager(), fragments, titles);
         ViewPager viewPager = binding.viewPager;
+        viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(pageAdapter);
         binding.tabLayout.setupWithViewPager(viewPager);
 
         // 清空历史记录
-        binding.clearHistory.setOnClickListener(v -> dataBaseUtils.clearTableData(DataBaseHelper.TABLE_NAME));
+        binding.clearHistory.setOnClickListener(v -> {
+            try {
+                dataBaseUtils.clearTableData(DataBaseHelper.TABLE_NAME);
+                SearchHistory();
+                Toast.makeText(this, "已清空历史记录", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                Toast.makeText(this, "清空历史记录失败", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+    }
+
+    /**
+     * 查询历史记录
+     */
+    @SuppressLint("NotifyDataSetChanged")
+    public void SearchHistory(){
+        ArrayList<String> contents = dataBaseUtils.select("SELECT * FROM search_history WHERE 1", "content");
+        if (contents.isEmpty()){
+            binding.asNotHistory.setVisibility(View.VISIBLE);
+        }else {
+            binding.asNotHistory.setVisibility(View.GONE);
+        }
+        adapter.setData(contents);
+        SearchActivity.this.runOnUiThread(() -> adapter.notifyDataSetChanged());
+    }
+
+    /**
+     * 执行搜索动作
+     * @param search 搜索内容
+     */
+    public void searchBegin(String search){
+        binding.tableParent.setVisibility(View.VISIBLE);
+        binding.scrollView2.setVisibility(View.GONE);
+        binding.tableParent.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                searchArticleFragment.search(search);
+            }
+        }, 100);
     }
 
     @Override

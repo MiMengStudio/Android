@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="24dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:paddingTop="24dp">
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -45,190 +45,63 @@
 
             </RelativeLayout>
 
-            <com.google.android.flexbox.FlexboxLayout
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/search_history"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
-                app:flexWrap="wrap">
+                app:flexWrap="wrap" />
 
-                <androidx.cardview.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="28dp"
-                    android:layout_margin="2dp"
-                    app:cardBackgroundColor="@color/md_theme_background"
-                    app:cardCornerRadius="14dp"
-                    app:cardElevation="1px">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
-                        android:ellipsize="end"
-                        android:maxWidth="120dp"
-                        android:maxLines="1"
-                        android:text="历史记录123"
-                        android:textSize="14dp" />
-
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="28dp"
-                    android:layout_margin="2dp"
-                    app:cardBackgroundColor="@color/md_theme_background"
-                    app:cardCornerRadius="14dp"
-                    app:cardElevation="1px">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
-                        android:ellipsize="end"
-                        android:maxWidth="120dp"
-                        android:maxLines="1"
-                        android:text="历史记录1234567"
-                        android:textSize="14dp" />
-
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="28dp"
-                    android:layout_margin="2dp"
-                    app:cardBackgroundColor="@color/md_theme_background"
-                    app:cardCornerRadius="14dp"
-                    app:cardElevation="1px">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
-                        android:ellipsize="end"
-                        android:maxWidth="120dp"
-                        android:maxLines="1"
-                        android:text="历史记录761244521345365232"
-                        android:textSize="14dp" />
-
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="28dp"
-                    android:layout_margin="2dp"
-                    app:cardBackgroundColor="@color/md_theme_background"
-                    app:cardCornerRadius="14dp"
-                    app:cardElevation="1px">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
-                        android:ellipsize="end"
-                        android:maxWidth="120dp"
-                        android:maxLines="1"
-                        android:text="历"
-                        android:textSize="14dp" />
-
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="28dp"
-                    android:layout_margin="2dp"
-                    app:cardBackgroundColor="@color/md_theme_background"
-                    app:cardCornerRadius="14dp"
-                    app:cardElevation="1px">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
-                        android:ellipsize="end"
-                        android:maxWidth="120dp"
-                        android:maxLines="1"
-                        android:text="历史"
-                        android:textSize="14dp" />
-
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="28dp"
-                    android:layout_margin="2dp"
-                    app:cardBackgroundColor="@color/md_theme_background"
-                    app:cardCornerRadius="14dp"
-                    app:cardElevation="1px">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
-                        android:ellipsize="end"
-                        android:maxWidth="120dp"
-                        android:maxLines="1"
-                        android:text="历史记"
-                        android:textSize="14dp" />
-
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="28dp"
-                    android:layout_margin="2dp"
-                    app:cardBackgroundColor="@color/md_theme_background"
-                    app:cardCornerRadius="14dp"
-                    app:cardElevation="1px">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
-                        android:ellipsize="end"
-                        android:maxWidth="120dp"
-                        android:maxLines="1"
-                        android:text="历史记录"
-                        android:textSize="14dp" />
-
-                </androidx.cardview.widget.CardView>
-
-            </com.google.android.flexbox.FlexboxLayout>
 
         </LinearLayout>
 
     </ScrollView>
 
     <LinearLayout
-        android:id="@+id/table_parent"
+        android:id="@+id/as_not_history"
+        android:background="@color/md_theme_background"
         android:visibility="gone"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="MissingConstraints">
+
+        <ImageView
+            android:contentDescription="@string/todo"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_not_data"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:text="嗯~您似乎没有搜索记录呢，赶快搜寻点什么吧！"
+            android:textColor="@color/font_color" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/table_parent"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:gravity="center|top"
         android:orientation="vertical"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardView3"
         app:layout_constraintVertical_bias="0.63"
         tools:ignore="MissingConstraints">
 
         <com.google.android.material.tabs.TabLayout
-            android:paddingBottom="5dp"
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="40dp"
+            android:paddingBottom="5dp"
             app:tabIndicator="@drawable/tab_layout_item_style"
             app:tabIndicatorColor="@color/colorPrimary"
             app:tabIndicatorFullWidth="false"
