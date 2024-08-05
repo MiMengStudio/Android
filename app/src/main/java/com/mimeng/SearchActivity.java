@@ -19,10 +19,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.flexbox.FlexDirection;
-import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.flexbox.FlexboxLayoutManager;
-import com.mimeng.adapter.FlexRecyclerAdapter;
-import com.mimeng.adapter.FragmentPageAdapter;
+import com.mimeng.Adapter.FlexRecyclerAdapter;
+import com.mimeng.Adapter.FragmentPageAdapter;
 import com.mimeng.base.BaseActivity;
 import com.mimeng.fragments.SearchArticleFragment;
 import com.mimeng.databinding.ActivitySearchBinding;

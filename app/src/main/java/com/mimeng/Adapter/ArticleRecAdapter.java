@@ -1,4 +1,4 @@
-package com.mimeng.adapter;
+package com.mimeng.Adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

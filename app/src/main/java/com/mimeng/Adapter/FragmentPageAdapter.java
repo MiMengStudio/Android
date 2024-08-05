@@ -1,4 +1,4 @@
-package com.mimeng.adapter;
+package com.mimeng.Adapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
