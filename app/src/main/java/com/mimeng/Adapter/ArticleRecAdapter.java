@@ -25,7 +25,7 @@ import java.util.List;
 public class ArticleRecAdapter extends RecyclerView.Adapter<ArticleRecAdapter.mViewHolder> {
     private final Context context;
     private ArrayList<ArticleEntity> data;
-    private setItemChangeInterface mSetItemChangeInterface;
+    private setItemChangeInterface mSetItemChangeInterface = null;
 
     public ArticleRecAdapter(Context context) {
         this.context = context;
@@ -116,7 +116,6 @@ public class ArticleRecAdapter extends RecyclerView.Adapter<ArticleRecAdapter.mV
 
         }
 
-        holder.itemView.setOnClickListener(v -> mSetItemChangeInterface.articleId(indexData.getId()));
 
 
     }
