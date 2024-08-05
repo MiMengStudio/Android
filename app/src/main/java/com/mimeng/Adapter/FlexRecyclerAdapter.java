@@ -1,4 +1,4 @@
-package com.mimeng.adapter;
+package com.mimeng.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;

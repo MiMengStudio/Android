@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.mimeng.adapter.ArticleRecAdapter;
+import com.mimeng.Adapter.ArticleRecAdapter;
 import com.mimeng.ApplicationConfig;
 import com.mimeng.base.BaseFragment;
 import com.mimeng.values.ArticleEntity;
