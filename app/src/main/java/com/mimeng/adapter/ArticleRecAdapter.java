@@ -25,6 +25,7 @@ import java.util.List;
 public class ArticleRecAdapter extends RecyclerView.Adapter<ArticleRecAdapter.mViewHolder> {
     private final Context context;
     private ArrayList<ArticleEntity> data;
+    private setItemChangeInterface mSetItemChangeInterface;
 
     public ArticleRecAdapter(Context context) {
         this.context = context;
@@ -32,6 +33,14 @@ public class ArticleRecAdapter extends RecyclerView.Adapter<ArticleRecAdapter.mV
 
     public void setData(ArrayList<ArticleEntity> data) {
         this.data = data;
+    }
+
+    public interface setItemChangeInterface{
+        void articleId(int arId);
+    }
+
+    public void setItemChangeListener(setItemChangeInterface mSetItemChangeInterface){
+        this.mSetItemChangeInterface = mSetItemChangeInterface;
     }
 
     @NonNull
@@ -106,6 +115,8 @@ public class ArticleRecAdapter extends RecyclerView.Adapter<ArticleRecAdapter.mV
             }
 
         }
+
+        holder.itemView.setOnClickListener(v -> mSetItemChangeInterface.articleId(indexData.getId()));
 
 
     }
