@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mimeng.BaseClass.BaseActivity;
+import com.mimeng.base.BaseActivity;
 
 @SuppressLint("CustomSplashScreen")
 public class LaunchActivity extends BaseActivity {

@@ -22,7 +22,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.google.gson.Gson;
 import com.just.agentweb.AgentWeb;
 import com.just.agentweb.WebViewClient;
-import com.mimeng.BaseClass.BaseActivity;
+import com.mimeng.base.BaseActivity;
 import com.mimeng.user.Account;
 import com.mimeng.user.AccountManager;
 import com.mimeng.utils.ClipboardUtils;

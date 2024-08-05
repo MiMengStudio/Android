@@ -2,11 +2,10 @@ package com.mimeng;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.mimeng.BaseClass.BaseActivity;
+import com.mimeng.base.BaseActivity;
 
 public class GuideActivity extends BaseActivity {
     private final String PREFS_NAME = "MyPrefsFile";

@@ -1,4 +1,4 @@
-package com.mimeng.Adapter;
+package com.mimeng.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.material.imageview.ShapeableImageView;
-import com.mimeng.EntityClass.ArticleEntity;
+import com.mimeng.values.ArticleEntity;
 import com.mimeng.R;
 import com.mimeng.utils.DateUtils;
 

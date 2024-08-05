@@ -1,4 +1,4 @@
-package com.mimeng.EntityClass;
+package com.mimeng.values;
 
 import java.io.Serializable;
 import java.util.List;

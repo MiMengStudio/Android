@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.mimeng.BaseClass.BaseFragment;
+import com.mimeng.base.BaseFragment;
 import com.mimeng.R;
 import com.mimeng.ResourceManagementActivity;
 import com.mimeng.SearchActivity;
