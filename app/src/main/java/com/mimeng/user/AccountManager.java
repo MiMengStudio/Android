@@ -30,15 +30,15 @@ public class AccountManager {
     public static final String ACCOUNT_SERVICE_URL = "https://cloud.mimeng.fun/account";
     //public static final String ACCOUNT_SERVICE_URL = "http://127.0.0.1:3000/account";
     private static final String TAG = "AccountManager";
+    private static final CopyOnWriteArrayList<AccountSignInTimeListener> listeners = new CopyOnWriteArrayList<>();
     @Nullable
     private static Account loggedIn; // 缓存全局已登录账号
-
-    private static final CopyOnWriteArrayList<AccountSignInTimeListener> listeners = new CopyOnWriteArrayList<>();
     @Nullable
     private static SignInInfo lastSignInInfo = null;
 
     /**
      * 保存 Account 对象到 SharedPreferences
+     *
      * @param context Context 对象
      * @param account Account 对象
      */
@@ -56,7 +56,26 @@ public class AccountManager {
     }
 
     /**
+     * 获取用户敏感信息
+     *
+     * @param context 上下文对象
+     * @return 返回Account实体类对象
+     */
+    public static Account getAccountData(Context context) {
+        Account account = new Account();
+        try {
+            SharedPreferences sharedPreferences = context.getSharedPreferences("AccountPrefs", Context.MODE_PRIVATE);
+            String json = sharedPreferences.getString("account", "");
+            account = new Gson().fromJson(json, Account.class);
+        } catch (Exception e) {
+            Log.e(TAG, "getAccountData: 获取用户信息方法发送错误 => " + e);
+        }
+        return account;
+    }
+
+    /**
      * 从 SharedPreferences 获取 Account 对象
+     *
      * @param context Context 对象
      */
     public static void tryLoadFromStorage(Context context) {
@@ -83,10 +102,10 @@ public class AccountManager {
         ensureUserLoggedIn();
         assert loggedIn != null;
         Picasso.get()
-            .load("https://q1.qlogo.cn/g?b=qq&nk=" + loggedIn.getQQ()+ "&s=100")
-            .placeholder(R.drawable.ic_default_head)
-            .error(R.drawable.ic_default_head)
-            .into(target);
+                .load("https://q1.qlogo.cn/g?b=qq&nk=" + loggedIn.getQQ() + "&s=100")
+                .placeholder(R.drawable.ic_default_head)
+                .error(R.drawable.ic_default_head)
+                .into(target);
     }
 
     static void notifyListenersUpdateSignInDate() {
@@ -94,7 +113,7 @@ public class AccountManager {
         for (AccountSignInTimeListener listener : listeners) {
             listener.onReceive(lastSignInInfo);
         }
-        
+
         if (lastSignInInfo == SignInInfo.SIGNED_SUCCESSFUL) {
             lastSignInInfo = SignInInfo.SIGNED_IN;
         }

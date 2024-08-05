@@ -19,6 +19,7 @@ import com.mimeng.ApplicationConfig;
 import com.mimeng.BaseClass.BaseFragment;
 import com.mimeng.EntityClass.ArticleEntity;
 import com.mimeng.databinding.FragmentSearchArticleBinding;
+import com.mimeng.user.AccountManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -74,10 +75,14 @@ public class SearchArticleFragment extends BaseFragment {
     }
 
     public void startSearchArticle(String word) {
-
+        String token = AccountManager.getAccountData(requireContext()).getToken();
+        String id = AccountManager.getAccountData(requireContext()).getID();
         String url = ApplicationConfig.HOST_API +
-                "/search?act=searchArticle&id=Test123&token=d7fvJ2CK7Hcbesq10iyOTykJbZJLnDar4wsh4JCezODN5JDNmFLe36QVX3Cg96ar&keyword=" +
+                "/search?act=searchArticle&id=" +
+                id + "&token=" +
+                token + "&keyword=" +
                 word + "&page=1&sort=hot&reverse=false";
+        Log.d(TAG, "startSearchArticle: 完整API => " + url);
 
         apiGetMethod(url, new Callback() {
             @Override

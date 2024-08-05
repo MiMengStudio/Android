@@ -11,8 +11,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.gson.Gson;
 import com.mimeng.App;
 import com.mimeng.R;
+import com.mimeng.user.Account;
+import com.mimeng.user.AccountManager;
 
 import java.util.Map;
 
@@ -94,9 +97,11 @@ public class BaseFragment extends Fragment {
      * @param callback 回调
      */
     public void apiGetMethod(String url, Callback callback) {
+        Account account = AccountManager.getAccountData(requireContext());
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(url)
+                .addHeader("Authorization","Bearer " + account.getToken())
                 .get()
                 .build();
         client.newCall(request).enqueue(callback);
