@@ -1,4 +1,4 @@
-package com.mimeng.BaseClass;
+package com.mimeng.base;
 
 import android.app.ActivityOptions;
 import android.content.Intent;

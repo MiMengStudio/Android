@@ -12,14 +12,12 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.mimeng.R;
-import com.mimeng.BaseClass.BaseActivity;
+import com.mimeng.base.BaseActivity;
 import com.mimeng.databinding.ActivitySearchResultBinding;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.zip.Inflater;
 
 
 public class SearchResultActivity extends BaseActivity {

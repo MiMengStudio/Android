@@ -2,9 +2,7 @@ package com.mimeng;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,11 +18,9 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 
 import com.google.gson.Gson;
-import com.mimeng.BaseClass.BaseActivity;
-import com.mimeng.BaseClass.BaseDialog;
-import com.mimeng.resourcepack.ResourcePackInfo;
-import com.mimeng.utils.DataBaseHelper;
-import com.mimeng.utils.DataBaseUtils;
+import com.mimeng.base.BaseActivity;
+import com.mimeng.base.BaseDialog;
+import com.mimeng.values.ResourcePackInfo;
 import com.mimeng.utils.IOUtils;
 
 import java.io.BufferedOutputStream;
@@ -38,7 +34,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.ref.WeakReference;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;

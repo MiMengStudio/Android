@@ -1,4 +1,4 @@
-package com.mimeng.Fragment;
+package com.mimeng.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -14,10 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.mimeng.Adapter.ArticleRecAdapter;
+import com.mimeng.adapter.ArticleRecAdapter;
 import com.mimeng.ApplicationConfig;
-import com.mimeng.BaseClass.BaseFragment;
-import com.mimeng.EntityClass.ArticleEntity;
+import com.mimeng.base.BaseFragment;
+import com.mimeng.values.ArticleEntity;
 import com.mimeng.databinding.FragmentSearchArticleBinding;
 
 import java.io.IOException;

@@ -1,22 +1,14 @@
 package com.mimeng;
 
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.graphics.Rect;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
-import com.mimeng.BaseClass.BaseActivity;
+import com.mimeng.base.BaseActivity;
 import com.mimeng.databinding.ActivityMainBinding;
 
 public class MainActivity extends BaseActivity {

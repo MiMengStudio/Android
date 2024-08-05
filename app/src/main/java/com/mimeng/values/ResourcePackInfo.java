@@ -1,4 +1,4 @@
-package com.mimeng.resourcepack;
+package com.mimeng.values;
 
 public class ResourcePackInfo {
     private String name;

@@ -1,6 +1,5 @@
-package com.mimeng.BaseClass;
+package com.mimeng.base;
 
-import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.Color;
@@ -10,7 +9,6 @@ import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
