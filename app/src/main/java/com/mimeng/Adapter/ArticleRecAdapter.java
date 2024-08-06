@@ -2,6 +2,7 @@ package com.mimeng.Adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,8 @@ import java.util.List;
 public class ArticleRecAdapter extends RecyclerView.Adapter<ArticleRecAdapter.mViewHolder> {
     private final Context context;
     private ArrayList<ArticleEntity> data;
-    private setItemChangeInterface mSetItemChangeInterface;
+    private setItemChangeInterface mSetItemChangeInterface = arId -> {
+    };
 
     public ArticleRecAdapter(Context context) {
         this.context = context;
@@ -116,8 +118,7 @@ public class ArticleRecAdapter extends RecyclerView.Adapter<ArticleRecAdapter.mV
 
         }
 
-        holder.itemView.setOnClickListener(v -> mSetItemChangeInterface.articleId(indexData.getId()));
-
+        holder.itemView.setOnClickListener(v -> mSetItemChangeInterface.articleId(1));
 
     }
 

@@ -16,28 +16,25 @@ import java.util.ArrayList;
 public class FlexRecyclerAdapter extends RecyclerView.Adapter<FlexRecyclerAdapter.mViewHolder> {
     private final Context context;
     private ArrayList<String> data;
-    private setItemChangeListener itemChangeListener = null;
+    private setItemChangeListener itemChangeListener = keyWord -> {
+    };
 
-    public FlexRecyclerAdapter(Context context){
+    public FlexRecyclerAdapter(Context context) {
         this.context = context;
     }
 
-    public void setData(ArrayList<String> data){
+    public void setData(ArrayList<String> data) {
         this.data = data;
     }
 
-    public interface setItemChangeListener{
-        void onClickItemPosition(String keyWord);
-    }
-
-    public void setOnChangeListener(setItemChangeListener itemChangeListener){
+    public void setOnChangeListener(setItemChangeListener itemChangeListener) {
         this.itemChangeListener = itemChangeListener;
     }
 
     @NonNull
     @Override
     public mViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new mViewHolder(LayoutInflater.from(context).inflate(R.layout.history_block_item,parent,false));
+        return new mViewHolder(LayoutInflater.from(context).inflate(R.layout.history_block_item, parent, false));
     }
 
     @Override
@@ -52,7 +49,11 @@ public class FlexRecyclerAdapter extends RecyclerView.Adapter<FlexRecyclerAdapte
         return data != null ? data.size() : 0;
     }
 
-    public static class mViewHolder extends RecyclerView.ViewHolder{
+    public interface setItemChangeListener {
+        void onClickItemPosition(String keyWord);
+    }
+
+    public static class mViewHolder extends RecyclerView.ViewHolder {
         private final TextView content;
 
         public mViewHolder(@NonNull View v) {
