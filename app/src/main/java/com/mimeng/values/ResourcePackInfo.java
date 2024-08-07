@@ -1,5 +1,7 @@
 package com.mimeng.values;
 
+import androidx.annotation.NonNull;
+
 public class ResourcePackInfo {
     private String name;
     private String resolution;
@@ -52,6 +54,7 @@ public class ResourcePackInfo {
     }
 
     // toString方法，用于打印对象信息
+    @NonNull
     @Override
     public String toString() {
         return "ResourcePackInfo{" +

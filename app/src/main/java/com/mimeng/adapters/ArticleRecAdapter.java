@@ -1,4 +1,4 @@
-package com.mimeng.Adapter;
+package com.mimeng.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -16,14 +16,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.material.imageview.ShapeableImageView;
-import com.mimeng.values.ArticleEntity;
 import com.mimeng.R;
 import com.mimeng.utils.DateUtils;
+import com.mimeng.values.ArticleEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArticleRecAdapter extends RecyclerView.Adapter<ArticleRecAdapter.mViewHolder> {
+public class ArticleRecAdapter extends RecyclerView.Adapter<ArticleRecAdapter.ViewHolder> {
     private final Context context;
     private ArrayList<ArticleEntity> data;
     private setItemChangeInterface mSetItemChangeInterface = arId -> {
@@ -47,13 +47,13 @@ public class ArticleRecAdapter extends RecyclerView.Adapter<ArticleRecAdapter.mV
 
     @NonNull
     @Override
-    public ArticleRecAdapter.mViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new mViewHolder(LayoutInflater.from(context).inflate(R.layout.module_article, parent, false));
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new ViewHolder(LayoutInflater.from(context).inflate(R.layout.module_article, parent, false));
     }
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull ArticleRecAdapter.mViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ArticleEntity indexData = data.get(position);
         holder.title.setText(indexData.getTitle());
         holder.username.setText(indexData.getName());
@@ -127,7 +127,7 @@ public class ArticleRecAdapter extends RecyclerView.Adapter<ArticleRecAdapter.mV
         return data != null ? data.size() : 0;
     }
 
-    public static class mViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView title;
         private final TextView upTime;
         private final TextView content;
@@ -142,7 +142,7 @@ public class ArticleRecAdapter extends RecyclerView.Adapter<ArticleRecAdapter.mV
         private final CardView badgeOfficial;
         private final ShapeableImageView head_icon;
 
-        public mViewHolder(@NonNull View v) {
+        public ViewHolder(@NonNull View v) {
             super(v);
             tags = v.findViewById(R.id.ar_tags);
             title = v.findViewById(R.id.ar_title);

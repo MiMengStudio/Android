@@ -17,11 +17,10 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 
-import com.google.gson.Gson;
 import com.mimeng.base.BaseActivity;
 import com.mimeng.base.BaseDialog;
-import com.mimeng.values.ResourcePackInfo;
 import com.mimeng.utils.IOUtils;
+import com.mimeng.values.ResourcePackInfo;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -97,11 +96,10 @@ public class ResourceManagementActivity extends BaseActivity {
                     Log.i(TAG, "Size: " + size);
                     // 将字节流转换为字符串
                     String jsonContent =
-                            new String(outputStream.toByteArray(), StandardCharsets.UTF_8);
+                            outputStream.toString(StandardCharsets.UTF_8);
                     if (!jsonContent.isEmpty()) {
-                        Gson gson = new Gson();
                         ResourcePackInfo resPackInfo =
-                                gson.fromJson(jsonContent, ResourcePackInfo.class);
+                                App.GSON.fromJson(jsonContent, ResourcePackInfo.class);
                         // 检查资源类型
                         if ("ItemResourcePack".equals(resPackInfo.getType())) {
                             // 处理找到的ResourcePackInfo
@@ -129,8 +127,7 @@ public class ResourceManagementActivity extends BaseActivity {
         Log.d(TAG, "File exists: " + jsonFile.exists() + ", Path: " + jsonFile.getAbsolutePath());
         if (jsonFile.exists()) {
             try (Reader reader = new InputStreamReader(new FileInputStream(jsonFile), StandardCharsets.UTF_8)) {
-                Gson gson = new Gson();
-                ResourcePackInfo resourcePackInfo = gson.fromJson(reader, ResourcePackInfo.class);
+                ResourcePackInfo resourcePackInfo = App.GSON.fromJson(reader, ResourcePackInfo.class);
                 // 显示ResourcePackInfo的内容
                 imp_state_text.setText("已导入：" + resourcePackInfo.getName() + " v" + resourcePackInfo.getVersion());
                 imp_state_text.setTextColor(ContextCompat.getColor(this, R.color.md_theme_primary)); // 假设正常文本颜色为主题主色

@@ -21,9 +21,9 @@ import java.util.List;
 
 
 public class SearchResultActivity extends BaseActivity {
-    private View indicator;
-    private List<Integer> textViewXPositions = new ArrayList<>();
-    private List<TextView> typeTextViews = new ArrayList<>();
+    private final List<Integer> textViewXPositions = new ArrayList<>();
+    private final List<TextView> typeTextViews = new ArrayList<>();
+    private ActivitySearchResultBinding binding;
 
     @Override
     protected void onStart() {
@@ -31,13 +31,12 @@ public class SearchResultActivity extends BaseActivity {
         overridePendingTransition(0,0);
     }
 
-    private ActivitySearchResultBinding binding;
     @SuppressLint("ResourceAsColor")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         blackParentBar();
         setFullScreen(false);
+
         binding = ActivitySearchResultBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -47,20 +46,18 @@ public class SearchResultActivity extends BaseActivity {
 
         binding.searchEdit.requestFocus();
 
-        indicator = findViewById(R.id.indicator);
-        LinearLayout parentLayout = findViewById(R.id.type_parent_layout); // 假设您的LinearLayout的id是parent_layout
+        LinearLayout parentLayout = binding.typeParentLayout; // 假设您的LinearLayout的id是parent_layout
 
+        int[] location = new int[2];
         for (int i = 0; i < parentLayout.getChildCount(); i++) {
             View view = parentLayout.getChildAt(i);
             if (view instanceof TextView) {
                 TextView tv = (TextView) view;
                 // 获取每个TextView的中心点x坐标
 
-                int[] location = new int[2];
-                view.getLocationInWindow(location);
-                int a = tv.getLeft();
                 tv.getLocationInWindow(location);
-                Log.d("p", ""+ tv.getText() + a + Arrays.toString(location));
+                Log.d("p", tv.getText() + Arrays.toString(location));
+
                 int centerX = location[0] + view.getWidth() / 2;
                 textViewXPositions.add(centerX);
                 typeTextViews.add(tv);
@@ -98,8 +95,8 @@ public class SearchResultActivity extends BaseActivity {
     }
 
     private void animateIndicatorToPosition(int position) {
-        indicator.animate()
-                .translationX(position - indicator.getWidth() / 2)
+        binding.indicator.animate()
+                .translationX(position - binding.indicator.getWidth() / 2)
                 .setDuration(300) // 动画持续时间
                 .start();
     }
