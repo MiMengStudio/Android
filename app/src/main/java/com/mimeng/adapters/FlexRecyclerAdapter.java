@@ -1,4 +1,4 @@
-package com.mimeng.Adapter;
+package com.mimeng.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,35 +13,38 @@ import com.mimeng.R;
 
 import java.util.ArrayList;
 
-public class FlexRecyclerAdapter extends RecyclerView.Adapter<FlexRecyclerAdapter.mViewHolder> {
+public class FlexRecyclerAdapter extends RecyclerView.Adapter<FlexRecyclerAdapter.ViewHolder> {
     private final Context context;
     private ArrayList<String> data;
-    private setItemChangeListener itemChangeListener = keyWord -> {
-    };
+    private ItemChangeListener itemChangeListener = null;
 
-    public FlexRecyclerAdapter(Context context) {
+    public FlexRecyclerAdapter(Context context){
         this.context = context;
     }
 
-    public void setData(ArrayList<String> data) {
+    public void setData(ArrayList<String> data){
         this.data = data;
     }
 
-    public void setOnChangeListener(setItemChangeListener itemChangeListener) {
+    public void setOnChangeListener(ItemChangeListener itemChangeListener) {
         this.itemChangeListener = itemChangeListener;
     }
 
     @NonNull
     @Override
-    public mViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new mViewHolder(LayoutInflater.from(context).inflate(R.layout.history_block_item, parent, false));
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new ViewHolder(LayoutInflater.from(context).inflate(R.layout.history_block_item, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull mViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String content = data.get(position);
         holder.content.setText(content);
         holder.itemView.setOnClickListener(v -> itemChangeListener.onClickItemPosition(content));
+    }
+
+    public interface ItemChangeListener {
+        void onClickItemPosition(String keyWord);
     }
 
     @Override
@@ -49,14 +52,10 @@ public class FlexRecyclerAdapter extends RecyclerView.Adapter<FlexRecyclerAdapte
         return data != null ? data.size() : 0;
     }
 
-    public interface setItemChangeListener {
-        void onClickItemPosition(String keyWord);
-    }
-
-    public static class mViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView content;
 
-        public mViewHolder(@NonNull View v) {
+        public ViewHolder(@NonNull View v) {
             super(v);
             content = v.findViewById(R.id.hb_content);
         }

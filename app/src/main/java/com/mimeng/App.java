@@ -9,9 +9,11 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.gson.Gson;
 import com.mimeng.user.AccountManager;
 
 public class App extends Application {
+    public static final Gson GSON = new Gson();
     private static App instance;
     @Override
     public void onCreate() {

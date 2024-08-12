@@ -20,11 +20,11 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
-import com.mimeng.Adapter.FlexRecyclerAdapter;
-import com.mimeng.Adapter.FragmentPageAdapter;
+import com.mimeng.adapters.FlexRecyclerAdapter;
+import com.mimeng.adapters.FragmentPageAdapter;
 import com.mimeng.base.BaseActivity;
-import com.mimeng.fragments.SearchArticleFragment;
 import com.mimeng.databinding.ActivitySearchBinding;
+import com.mimeng.fragments.SearchArticleFragment;
 import com.mimeng.ui.community.CommunityFragment;
 import com.mimeng.ui.tools.ToolsFragment;
 import com.mimeng.ui.user.UserFragment;
@@ -75,7 +75,7 @@ public class SearchActivity extends BaseActivity {
                 if (s.length() == 0) {
                     binding.tableParent.setVisibility(View.GONE);
                     binding.scrollView2.setVisibility(View.VISIBLE);
-                    SearchHistory();
+                    searchHistory();
                 }
             }
         });
@@ -88,7 +88,7 @@ public class SearchActivity extends BaseActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(manager);
         // 查询历史记录
-        SearchHistory();
+        searchHistory();
         // 根据点击搜索历史的关键词进行搜索
         adapter.setOnChangeListener(keyWord -> {
             searchBegin(keyWord);
@@ -126,7 +126,7 @@ public class SearchActivity extends BaseActivity {
         binding.clearHistory.setOnClickListener(v -> {
             try {
                 dataBaseUtils.clearTableData(DataBaseHelper.TABLE_NAME);
-                SearchHistory();
+                searchHistory();
                 Toast.makeText(this, "已清空历史记录", Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 Toast.makeText(this, "清空历史记录失败", Toast.LENGTH_SHORT).show();
@@ -139,11 +139,11 @@ public class SearchActivity extends BaseActivity {
      * 查询历史记录
      */
     @SuppressLint("NotifyDataSetChanged")
-    public void SearchHistory(){
+    private void searchHistory() {
         ArrayList<String> contents = dataBaseUtils.select("SELECT * FROM search_history WHERE 1", "content");
         if (contents.isEmpty()){
             binding.asNotHistory.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             binding.asNotHistory.setVisibility(View.GONE);
         }
         adapter.setData(contents);
@@ -157,12 +157,7 @@ public class SearchActivity extends BaseActivity {
     public void searchBegin(String search){
         binding.tableParent.setVisibility(View.VISIBLE);
         binding.scrollView2.setVisibility(View.GONE);
-        binding.tableParent.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                searchArticleFragment.search(search);
-            }
-        }, 100);
+        binding.tableParent.postDelayed(() -> searchArticleFragment.search(search), 100);
     }
 
     @Override
@@ -205,7 +200,6 @@ public class SearchActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        binding = null;
         dataBaseUtils.closeDatabase();
     }
 }

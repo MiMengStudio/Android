@@ -13,9 +13,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.mimeng.base.BaseFragment;
+import com.mimeng.ApplicationConfig;
 import com.mimeng.R;
 import com.mimeng.activity.WebViewActivity;
+import com.mimeng.base.BaseFragment;
 import com.mimeng.databinding.FragmentUserBinding;
 import com.mimeng.user.Account;
 import com.mimeng.user.AccountManager;
@@ -35,7 +36,7 @@ public class UserFragment extends BaseFragment {
 
         binding.userInfo.setOnClickListener(view1 -> {
             Intent intent = new Intent(UserFragment.this.getActivity(), WebViewActivity.class);
-            intent.putExtra("url", AccountManager.LOGIN_IN_URL);
+            intent.putExtra("url", ApplicationConfig.LOGIN_IN_URL);
             intent.putExtra("showMenu", false);
             startActivityForResult(intent, REQUEST_LOGIN);
         });
@@ -103,7 +104,7 @@ public class UserFragment extends BaseFragment {
         }
     }
 
-    private void reloadSignInLayout(SignInInfo info) {
+    private boolean reloadSignInLayout(SignInInfo info) {
         switch (info) {
             case SIGNED_SUCCESSFUL:
                 requireActivity().runOnUiThread(
@@ -136,6 +137,7 @@ public class UserFragment extends BaseFragment {
                                 info.getErrorMsg(), Toast.LENGTH_SHORT).show()
                 );
         }
+        return false;
     }
 
     private void loadUserLayout() {

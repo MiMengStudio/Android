@@ -100,7 +100,7 @@ public class MainActivity extends BaseActivity {
 
                             AccountManager.clearUserLoginData(MainActivity.this);
                             Intent i = new Intent(MainActivity.this, WebViewActivity.class);
-                            i.putExtra("url", AccountManager.LOGIN_IN_URL);
+                            i.putExtra("url", ApplicationConfig.LOGIN_IN_URL);
                             i.putExtra("showMenu", false);
                             startActivity(i);
                         });

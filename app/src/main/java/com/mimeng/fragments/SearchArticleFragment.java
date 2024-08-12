@@ -9,19 +9,15 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.mimeng.Adapter.ArticleRecAdapter;
-import com.mimeng.ApplicationConfig;
-import com.mimeng.R;
+import com.mimeng.ApiRequestManager;
+import com.mimeng.App;
+import com.mimeng.adapters.ArticleRecAdapter;
 import com.mimeng.base.BaseFragment;
 import com.mimeng.databinding.FragmentSearchArticleBinding;
-import com.mimeng.user.AccountManager;
-import com.mimeng.utils.AndroidUtils;
 import com.mimeng.values.ArticleEntity;
 
 import java.io.IOException;
@@ -35,10 +31,8 @@ import okhttp3.Response;
 
 public class SearchArticleFragment extends BaseFragment {
 
-    public static final int REQUEST_LOGIN = 1;
     private final String TAG = "SearchArticleFragment";
     private ArrayList<ArticleEntity> arData = new ArrayList<>();
-    private FragmentSearchArticleBinding binding;
     private ArticleRecAdapter adapter;
     private final Handler handler = new Handler() {
         @Override
@@ -66,7 +60,7 @@ public class SearchArticleFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentSearchArticleBinding.inflate(inflater, container, false);
+        FragmentSearchArticleBinding binding = FragmentSearchArticleBinding.inflate(inflater, container, false);
 
         RecyclerView recyclerView = binding.searchRecArticle;
         adapter = new ArticleRecAdapter(requireActivity());
@@ -74,31 +68,12 @@ public class SearchArticleFragment extends BaseFragment {
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
-        recyclerView.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.md_theme_background));
-
-        // 点击文章跳转到详情页
-        adapter.setItemChangeListener(arId -> {
-//            Intent i = new Intent(requireContext(), WebViewActivity.class);
-//            i.putExtra("url", AccountManager.LOGIN_IN_URL);
-//            i.putExtra("showMenu", false);
-//            startActivity(i);
-            AndroidUtils.shareText(requireContext(), "文章ID：" + arId);
-        });
 
         return binding.getRoot();
     }
 
     public void startSearchArticle(String word) {
-        String token = AccountManager.getAccountData(requireContext()).getToken();
-        String id = AccountManager.getAccountData(requireContext()).getID();
-        String url = ApplicationConfig.HOST_API +
-                "/search?act=searchArticle&id=" +
-                id + "&token=" +
-                token + "&keyword=" +
-                word + "&page=1&sort=hot&reverse=false";
-        Log.d(TAG, "startSearchArticle: 完整API => " + url);
-
-        apiGetMethod(url, new Callback() {
+        ApiRequestManager.DEFAULT.searchArticle(word, requireContext(), new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
 
@@ -110,7 +85,7 @@ public class SearchArticleFragment extends BaseFragment {
                     assert response.body() != null;
                     String json = response.body().string();
                     Log.d(TAG, "onResponse: 返回的数据=> " + json);
-                    arData = new Gson().fromJson(json, new TypeToken<>() {
+                    arData = App.GSON.fromJson(json, new TypeToken<>() {
                     });
                     requireActivity().runOnUiThread(handler::flush);
                 } catch (Exception e) {
@@ -118,11 +93,5 @@ public class SearchArticleFragment extends BaseFragment {
                 }
             }
         });
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        binding = null;
     }
 }

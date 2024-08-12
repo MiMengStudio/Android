@@ -19,9 +19,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.gson.Gson;
 import com.just.agentweb.AgentWeb;
 import com.just.agentweb.WebViewClient;
+import com.mimeng.App;
 import com.mimeng.R;
 import com.mimeng.base.BaseActivity;
 import com.mimeng.user.Account;
@@ -129,8 +129,7 @@ public class WebViewActivity extends BaseActivity {
         public void updateUserInfo(String accountInfo) {
             Log.d("WebViewActivity", "updateUserInfo called from JavaScript");
             Log.d("WebViewActivity", "AccountInfo: " + accountInfo);
-            Gson gson = new Gson();
-            Account account = gson.fromJson(accountInfo, Account.class);
+            Account account = App.GSON.fromJson(accountInfo, Account.class);
 
             // 保存 Account 对象到 SharedPreferences
             AccountManager.save(mContext, account);
