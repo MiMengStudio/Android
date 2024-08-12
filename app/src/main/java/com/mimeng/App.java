@@ -21,6 +21,7 @@ public class App extends Application {
         instance = this;
         AccountManager.tryLoadFromStorage(this);
         if (AccountManager.hasLoggedIn()) {
+            ApiRequestManager.DEFAULT.setAccount(AccountManager.get());
             AccountManager.updateAccountSignInTime();
         }
     }

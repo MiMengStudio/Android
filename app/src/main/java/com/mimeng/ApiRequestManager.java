@@ -24,6 +24,7 @@ public class ApiRequestManager implements AccountManager.AccountSignInTimeListen
 
     ApiRequestManager() {
         this.client = new OkHttpClient();
+        AccountManager.addSignInDateUpdateListener(this);
     }
 
     private Request buildRequest(String url) {
@@ -50,8 +51,8 @@ public class ApiRequestManager implements AccountManager.AccountSignInTimeListen
     public void searchArticle(@NonNull String word, Context context, @NonNull Callback callback) {
         String url = ApplicationConfig.HOST_API +
                 "/search?act=searchArticle&id=" +
-                AccountManager.getAccountData(context).getID() + "&token=" +
-                AccountManager.getAccountData(context).getToken() + "&keyword=" +
+                getIdIfNotNull() + "&token=" +
+                getTokenIfNotNull() + "&keyword=" +
                 word + "&page=1&sort=hot&reverse=false";
         Log.d(TAG, "startSearchArticle: 完整API => " + url);
         client.newCall(buildRequest(url)).enqueue(callback);
@@ -73,13 +74,7 @@ public class ApiRequestManager implements AccountManager.AccountSignInTimeListen
 
     @Override
     public boolean onReceive(@NonNull SignInInfo newInfo) {
-        switch (newInfo) {
-            case NEED_SIGN_IN:
-            case SIGNED_IN:
-            case SIGNED_SUCCESSFUL:
-                setAccount(AccountManager.get());
-            default:
-                return false;
-        }
+        setAccount(AccountManager.get());
+        return false;
     }
 }

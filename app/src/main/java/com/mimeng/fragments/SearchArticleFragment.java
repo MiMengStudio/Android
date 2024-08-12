@@ -34,25 +34,7 @@ public class SearchArticleFragment extends BaseFragment {
     private final String TAG = "SearchArticleFragment";
     private ArrayList<ArticleEntity> arData = new ArrayList<>();
     private ArticleRecAdapter adapter;
-    private final Handler handler = new Handler() {
-        @Override
-        public void publish(LogRecord record) {
-
-        }
-
-        @SuppressLint("NotifyDataSetChanged")
-        @Override
-        public void flush() {
-            adapter.setData(arData);
-            adapter.notifyDataSetChanged();
-        }
-
-        @Override
-        public void close() throws SecurityException {
-
-        }
-    };
-
+    
     public void search(String keyWord) {
         startSearchArticle(keyWord);
     }
@@ -85,9 +67,11 @@ public class SearchArticleFragment extends BaseFragment {
                     assert response.body() != null;
                     String json = response.body().string();
                     Log.d(TAG, "onResponse: 返回的数据=> " + json);
-                    arData = App.GSON.fromJson(json, new TypeToken<>() {
+                    arData = App.GSON.fromJson(json, new TypeToken<>() {});
+                    requireActivity().runOnUiThread(() -> {
+                        adapter.setData(arData);
+                        adapter.notifyDataSetChanged();
                     });
-                    requireActivity().runOnUiThread(handler::flush);
                 } catch (Exception e) {
                     Log.e(TAG, "onResponse: 搜索文章接口错误=> " + e);
                 }

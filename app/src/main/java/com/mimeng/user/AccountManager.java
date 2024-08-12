@@ -194,6 +194,7 @@ public class AccountManager {
             if (listener.onReceive(lastSignInInfo))
                 return;
         }
+        Log.d(TAG, "Add listener " + listener);
         listeners.add(new WeakReference<>(listener));
     }
 
