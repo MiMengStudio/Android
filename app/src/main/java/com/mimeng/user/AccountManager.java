@@ -56,6 +56,23 @@ public class AccountManager {
     }
 
     /**
+     * 清除用户数据，只保留token和id
+     *
+     * @param context 上下文
+     */
+    public static void clearUserLoginData(Context context) {
+        Account account = new Account();
+        account.setName("");
+        account.setVipDate(0);
+        account.setQQ("");
+        account.setDate(0);
+        account.setMiniuid("");
+        account.setID(AccountManager.getAccountData(context).getID());
+        account.setToken(AccountManager.getAccountData(context).getToken());
+        save(context, account);
+    }
+
+    /**
      * 获取用户敏感信息
      *
      * @param context 上下文对象

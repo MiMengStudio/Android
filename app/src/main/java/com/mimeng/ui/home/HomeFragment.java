@@ -13,8 +13,8 @@ import androidx.annotation.Nullable;
 
 import com.mimeng.base.BaseFragment;
 import com.mimeng.R;
-import com.mimeng.ResourceManagementActivity;
-import com.mimeng.SearchActivity;
+import com.mimeng.activity.ResourceManagementActivity;
+import com.mimeng.activity.SearchActivity;
 import com.mimeng.databinding.FragmentHomeBinding;
 import com.mimeng.user.Account;
 import com.mimeng.user.AccountManager;

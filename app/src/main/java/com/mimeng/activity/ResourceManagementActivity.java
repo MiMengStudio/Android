@@ -1,4 +1,4 @@
-package com.mimeng;
+package com.mimeng.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -18,6 +18,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 
 import com.google.gson.Gson;
+import com.mimeng.R;
 import com.mimeng.base.BaseActivity;
 import com.mimeng.base.BaseDialog;
 import com.mimeng.values.ResourcePackInfo;
