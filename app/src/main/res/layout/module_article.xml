@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_marginTop="10dp"
+    android:layout_marginTop="15dp"
+    android:elevation="5dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -18,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@color/article_car_color"
+            android:background="@color/background_white"
             android:padding="12dp">
 
             <LinearLayout
@@ -259,19 +260,22 @@
 
             </LinearLayout>
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_alignParentStart="true"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
                     android:gravity="center"
                     tools:ignore="UseCompoundDrawables">
 
                     <ImageView
+                        android:scaleType="centerCrop"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:contentDescription="@string/todo"
@@ -282,7 +286,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
-                        android:text="0"
                         android:textColor="@color/font_color"
                         android:textSize="14dp"
                         android:textStyle="bold" />
@@ -290,13 +293,16 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_centerInParent="true"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
                     android:gravity="center"
                     tools:ignore="UseCompoundDrawables">
 
                     <ImageView
+                        android:scaleType="centerCrop"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:contentDescription="@string/todo"
@@ -307,7 +313,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
-                        android:text="0"
                         android:textColor="@color/font_color"
                         android:textSize="14dp"
                         android:textStyle="bold" />
@@ -315,13 +320,16 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
                     android:gravity="center"
                     tools:ignore="UseCompoundDrawables">
 
                     <ImageView
+                        android:scaleType="centerCrop"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@drawable/ic_share" />
@@ -331,14 +339,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
-                        android:text="0"
                         android:textColor="@color/font_color"
                         android:textSize="14dp"
                         android:textStyle="bold" />
 
                 </LinearLayout>
 
-            </LinearLayout>
+            </RelativeLayout>
 
         </LinearLayout>
 

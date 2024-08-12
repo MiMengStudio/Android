@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.gson.Gson;
 import com.mimeng.ApiRequestManager;
 import com.mimeng.App;
 import com.mimeng.R;
@@ -50,6 +51,40 @@ public class AccountManager {
         loggedIn = account;
         lastSignInInfo = DateUtils.isSameDay(System.currentTimeMillis(), account.getSignInDate()) ? SignInInfo.SIGNED_IN : SignInInfo.NEED_SIGN_IN;
         notifyListenersUpdateSignInDate();
+    }
+
+    /**
+     * 清除用户登录数据除了token和id
+     * @param context 上下文
+     */
+    public static void clearUserLoginData(Context context){
+        Account account = new Account();
+        account.setName("");
+        account.setVipDate(0);
+        account.setQQ("");
+        account.setDate(0);
+        account.setMiniuid("");
+        account.setID(AccountManager.getAccountData(context).getID());
+        account.setToken(AccountManager.getAccountData(context).getToken());
+        AccountManager.save(context, account);
+    }
+
+    /**
+     * 获取用户敏感信息
+     *
+     * @param context 上下文对象
+     * @return 返回Account实体类对象
+     */
+    public static Account getAccountData(Context context) {
+        Account account = new Account();
+        try {
+            SharedPreferences sharedPreferences = context.getSharedPreferences("AccountPrefs", Context.MODE_PRIVATE);
+            String json = sharedPreferences.getString("account", "");
+            account = new Gson().fromJson(json, Account.class);
+        } catch (Exception e) {
+            Log.e(TAG, "getAccountData: 获取用户信息方法发送错误 => " + e);
+        }
+        return account;
     }
 
     /**

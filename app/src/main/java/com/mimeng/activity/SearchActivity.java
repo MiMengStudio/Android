@@ -1,4 +1,4 @@
-package com.mimeng;
+package com.mimeng.activity;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
@@ -190,6 +190,7 @@ public class SearchActivity extends BaseActivity {
         if (v instanceof EditText) {
             Rect rect = new Rect();
             v.getGlobalVisibleRect(rect);
+            v.clearFocus();
             // 如果点击事件在EditText的范围内，则不隐藏软键盘
             return !rect.contains((int) event.getRawX(), (int) event.getRawY());
         }

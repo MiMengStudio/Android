@@ -1,5 +1,6 @@
 package com.mimeng;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -46,11 +47,11 @@ public class ApiRequestManager implements AccountManager.AccountSignInTimeListen
         this.account = account;
     }
 
-    public void searchArticle(@NonNull String word, @NonNull Callback callback) {
+    public void searchArticle(@NonNull String word, Context context, @NonNull Callback callback) {
         String url = ApplicationConfig.HOST_API +
                 "/search?act=searchArticle&id=" +
-                getIdIfNotNull() + "&token=" +
-                getTokenIfNotNull() + "&keyword=" +
+                AccountManager.getAccountData(context).getID() + "&token=" +
+                AccountManager.getAccountData(context).getToken() + "&keyword=" +
                 word + "&page=1&sort=hot&reverse=false";
         Log.d(TAG, "startSearchArticle: 完整API => " + url);
         client.newCall(buildRequest(url)).enqueue(callback);

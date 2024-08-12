@@ -1,4 +1,4 @@
-package com.mimeng;
+package com.mimeng.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.mimeng.R;
 import com.mimeng.base.BaseActivity;
 import com.mimeng.databinding.ActivitySearchResultBinding;
 

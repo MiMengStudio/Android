@@ -1,10 +1,11 @@
-package com.mimeng;
+package com.mimeng.activity;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.mimeng.R;
 import com.mimeng.base.BaseActivity;
 
 public class GuideActivity extends BaseActivity {

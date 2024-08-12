@@ -73,7 +73,7 @@ public class SearchArticleFragment extends BaseFragment {
     }
 
     public void startSearchArticle(String word) {
-        ApiRequestManager.DEFAULT.searchArticle(word, new Callback() {
+        ApiRequestManager.DEFAULT.searchArticle(word, requireContext(), new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
 

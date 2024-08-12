@@ -1,4 +1,4 @@
-package com.mimeng;
+package com.mimeng.activity;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mimeng.R;
 import com.mimeng.base.BaseActivity;
 
 @SuppressLint("CustomSplashScreen")

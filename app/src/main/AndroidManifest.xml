@@ -26,7 +26,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="DataExtractionRules">
         <activity
-            android:name=".LaunchActivity"
+            android:name=".activity.LaunchActivity"
             android:exported="true">
             <intent-filter>
                 <action
@@ -37,23 +37,23 @@
         </activity>
 
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:windowSoftInputMode="adjustPan"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".GuideActivity"
+            android:name=".activity.GuideActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".ResourceManagementActivity"
+            android:name=".activity.ResourceManagementActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".SearchActivity"
+            android:name=".activity.SearchActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".SearchResultActivity"
+            android:name=".activity.SearchResultActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".WebViewActivity"
+            android:name=".activity.WebViewActivity"
             android:label=""
             android:theme="@style/WebViewActivity.Theme" />
     </application>

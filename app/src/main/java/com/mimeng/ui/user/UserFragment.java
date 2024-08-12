@@ -15,7 +15,7 @@ import androidx.annotation.Nullable;
 
 import com.mimeng.ApplicationConfig;
 import com.mimeng.R;
-import com.mimeng.WebViewActivity;
+import com.mimeng.activity.WebViewActivity;
 import com.mimeng.base.BaseFragment;
 import com.mimeng.databinding.FragmentUserBinding;
 import com.mimeng.user.Account;
