@@ -7,6 +7,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 
 import com.google.gson.Gson;
 import com.mimeng.ApiRequestManager;
@@ -32,6 +33,7 @@ public class AccountManager {
     private static final ArrayList<WeakReference<AccountSignInTimeListener>> listeners = new ArrayList<>();
     @Nullable
     private static Account loggedIn; // 缓存全局已登录账号
+    // null 表示还没有完成服务器请求
     @Nullable
     private static SignInInfo lastSignInInfo = null;
 
@@ -39,34 +41,36 @@ public class AccountManager {
      * 保存 Account 对象到 SharedPreferences
      *
      * @param context Context 对象
-     * @param account Account 对象
+     * @param account Account 对象, null表示清除登录状态
      */
     public static void save(Context context, Account account) {
-        String json = App.GSON.toJson(account);
+        String json = account == null ? "" : App.GSON.toJson(account);
         SharedPreferences sharedPreferences = context.getSharedPreferences("AccountPrefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("account", json);
         editor.apply();
 
         loggedIn = account;
-        lastSignInInfo = DateUtils.isSameDay(System.currentTimeMillis(), account.getSignInDate()) ? SignInInfo.SIGNED_IN : SignInInfo.NEED_SIGN_IN;
+        if (account != null)
+            lastSignInInfo = DateUtils.isSameDay(System.currentTimeMillis(), account.getSignInDate()) ? SignInInfo.SIGNED_IN : SignInInfo.NEED_SIGN_IN;
+        else
+            lastSignInInfo = SignInInfo.NOT_LOGGED_IN;
         notifyListenersUpdateSignInDate();
     }
 
     /**
-     * 清除用户登录数据除了token和id
-     * @param context 上下文
+     * 清除用户登录数据
      */
-    public static void clearUserLoginData(Context context){
-        Account account = new Account();
-        account.setName("");
-        account.setVipDate(0);
-        account.setQQ("");
-        account.setDate(0);
-        account.setMiniuid("");
-        account.setID(AccountManager.getAccountData(context).getID());
-        account.setToken(AccountManager.getAccountData(context).getToken());
-        AccountManager.save(context, account);
+    public static void clearUserLoginData(@NonNull Context context) {
+//        Account account = new Account();
+//        account.setName("");
+//        account.setVipDate(0);
+//        account.setQQ("");
+//        account.setDate(0);
+//        account.setMiniuid("");
+//        account.setID(AccountManager.getAccountData(context).getID());
+//        account.setToken(AccountManager.getAccountData(context).getToken());
+        AccountManager.save(context, null);
     }
 
     /**
@@ -99,12 +103,8 @@ public class AccountManager {
             // Gson解析也是有开销的，能缓存就缓存
             loggedIn = App.GSON.fromJson(json, Account.class);
             Log.d(TAG, "Found account");
-        }
-    }
-
-    private static void ensureUserLoggedIn() {
-        if (!hasLoggedIn()) {
-            throw new RuntimeException("No user logged in.");
+        } else {
+            lastSignInInfo = SignInInfo.NOT_LOGGED_IN;
         }
     }
 
@@ -112,29 +112,12 @@ public class AccountManager {
      * 加载用户头像至ImageView
      */
     public static void loadUserIcon(ImageView target) {
-        ensureUserLoggedIn();
         assert loggedIn != null;
         Picasso.get()
                 .load("https://q1.qlogo.cn/g?b=qq&nk=" + loggedIn.getQQ() + "&s=100")
                 .placeholder(R.drawable.ic_default_head)
                 .error(R.drawable.ic_default_head)
                 .into(target);
-    }
-
-    static void notifyListenersUpdateSignInDate() {
-        assert lastSignInInfo != null;
-        Iterator<WeakReference<AccountSignInTimeListener>> iterator = listeners.iterator();
-        while (iterator.hasNext()) {
-            WeakReference<AccountSignInTimeListener> ref = iterator.next();
-            AccountSignInTimeListener listener = ref.get();
-            if (listener == null || listener.onReceive(lastSignInInfo)) {
-                iterator.remove();
-            }
-        }
-
-        if (lastSignInInfo == SignInInfo.SIGNED_SUCCESSFUL) {
-            lastSignInInfo = SignInInfo.SIGNED_IN;
-        }
     }
 
     /**
@@ -189,28 +172,6 @@ public class AccountManager {
         });
     }
 
-    public static void addSignInDateUpdateListener(@NonNull AccountSignInTimeListener listener) {
-        if (lastSignInInfo != null) {
-            if (listener.onReceive(lastSignInInfo))
-                return;
-        }
-        Log.d(TAG, "Add listener " + listener);
-        listeners.add(new WeakReference<>(listener));
-    }
-
-    public static void removeSignInDateUpdateListener(@NonNull final AccountSignInTimeListener listener) {
-        Iterator<WeakReference<AccountSignInTimeListener>> iterator = listeners.iterator();
-        while (iterator.hasNext()) {
-            AccountSignInTimeListener ref = iterator.next().get();
-            if (ref == null) {
-                iterator.remove();
-            } else if (ref == listener) {
-                iterator.remove();
-                break;
-            }
-        }
-    }
-
     public static void performSigningIn() {
         Log.i(TAG, "Performing sign in");
         ApiRequestManager.DEFAULT.performSigningIn(new Callback() {
@@ -256,6 +217,27 @@ public class AccountManager {
         });
     }
 
+    public static void validateToken(@NonNull Context context, @NonNull ValidateTokenResult result) {
+        ApiRequestManager.DEFAULT.validateToken(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e(TAG, "Failed to validate token ", e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                // 根据Core的源码，我们只需要检查返回值
+                Log.i(TAG, "validateToken: " + response.code() + " " + response.body().string());
+                if (response.isSuccessful()) {
+                    result.onSuccess();
+                } else {
+                    clearUserLoginData(context);
+                    result.onFail();
+                }
+            }
+        });
+    }
+
 
     /**
      * 获取用户敏感信息
@@ -270,6 +252,53 @@ public class AccountManager {
         return loggedIn != null;
     }
 
+    //  ----------------------------------- 事件 ------------------------------------ //
+
+    /**
+     * 监听签到事件，如果已经获得签到状态则会立刻调用.
+     * 获取签到状态从app启动需要经过两个请求.
+     * 根据网络情况的不同会导致更新时间可能缩短，也可能延长.
+     * 所以使用事件回调.
+     */
+    public static void addSignInDateUpdateListener(@NonNull AccountSignInTimeListener listener) {
+        if (lastSignInInfo != null) {
+            if (listener.onReceive(lastSignInInfo))
+                return;
+        }
+        listeners.add(new WeakReference<>(listener));
+    }
+
+    /**
+     * 取消监听事件
+     */
+    public static void removeSignInDateUpdateListener(@NonNull final AccountSignInTimeListener listener) {
+        Iterator<WeakReference<AccountSignInTimeListener>> iterator = listeners.iterator();
+        while (iterator.hasNext()) {
+            AccountSignInTimeListener ref = iterator.next().get();
+            if (ref == null) {
+                iterator.remove();
+            } else if (ref == listener) {
+                iterator.remove();
+                break;
+            }
+        }
+    }
+
+    static void notifyListenersUpdateSignInDate() {
+        Iterator<WeakReference<AccountSignInTimeListener>> iterator = listeners.iterator();
+        while (iterator.hasNext()) {
+            AccountSignInTimeListener listener = iterator.next().get();
+            if (listener == null || listener.onReceive(lastSignInInfo)) {
+                iterator.remove();
+            }
+        }
+
+        // 回滚SIGNED_IN，防止重复更新UI
+        if (lastSignInInfo == SignInInfo.SIGNED_SUCCESSFUL) {
+            lastSignInInfo = SignInInfo.SIGNED_IN;
+        }
+    }
+
     public interface AccountSignInTimeListener {
         /**
          * 在签到时间 向服务器请求更新完毕后,
@@ -279,5 +308,13 @@ public class AccountManager {
          * @return 返回true取消之后监听，false则继续监听
          */
         boolean onReceive(@NonNull SignInInfo newInfo);
+    }
+
+    public interface ValidateTokenResult {
+        @WorkerThread
+        void onSuccess();
+
+        @WorkerThread
+        void onFail();
     }
 }

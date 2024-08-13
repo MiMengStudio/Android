@@ -13,7 +13,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.mimeng.ApplicationConfig;
 import com.mimeng.R;
 import com.mimeng.activity.WebViewActivity;
 import com.mimeng.base.BaseFragment;
@@ -34,12 +33,8 @@ public class UserFragment extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentUserBinding.inflate(inflater, container, false);
 
-        binding.userInfo.setOnClickListener(view1 -> {
-            Intent intent = new Intent(UserFragment.this.getActivity(), WebViewActivity.class);
-            intent.putExtra("url", ApplicationConfig.LOGIN_IN_URL);
-            intent.putExtra("showMenu", false);
-            startActivityForResult(intent, REQUEST_LOGIN);
-        });
+        binding.userInfo.setOnClickListener(view1 ->
+                startActivityForResult(WebViewActivity.createLoginInIntent(requireActivity()), REQUEST_LOGIN));
 
         //价格表
         int[][] priceTable = {{19, 9}, {49, 24}, {178, 84}, {298, 168}};
@@ -130,6 +125,7 @@ public class UserFragment extends BaseFragment {
             case INVALID_TOKEN:
             case USER_NOT_FOUND:
             case UNKNOWN_ERROR:
+            case NOT_LOGGED_IN:
                 break;
             default:
                 requireActivity().runOnUiThread(

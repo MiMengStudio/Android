@@ -9,6 +9,7 @@ public enum SignInInfo {
     SIGNED_SUCCESSFUL,
     INVALID_TOKEN("token错误"),
     USER_NOT_FOUND("账号不存在"),
+    NOT_LOGGED_IN("账号未登录"),
 
     UNKNOWN_ERROR("Unknown error");
 

@@ -22,6 +22,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.just.agentweb.AgentWeb;
 import com.just.agentweb.WebViewClient;
 import com.mimeng.App;
+import com.mimeng.ApplicationConfig;
 import com.mimeng.R;
 import com.mimeng.base.BaseActivity;
 import com.mimeng.user.Account;
@@ -32,6 +33,14 @@ public class WebViewActivity extends BaseActivity {
     private AgentWeb mAgentWeb;
     private String url;
 
+    @NonNull
+    public static Intent createLoginInIntent(@NonNull Context context) {
+        Intent intent = new Intent(context, WebViewActivity.class);
+        intent.putExtra("url", ApplicationConfig.LOGIN_IN_URL);
+        intent.putExtra("showMenu", false);
+        return intent;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +49,11 @@ public class WebViewActivity extends BaseActivity {
         setContentView(R.layout.activity_web_view);
 
         this.url = getIntent().getStringExtra("url"); // 获取传递的URL参数
-        Log.d("WebViewActivity", "URL: " + url);
+
+        String extraToast;
+        if ((extraToast = getIntent().getStringExtra("toast")) != null) {
+            Toast.makeText(this, extraToast, Toast.LENGTH_SHORT).show();
+        }
 
         Toolbar toolbar = findViewById(R.id.web_activity_toolbar);
         resetLayoutTopMargin(toolbar, 3);

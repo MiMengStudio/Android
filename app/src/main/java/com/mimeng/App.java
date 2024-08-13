@@ -3,6 +3,7 @@ package com.mimeng;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -10,19 +11,35 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
+import com.mimeng.activity.WebViewActivity;
 import com.mimeng.user.AccountManager;
 
 public class App extends Application {
     public static final Gson GSON = new Gson();
     private static App instance;
+
     @Override
     public void onCreate() {
         super.onCreate();
         instance = this;
         AccountManager.tryLoadFromStorage(this);
         if (AccountManager.hasLoggedIn()) {
+            // 必须先初始化
             ApiRequestManager.DEFAULT.setAccount(AccountManager.get());
-            AccountManager.updateAccountSignInTime();
+            // 先检查token, 再更新签到状态
+            AccountManager.validateToken(this, new AccountManager.ValidateTokenResult() {
+                @Override
+                public void onSuccess() {
+                    AccountManager.updateAccountSignInTime();
+                }
+
+                @Override
+                public void onFail() {
+                    Intent intent = WebViewActivity.createLoginInIntent(App.this);
+                    intent.putExtra("toast", "登录失效，请重新登录");
+                    startActivity(intent);
+                }
+            });
         }
     }
 
@@ -53,4 +70,8 @@ public class App extends Application {
         }
     }
 
+    @NonNull
+    public App get() {
+        return instance;
+    }
 }
