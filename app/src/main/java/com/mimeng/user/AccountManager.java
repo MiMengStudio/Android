@@ -70,6 +70,7 @@ public class AccountManager {
 //        account.setToken(AccountManager.getAccountData(context).getToken());
         loggedIn = null;
         lastSignInInfo = SignInInfo.INVALID_TOKEN;
+        notifyListenersUpdateSignInDate();
     }
 
     /**
@@ -231,7 +232,6 @@ public class AccountManager {
                     clearUserLoginData();
                     result.onFail();
                 }
-                notifyListenersUpdateSignInDate();
             }
         });
     }

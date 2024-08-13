@@ -35,8 +35,11 @@ public final class ApiRequestManager implements AccountManager.AccountSignInTime
     private Request buildRequest(String url) {
         Request.Builder builder = new Request.Builder()
                 .url(url);
+        
+        Log.i(TAG, "Request url " + url);
         if (account != null) {
             builder.addHeader("Authorization", "Bearer " + account.getToken());
+            Log.d(TAG, "Using token " + account.getToken() );
         }
         return builder.get().build();
     }
@@ -103,6 +106,7 @@ public final class ApiRequestManager implements AccountManager.AccountSignInTime
         private RequestURLBuilder(@NonNull String base, @Nullable Account id) {
             this(base);
             setIDIfValid(id);
+            setTokenIfValid(id);
         }
 
         public RequestURLBuilder setAction(@NonNull String act) {
@@ -123,13 +127,18 @@ public final class ApiRequestManager implements AccountManager.AccountSignInTime
         public RequestURLBuilder setIDIfValid(@Nullable Account account) {
             return set("id", account != null ? account.getID() : "null");
         }
+        
+        @CanIgnoreReturnValue
+        public RequestURLBuilder setTokenIfValid(@Nullable Account account) {
+            return set("token", account != null ? account.getToken() : "null");
+        }
 
         @NonNull
         @Override
         public String toString() {
             return base + getParams.entrySet().stream()
                     .map((entry) -> entry.getKey() + "=" + entry.getValue())
-                    .collect(Collectors.joining("?", "?", ""));
+                    .collect(Collectors.joining("&", "?", ""));
         }
 
         enum Action {

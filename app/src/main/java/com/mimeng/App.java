@@ -37,6 +37,7 @@ public class App extends Application {
                 public void onFail() {
                     Intent intent = WebViewActivity.createLoginInIntent(App.this);
                     intent.putExtra("toast", "登录失效，请重新登录");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                 }
             });
