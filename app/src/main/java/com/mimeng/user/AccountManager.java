@@ -64,9 +64,9 @@ public class AccountManager {
         account.setQQ("");
         account.setDate(0);
         account.setMiniuid("");
-        account.setID(AccountManager.getAccountData(context).getID());
-        account.setToken(AccountManager.getAccountData(context).getToken());
-        AccountManager.save(context, account);
+        account.setID(getAccountData(context).getID());
+        account.setToken(getAccountData(context).getToken());
+        save(context, account);
     }
 
     /**
