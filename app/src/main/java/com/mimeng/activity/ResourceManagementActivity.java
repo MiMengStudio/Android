@@ -1,4 +1,4 @@
-package com.mimeng;
+package com.mimeng.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -17,6 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 
+import com.mimeng.App;
+import com.mimeng.R;
 import com.mimeng.base.BaseActivity;
 import com.mimeng.base.BaseDialog;
 import com.mimeng.utils.IOUtils;
@@ -95,8 +97,7 @@ public class ResourceManagementActivity extends BaseActivity {
                     zis.closeEntry();
                     Log.i(TAG, "Size: " + size);
                     // 将字节流转换为字符串
-                    String jsonContent =
-                            outputStream.toString(StandardCharsets.UTF_8);
+                    String jsonContent = outputStream.toString();
                     if (!jsonContent.isEmpty()) {
                         ResourcePackInfo resPackInfo =
                                 App.GSON.fromJson(jsonContent, ResourcePackInfo.class);
@@ -170,7 +171,7 @@ public class ResourceManagementActivity extends BaseActivity {
                         IOUtils.copy(zis, bos);
                     }
                 }
-                
+
                 mHandler.post(() -> {
                     int pro_size = (int) ((size * 100) / totalSize);
                     progressBar.setProgress(pro_size);

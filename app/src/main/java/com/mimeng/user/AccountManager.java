@@ -41,7 +41,7 @@ public class AccountManager {
      * 保存 Account 对象到 SharedPreferences
      *
      * @param context Context 对象
-     * @param account Account 对象, null表示清除登录状态
+     * @param account Account 对象
      */
     public static void save(Context context, Account account) {
         String json = account == null ? "" : App.GSON.toJson(account);
@@ -51,17 +51,15 @@ public class AccountManager {
         editor.apply();
 
         loggedIn = account;
-        if (account != null)
-            lastSignInInfo = DateUtils.isSameDay(System.currentTimeMillis(), account.getSignInDate()) ? SignInInfo.SIGNED_IN : SignInInfo.NEED_SIGN_IN;
-        else
-            lastSignInInfo = SignInInfo.NOT_LOGGED_IN;
+        lastSignInInfo = DateUtils.isSameDay(System.currentTimeMillis(), account.getSignInDate()) ? SignInInfo.SIGNED_IN : SignInInfo.NEED_SIGN_IN;
+
         notifyListenersUpdateSignInDate();
     }
 
     /**
      * 清除用户登录数据
      */
-    public static void clearUserLoginData(@NonNull Context context) {
+    public static void clearUserLoginData() {
 //        Account account = new Account();
 //        account.setName("");
 //        account.setVipDate(0);
@@ -70,7 +68,8 @@ public class AccountManager {
 //        account.setMiniuid("");
 //        account.setID(AccountManager.getAccountData(context).getID());
 //        account.setToken(AccountManager.getAccountData(context).getToken());
-        AccountManager.save(context, null);
+        loggedIn = null;
+        lastSignInInfo = SignInInfo.INVALID_TOKEN;
     }
 
     /**
@@ -103,8 +102,6 @@ public class AccountManager {
             // Gson解析也是有开销的，能缓存就缓存
             loggedIn = App.GSON.fromJson(json, Account.class);
             Log.d(TAG, "Found account");
-        } else {
-            lastSignInInfo = SignInInfo.NOT_LOGGED_IN;
         }
     }
 
@@ -217,7 +214,7 @@ public class AccountManager {
         });
     }
 
-    public static void validateToken(@NonNull Context context, @NonNull ValidateTokenResult result) {
+    public static void validateToken(@NonNull ValidateTokenResult result) {
         ApiRequestManager.DEFAULT.validateToken(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -231,9 +228,10 @@ public class AccountManager {
                 if (response.isSuccessful()) {
                     result.onSuccess();
                 } else {
-                    clearUserLoginData(context);
+                    clearUserLoginData();
                     result.onFail();
                 }
+                notifyListenersUpdateSignInDate();
             }
         });
     }

@@ -125,7 +125,6 @@ public class UserFragment extends BaseFragment {
             case INVALID_TOKEN:
             case USER_NOT_FOUND:
             case UNKNOWN_ERROR:
-            case NOT_LOGGED_IN:
                 break;
             default:
                 requireActivity().runOnUiThread(

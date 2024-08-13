@@ -27,7 +27,7 @@ public class App extends Application {
             // 必须先初始化
             ApiRequestManager.DEFAULT.setAccount(AccountManager.get());
             // 先检查token, 再更新签到状态
-            AccountManager.validateToken(this, new AccountManager.ValidateTokenResult() {
+            AccountManager.validateToken(new AccountManager.ValidateTokenResult() {
                 @Override
                 public void onSuccess() {
                     AccountManager.updateAccountSignInTime();

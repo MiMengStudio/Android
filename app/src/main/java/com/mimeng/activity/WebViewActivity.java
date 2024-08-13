@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 
 import com.just.agentweb.AgentWeb;
+import com.just.agentweb.AgentWebUIControllerImplBase;
 import com.just.agentweb.WebViewClient;
 import com.mimeng.App;
 import com.mimeng.ApplicationConfig;
@@ -27,10 +28,27 @@ import com.mimeng.R;
 import com.mimeng.base.BaseActivity;
 import com.mimeng.user.Account;
 import com.mimeng.user.AccountManager;
+import com.mimeng.utils.AndroidUtils;
 import com.mimeng.utils.ClipboardUtils;
 
 public class WebViewActivity extends BaseActivity {
     private AgentWeb mAgentWeb;
+    private final WebViewClient mWebViewClient = new WebViewClient() {
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            // 获取网页标题
+            String title = view.getTitle();
+            TextView titleTextView = findViewById(R.id.title);
+            if (title != null) {
+                titleTextView.setText(title);
+                Log.d("WebViewActivity", "网页标题: " + title);
+            }
+
+            // 注册 AndroidInterface
+            mAgentWeb.getJsInterfaceHolder().addJavaObject("android", new AndroidInterface(WebViewActivity.this));
+        }
+    };
     private String url;
 
     @NonNull
@@ -59,11 +77,13 @@ public class WebViewActivity extends BaseActivity {
         resetLayoutTopMargin(toolbar, 3);
         setSupportActionBar(toolbar);
 
+
         View webView = findViewById(R.id.web_view);
         mAgentWeb = AgentWeb.with(this)
                 .setAgentWebParent((LinearLayout) webView, new LinearLayout.LayoutParams(-1, -1))
                 .useDefaultIndicator()
                 .setWebViewClient(mWebViewClient)
+                .setAgentWebUIController(new AgentWebUIControllerImplBase())
                 .createAgentWeb()
                 .ready()
                 .go(this.url); // 加载传递的URL
@@ -74,6 +94,7 @@ public class WebViewActivity extends BaseActivity {
         findViewById(R.id.back).setOnClickListener(view -> onBackPressed());
 
         ImageView close = findViewById(R.id.close);
+        if (!getIntent().getBooleanExtra("showCloseBut", true)) close.setVisibility(View.GONE);
         close.setOnClickListener(view -> finish());
     }
 
@@ -113,22 +134,13 @@ public class WebViewActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private final WebViewClient mWebViewClient = new WebViewClient() {
-        @Override
-        public void onPageFinished(WebView view, String url) {
-            super.onPageFinished(view, url);
-            // 获取网页标题
-            String title = view.getTitle();
-            TextView titleTextView = findViewById(R.id.title);
-            if (title != null) {
-                titleTextView.setText(title);
-                Log.d("WebViewActivity", "网页标题: " + title);
-            }
-
-            // 注册 AndroidInterface
-            mAgentWeb.getJsInterfaceHolder().addJavaObject("android", new AndroidInterface(WebViewActivity.this));
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mAgentWeb != null) {
+            mAgentWeb.destroy();
         }
-    };
+    }
 
     public class AndroidInterface {
         private final Context mContext; // 添加一个 Context 对象的引用
@@ -151,13 +163,10 @@ public class WebViewActivity extends BaseActivity {
             setResult(Activity.RESULT_OK, intent);
             finish();
         }
-    }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mAgentWeb != null) {
-            mAgentWeb.destroy();
+        @JavascriptInterface
+        public void share(String text) {
+            AndroidUtils.shareText(WebViewActivity.this, text);
         }
     }
 }
