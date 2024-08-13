@@ -60,4 +60,6 @@ dependencies {
     implementation 'com.github.Dimezis:BlurView:version-2.0.3' //高斯模糊
     implementation 'com.squareup.picasso:picasso:2.8'//图片加载库
     implementation 'androidx.cardview:cardview:1.0.0'
+    implementation  'io.github.scwang90:refresh-layout-kernel:2.1.0'      //刷新框架
+    implementation  'io.github.scwang90:refresh-header-classics:2.1.0'    //经典刷新头
 }
