@@ -1,4 +1,4 @@
-package com.mimeng.ui.user;
+package com.mimeng.fragments;
 
 import android.app.Activity;
 import android.content.Intent;

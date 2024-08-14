@@ -90,3 +90,18 @@
 -dontwarn org.tinylog.format.MessageFormatter
 -dontwarn org.tinylog.provider.LoggingProvider
 -dontwarn org.tinylog.provider.ProviderRegistry
+
+-keep public class * extends com.mimeng.base.BaseActivity
+-keep public class * extends android.app.Application
+
+-keepclassmembers public class com.mimeng.activity.WebViewActivity$AndroidInterface {
+    public <methods>;
+}
+
+-keepclassmembers public class com.mimeng.values.* {
+    <fields>;
+}
+
+-keepclassmembers public class com.mimeng.user.Account {
+    <fields>;
+}
