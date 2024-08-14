@@ -48,7 +48,7 @@ public class GuideActivity extends BaseActivity {
 
     private void isDestroyAction() {
         if ((System.currentTimeMillis() - exitTime) > 2000) {
-            Toast.makeText(this, "再按一次退出应用", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.msg_press_back_again_then_exit, Toast.LENGTH_SHORT).show();
             exitTime = System.currentTimeMillis();
         } else {
             finish(); // 用户两次点击返回键，退出应用

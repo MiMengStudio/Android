@@ -36,7 +36,7 @@ public class LaunchActivity extends BaseActivity {
                     @Override
                     public void onTick(long l) {
                         long t = l / 1000;
-                        time.setText("跳过(" + t + ")");
+                        time.setText(getString(R.string.msg_skip_launch_screen, t));
                     }
 
                     @Override

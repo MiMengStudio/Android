@@ -8,4 +8,13 @@
     <string name="title_tools">工具</string>
     <string name="title_user">我的</string>
     <string name="loading">加载资源中，请稍等...</string>
+    <string name="buy_discounted">已优惠￥ %d</string>
+    <string name="msg_copied">已复制</string>
+    <string name="msg_not_signed_in">你还没登录呢</string>
+    <string name="msg_qq_version_not_supported">未安装手Q或安装的版本不支持</string>
+    <string name="msg_press_back_again_then_exit">再按一次退出应用</string>
+    <string name="msg_skip_launch_screen">跳过(%d)</string>
+    <string name="sign_signed_in">已签到</string>
+    <string name="sign_need_sign_in">未签到</string>
+    <string name="sign_signed_successful">签到成功</string>
 </resources>

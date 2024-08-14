@@ -44,9 +44,6 @@ public class WebViewActivity extends BaseActivity {
                 titleTextView.setText(title);
                 Log.d("WebViewActivity", "网页标题: " + title);
             }
-
-            // 注册 AndroidInterface
-            mAgentWeb.getJsInterfaceHolder().addJavaObject("android", new AndroidInterface(WebViewActivity.this));
         }
     };
     private String url;
@@ -77,19 +74,16 @@ public class WebViewActivity extends BaseActivity {
         resetLayoutTopMargin(toolbar, 3);
         setSupportActionBar(toolbar);
 
-
         View webView = findViewById(R.id.web_view);
         mAgentWeb = AgentWeb.with(this)
                 .setAgentWebParent((LinearLayout) webView, new LinearLayout.LayoutParams(-1, -1))
                 .useDefaultIndicator()
                 .setWebViewClient(mWebViewClient)
                 .setAgentWebUIController(new AgentWebUIControllerImplBase())
+                .addJavascriptInterface("android", new AndroidInterface())
                 .createAgentWeb()
                 .ready()
                 .go(this.url); // 加载传递的URL
-
-        // 添加 JavaScript 接口
-        mAgentWeb.getJsInterfaceHolder().addJavaObject("android", new AndroidInterface(this));
 
         findViewById(R.id.back).setOnClickListener(view -> onBackPressed());
 
@@ -121,7 +115,7 @@ public class WebViewActivity extends BaseActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.copy_link) {
             ClipboardUtils.copyToClipboard(this, this.url);
-            Toast.makeText(this, "已复制", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.msg_copied), Toast.LENGTH_SHORT).show();
             return true;
         } else if (item.getItemId() == R.id.open_in_browser) {
             Intent intent = new Intent();
@@ -142,14 +136,8 @@ public class WebViewActivity extends BaseActivity {
         }
     }
 
+    @SuppressWarnings("unused")
     public class AndroidInterface {
-        private final Context mContext; // 添加一个 Context 对象的引用
-
-        public AndroidInterface(Context context) {
-            mContext = context; // 在构造函数中初始化 Context 对象
-        }
-
-        @SuppressWarnings("unused")
         @JavascriptInterface
         public void updateUserInfo(String accountInfo) {
             Log.d("WebViewActivity", "updateUserInfo called from JavaScript");
@@ -157,10 +145,8 @@ public class WebViewActivity extends BaseActivity {
             Account account = App.GSON.fromJson(accountInfo, Account.class);
 
             // 保存 Account 对象到 SharedPreferences
-            AccountManager.save(mContext, account);
-            Intent intent = new Intent();
-            intent.putExtra("accountInfo", "登录成功信息");
-            setResult(Activity.RESULT_OK, intent);
+            AccountManager.save(WebViewActivity.this, account);
+            setResult(Activity.RESULT_OK, null);
             finish();
         }
 
