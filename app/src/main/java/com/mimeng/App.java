@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
+import com.mimeng.activity.LaunchActivity;
 import com.mimeng.activity.WebViewActivity;
 import com.mimeng.user.AccountManager;
 
@@ -38,6 +39,7 @@ public class App extends Application {
                     Intent intent = WebViewActivity.createLoginInIntent(App.this);
                     intent.putExtra("toast", "登录失效，请重新登录");
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    LaunchActivity.stopTimerTask();
                     startActivity(intent);
                 }
             });
