@@ -3,7 +3,6 @@ package com.mimeng.activity;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -14,8 +13,6 @@ import android.widget.Toast;
 
 import com.mimeng.R;
 import com.mimeng.base.BaseActivity;
-
-import org.jetbrains.annotations.NotNull;
 
 @SuppressLint("CustomSplashScreen")
 public class LaunchActivity extends BaseActivity {
@@ -35,7 +32,7 @@ public class LaunchActivity extends BaseActivity {
             @Override
             public void onTick(long l) {
                 long t = l / 1000;
-                time.setText("跳过(" + t + ")");
+                time.setText(getString(R.string.msg_skip_launch_screen, t));
             }
 
             @Override
@@ -80,15 +77,6 @@ public class LaunchActivity extends BaseActivity {
         }
     }
 
-    public static void stopTimerTask() {
-        if (timer != null) timer.cancel();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        timer.start();
-    }
 
     // 覆盖返回按钮，不允许退出程序
     @Override

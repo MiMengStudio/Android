@@ -14,23 +14,19 @@ import com.mimeng.databinding.FragmentToolsBinding;
 
 public class ToolsFragment extends Fragment {
 
-    private FragmentToolsBinding binding;
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ToolsViewModel toolsViewModel = new ViewModelProvider(this).get(ToolsViewModel.class);
 
-        binding = FragmentToolsBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+        com.mimeng.databinding.FragmentToolsBinding binding = FragmentToolsBinding.inflate(inflater, container, false);
 
         final TextView textView = binding.textTools;
         toolsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-        return root;
+        return binding.getRoot();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
     }
 }

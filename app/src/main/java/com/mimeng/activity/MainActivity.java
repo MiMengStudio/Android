@@ -1,27 +1,16 @@
 package com.mimeng.activity;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
-import com.mimeng.ApplicationConfig;
 import com.mimeng.R;
 import com.mimeng.base.BaseActivity;
 import com.mimeng.databinding.ActivityMainBinding;
-import com.mimeng.user.Account;
-import com.mimeng.user.AccountManager;
-
-import java.io.IOException;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 
 public class MainActivity extends BaseActivity {
     public static final String PREFS_NAME = "MyPrefsFile";
@@ -76,7 +65,7 @@ public class MainActivity extends BaseActivity {
 
     private void isDestroyAction() {
         if ((System.currentTimeMillis() - exitTime) > 2000) {
-            Toast.makeText(this, "再按一次退出应用", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.msg_press_back_again_then_exit, Toast.LENGTH_SHORT).show();
             exitTime = System.currentTimeMillis();
         } else {
             finish(); // 用户两次点击返回键，退出应用

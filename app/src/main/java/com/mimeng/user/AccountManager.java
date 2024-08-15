@@ -135,20 +135,14 @@ public class AccountManager {
                 if (response.isSuccessful()) {
                     try {
                         JSONObject obj = new JSONObject(response.body().string());
-                        switch (obj.getInt("code")) {
-                            case 0:
-                                lastSignInInfo = SignInInfo.NEED_SIGN_IN;
-                                break;
-                            case 1:
-                                lastSignInInfo = SignInInfo.SIGNED_IN;
-                                break;
-                            case 2:
-                                lastSignInInfo = SignInInfo.INVALID_TOKEN;
-                                break;
-                            case 3:
-                                lastSignInInfo = SignInInfo.USER_NOT_FOUND;
-                                break;
-                        }
+                        lastSignInInfo = switch (obj.getInt("code")) {
+                            case 0 -> SignInInfo.NEED_SIGN_IN;
+                            case 1 -> SignInInfo.SIGNED_IN;
+                            case 2 -> SignInInfo.INVALID_TOKEN;
+                            case 3 -> SignInInfo.USER_NOT_FOUND;
+                            default ->
+                                    throw new IllegalStateException("Unexpected value " + obj.getInt("code"));
+                        };
                         if (obj.has("lastSignDate")) {
                             long time = obj.getLong("lastSignDate");
                             Log.d(TAG, "Update sign in date" + time);
@@ -184,23 +178,28 @@ public class AccountManager {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     try {
+                        assert loggedIn != null;
                         JSONObject obj = new JSONObject(response.body().string());
-                        switch (obj.getInt("code")) {
-                            case 0:
-                                lastSignInInfo = SignInInfo.SIGNED_SUCCESSFUL;
+                        lastSignInInfo = switch (obj.getInt("code")) {
+                            case 0 -> {
                                 loggedIn.setSignInDate(obj.getLong("date"));
-                                break;
-                            case 1:
-                                lastSignInInfo = SignInInfo.SIGNED_IN;
+                                yield SignInInfo.SIGNED_SUCCESSFUL;
+                            }
+                            case 1 -> {
                                 loggedIn.setSignInDate(obj.getLong("date"));
-                                break;
-                            case 2:
-                                lastSignInInfo = SignInInfo.INVALID_TOKEN;
-                                break;
-                            case 3:
-                                lastSignInInfo = SignInInfo.USER_NOT_FOUND;
-                        }
-                        notifyListenersUpdateSignInDate();
+                                yield SignInInfo.SIGNED_IN;
+                            }
+                            case 2 -> {
+                                notifyListenersUpdateSignInDate();
+                                yield SignInInfo.INVALID_TOKEN;
+                            }
+                            case 3 -> {
+                                notifyListenersUpdateSignInDate();
+                                yield SignInInfo.USER_NOT_FOUND;
+                            }
+                            default ->
+                                    throw new IllegalStateException("Unexpected value: " + obj.getInt("code"));
+                        };
                     } catch (JSONException e) {
                         Log.e(TAG, "Json Syntax Error " + response, e);
                         lastSignInInfo = SignInInfo.UNKNOWN_ERROR;

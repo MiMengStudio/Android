@@ -25,9 +25,9 @@ import com.mimeng.adapters.FragmentPageAdapter;
 import com.mimeng.base.BaseActivity;
 import com.mimeng.databinding.ActivitySearchBinding;
 import com.mimeng.fragments.SearchArticleFragment;
+import com.mimeng.fragments.UserFragment;
 import com.mimeng.ui.community.CommunityFragment;
 import com.mimeng.ui.tools.ToolsFragment;
-import com.mimeng.ui.user.UserFragment;
 import com.mimeng.utils.DataBaseHelper;
 import com.mimeng.utils.DataBaseUtils;
 

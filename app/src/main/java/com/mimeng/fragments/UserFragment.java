@@ -1,4 +1,4 @@
-package com.mimeng.ui.user;
+package com.mimeng.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -54,7 +54,7 @@ public class UserFragment extends BaseFragment {
                 vipSelected[0] = vip;
                 vip.setBackgroundResource(R.drawable.bg_vip_buy);
                 binding.priceActual.setText(String.format(Locale.getDefault(), "%d", newPrice));
-                binding.priceDiscounted.setText(String.format(Locale.getDefault(), "已优惠￥%d", oldPrice - newPrice));
+                binding.priceDiscounted.setText(getString(R.string.buy_discounted, oldPrice - newPrice));
             });
         }
 
@@ -80,7 +80,7 @@ public class UserFragment extends BaseFragment {
             if (AccountManager.hasLoggedIn()) {
                 AccountManager.performSigningIn();
             } else {
-                Toast.makeText(requireActivity(), "你还没登录呢", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireActivity(), R.string.msg_not_signed_in, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -95,7 +95,7 @@ public class UserFragment extends BaseFragment {
         try {
             startActivity(intent);
         } catch (Exception e) {
-            Toast.makeText(UserFragment.this.getActivity(), "未安装手Q或安装的版本不支持", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UserFragment.this.getActivity(), R.string.msg_qq_version_not_supported, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -104,7 +104,7 @@ public class UserFragment extends BaseFragment {
             case SIGNED_SUCCESSFUL:
                 requireActivity().runOnUiThread(
                         () -> Toast.makeText(requireActivity(),
-                                "签到成功", Toast.LENGTH_SHORT).show());
+                                R.string.sign_signed_successful, Toast.LENGTH_SHORT).show());
                 // 签到成功的同时也更新UserFragment的UI
             case SIGNED_IN: // fall through
                 requireActivity().runOnUiThread(
@@ -113,13 +113,13 @@ public class UserFragment extends BaseFragment {
                             binding.fragmentUserSignInTextView.setTextColor(
                                     requireContext().getResources().getColor(R.color.colorPrimary, null));
                             // 设置文本内容
-                            binding.fragmentUserSignInTextView.setText("已签到");
+                            binding.fragmentUserSignInTextView.setText(R.string.sign_signed_in);
                         }
                 );
                 break;
             case NEED_SIGN_IN:
                 requireActivity().runOnUiThread(
-                        () -> binding.fragmentUserSignInTextView.setText("未签到")
+                        () -> binding.fragmentUserSignInTextView.setText(R.string.sign_need_sign_in)
                 );
                 break;
             case INVALID_TOKEN:
@@ -139,7 +139,6 @@ public class UserFragment extends BaseFragment {
         // 获取 Account 信息
         if (AccountManager.hasLoggedIn()) {
             Account account = AccountManager.get();
-            Log.d("Account", "Retrieved Account Info: " + account);
             // TODO 用户相关功能
             AccountManager.loadUserIcon(binding.head);
 
@@ -156,14 +155,7 @@ public class UserFragment extends BaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_LOGIN && resultCode == Activity.RESULT_OK) {
-            if (data != null) {
-                String accountInfo = data.getStringExtra("accountInfo");
-                if (accountInfo != null) {
-                    // 更新 UI 或处理登录结果
-                    Log.d("UserFragment", "Received login result: " + accountInfo);
-                    loadUserLayout();
-                }
-            }
+            loadUserLayout();
         }
     }
 

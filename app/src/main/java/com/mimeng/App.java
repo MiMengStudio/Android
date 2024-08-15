@@ -39,7 +39,6 @@ public class App extends Application {
                     Intent intent = WebViewActivity.createLoginInIntent(App.this);
                     intent.putExtra("toast", "登录失效，请重新登录");
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    LaunchActivity.stopTimerTask();
                     startActivity(intent);
                 }
             });
@@ -67,9 +66,8 @@ public class App extends Application {
      */
     public static void resetLayoutTopMargin(@Nullable Context context , @NonNull View root, int topMarginTimes) {
         ViewGroup.LayoutParams layoutParams = root.getLayoutParams();
-        if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
-            ((ViewGroup.MarginLayoutParams) layoutParams).topMargin +=
-                    App.getStatusBarHeight(context) * topMarginTimes;
+        if (layoutParams instanceof ViewGroup.MarginLayoutParams params) {
+            params.topMargin += App.getStatusBarHeight(context) * topMarginTimes;
         }
     }
 
