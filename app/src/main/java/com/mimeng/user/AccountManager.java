@@ -222,15 +222,21 @@ public class AccountManager {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(Call call, Response response) {
                 // 根据Core的源码，我们只需要检查返回值
-                Log.i(TAG, "validateToken: " + response.code() + " " + response.body().string());
-                if (response.isSuccessful()) {
-                    result.onSuccess();
-                } else {
-                    clearUserLoginData();
-                    result.onFail();
+                try {
+                    assert response.body() != null;
+                    Log.i(TAG, "validateToken: " + response.code() + " " + response.body().string());
+                    if (response.isSuccessful()) {
+                        result.onSuccess();
+                    } else {
+                        clearUserLoginData();
+                        result.onFail();
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "AccountManager -- onResponse: Token校验函数出错 => " + e);
                 }
+
             }
         });
     }

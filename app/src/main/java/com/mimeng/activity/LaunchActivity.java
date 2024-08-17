@@ -16,10 +16,7 @@ import com.mimeng.base.BaseActivity;
 
 @SuppressLint("CustomSplashScreen")
 public class LaunchActivity extends BaseActivity {
-    private final String PREFS_NAME = "MyPrefsFile";
-    private final String KEY_GUIDE_SEEN = "hasSeenGuide"; // 仅保留是否看过教程的键
-
-    //设置preferences
+    private static CountDownTimer timer;
 
     @SuppressLint("ObsoleteSdkInt")
     @Override
@@ -30,20 +27,19 @@ public class LaunchActivity extends BaseActivity {
 
         // 计时
         TextView time = findViewById(R.id.timer);
-        CountDownTimer timer =
-                new CountDownTimer(5000, 1000) {
-                    @SuppressLint("SetTextI18n")
-                    @Override
-                    public void onTick(long l) {
-                        long t = l / 1000;
-                        time.setText(getString(R.string.msg_skip_launch_screen, t));
-                    }
+        timer = new CountDownTimer(5000, 1000) {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onTick(long l) {
+                long t = l / 1000;
+                time.setText(getString(R.string.msg_skip_launch_screen, t));
+            }
 
-                    @Override
-                    public void onFinish() {
-                        isBeginner();
-                    }
-                };
+            @Override
+            public void onFinish() {
+                isBeginner();
+            }
+        };
         timer.start();
 
         // 跳过
@@ -67,34 +63,42 @@ public class LaunchActivity extends BaseActivity {
     }
 
     private void isBeginner() {
-        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        boolean hasSeenGuide = prefs.getBoolean(KEY_GUIDE_SEEN, false); // 检查是否已经看过教程
-        if (!hasSeenGuide) { // 如果用户未看过教程
-            showTutorial();
+        // 检查是否已经看过教程
+        SharedPreferences prefs = getSharedPreferences("MyPrefsFile", MODE_PRIVATE);
+        // 仅保留是否看过教程的键
+        boolean hasSeenGuide = prefs.getBoolean("hasSeenGuide", false);
+        if (!hasSeenGuide) {
+            // 如果用户未看过教程
+            toMainActivity(GuideActivity.class);
+            Toast.makeText(this, "展示教程", Toast.LENGTH_SHORT).show();
+            finish();
         } else {
-            proceedToMain(); // 如果已经看过教程，直接进入主界面
+            toMainActivity(MainActivity.class); // 如果已经看过教程，直接进入主界面
         }
     }
 
-    private void showTutorial() {
-        toMainActivity(GuideActivity.class);
-        Toast.makeText(this, "展示教程", Toast.LENGTH_SHORT).show();
-        finish();
-    }
-
-    private void proceedToMain() {
-        // 应用正常启动流程
-        toMainActivity(MainActivity.class);
-    }
 
     // 覆盖返回按钮，不允许退出程序
     @Override
     public void onBackPressed() {
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        timer.start();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        timer.cancel();
+    }
+
     // 避免内存泄漏，确保在Activity销毁时释放binding
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        timer.cancel();
     }
 }

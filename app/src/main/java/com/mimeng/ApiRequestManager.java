@@ -13,6 +13,7 @@ import com.mimeng.user.AccountManager;
 import com.mimeng.user.SignInInfo;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import okhttp3.Callback;
@@ -48,11 +49,11 @@ public final class ApiRequestManager implements AccountManager.AccountSignInTime
         this.account = account;
     }
 
-    public void searchArticle(@NonNull String word, Context context, @NonNull Callback callback) {
+    public void searchArticle(@NonNull String word, @NonNull int pager, @NonNull Callback callback) {
         RequestURLBuilder builder = new RequestURLBuilder(ApplicationConfig.HOST_API + "/search", account)
                 .setAction(RequestURLBuilder.Action.SEARCH_ARTICLE)
                 .set("keyword", word)
-                .set("page", "1")
+                .set("page", pager)
                 .set("sort", "hot")
                 .set("reverse", "false");
         String url = builder.toString();
@@ -94,7 +95,7 @@ public final class ApiRequestManager implements AccountManager.AccountSignInTime
 
     private final static class RequestURLBuilder {
         @NonNull
-        private final Map<String, String> getParams;
+        private final Map<String, Object> getParams;
         @NonNull
         private final String base;
 
@@ -118,7 +119,7 @@ public final class ApiRequestManager implements AccountManager.AccountSignInTime
             return setAction(act.toString());
         }
 
-        public RequestURLBuilder set(@NonNull String key, @NonNull String value) {
+        public RequestURLBuilder set(@NonNull String key, @NonNull Object value) {
             getParams.put(key, value);
             return this;
         }

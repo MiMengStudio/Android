@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
+import com.mimeng.activity.LaunchActivity;
 import com.mimeng.activity.WebViewActivity;
 import com.mimeng.user.AccountManager;
 
@@ -66,8 +67,7 @@ public class App extends Application {
     public static void resetLayoutTopMargin(@Nullable Context context , @NonNull View root, int topMarginTimes) {
         ViewGroup.LayoutParams layoutParams = root.getLayoutParams();
         if (layoutParams instanceof ViewGroup.MarginLayoutParams params) {
-            params.topMargin +=
-                    App.getStatusBarHeight(context) * topMarginTimes;
+            params.topMargin += App.getStatusBarHeight(context) * topMarginTimes;
         }
     }
 
