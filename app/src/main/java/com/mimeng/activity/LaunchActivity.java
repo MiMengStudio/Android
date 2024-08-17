@@ -83,6 +83,18 @@ public class LaunchActivity extends BaseActivity {
     public void onBackPressed() {
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        timer.start();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        timer.cancel();
+    }
+
     // 避免内存泄漏，确保在Activity销毁时释放binding
     @Override
     protected void onDestroy() {
