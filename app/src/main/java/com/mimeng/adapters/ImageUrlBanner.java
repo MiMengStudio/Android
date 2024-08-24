@@ -36,7 +36,6 @@ public class ImageUrlBanner extends BannerAdapter<BannerEntity, ImageUrlBanner.B
 
     @Override
     public void onBindView(BannerViewHolder holder, BannerEntity data, int position, int size) {
-        Log.e("onBindView: 测试测试测试测试",data.getImage());
         Glide.with(context).load(data.getImage()).into(holder.img);
     }
 

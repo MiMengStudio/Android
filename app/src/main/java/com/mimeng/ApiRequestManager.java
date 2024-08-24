@@ -1,6 +1,5 @@
 package com.mimeng;
 
-import android.content.Context;
 import android.util.ArrayMap;
 import android.util.Log;
 
@@ -13,7 +12,6 @@ import com.mimeng.user.AccountManager;
 import com.mimeng.user.SignInInfo;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import okhttp3.Callback;
@@ -49,7 +47,13 @@ public final class ApiRequestManager implements AccountManager.AccountSignInTime
         this.account = account;
     }
 
-    public void searchArticle(@NonNull String word, @NonNull int pager, @NonNull Callback callback) {
+    /**
+     * 搜索文章
+     * @param word 关键词
+     * @param pager 页数
+     * @param callback 请求回调
+     */
+    public void searchArticle(@NonNull String word, int pager, @NonNull Callback callback) {
         RequestURLBuilder builder = new RequestURLBuilder(ApplicationConfig.HOST_API + "/search", account)
                 .setAction(RequestURLBuilder.Action.SEARCH_ARTICLE)
                 .set("keyword", word)
@@ -59,6 +63,26 @@ public final class ApiRequestManager implements AccountManager.AccountSignInTime
         String url = builder.toString();
         Log.d(TAG, "startSearchArticle: 完整API => " + url);
         client.newCall(buildRequest(url)).enqueue(callback);
+    }
+
+    /**
+     * 获取轮播图
+     * @param callback 请求回调
+     */
+    public void getBannerApi(@NonNull Callback callback){
+        RequestURLBuilder builder = new RequestURLBuilder(ApplicationConfig.HOST_API + "/content", account)
+                .setAction(RequestURLBuilder.Action.AD);
+        String url = builder.toString();
+        Log.d(TAG, "getBannerApi: 完整API => " + url);
+        client.newCall(buildRequest(url)).enqueue(callback);
+    }
+
+    /**
+     * 获取账号数据
+     * @return account实例
+     */
+    public Account getAccountData(){
+        return account;
     }
 
     public void performSigningIn(@NonNull Callback callback) {
@@ -146,7 +170,8 @@ public final class ApiRequestManager implements AccountManager.AccountSignInTime
             SEARCH_ARTICLE("searchArticle"),
             IS_SIGNED_IN("isSignedIn"),
             SIGN_IN("signIn"),
-            VALIDATE_TOKEN("validateToken");
+            VALIDATE_TOKEN("validateToken"),
+            AD("getAD");
             @NonNull
             private final String act;
 
