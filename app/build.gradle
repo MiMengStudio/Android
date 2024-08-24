@@ -4,14 +4,6 @@ plugins {
 }
 
 android {
-    signingConfigs {
-        debug {
-            storeFile file('D:\\KeyStor\\Stick.jks')
-            storePassword 'abc147369'
-            keyPassword 'abc147369'
-            keyAlias 'key0'
-        }
-    }
     namespace 'com.mimeng'
     compileSdk 33
     aaptOptions.cruncherEnabled = false

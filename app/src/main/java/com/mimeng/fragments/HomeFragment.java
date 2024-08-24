@@ -7,13 +7,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.mimeng.ApiRequestManager;
 import com.mimeng.R;
 import com.mimeng.activity.ResourceManagementActivity;
 import com.mimeng.activity.SearchActivity;
@@ -27,7 +27,12 @@ import com.mimeng.values.BannerEntity;
 import com.youth.banner.Banner;
 import com.youth.banner.indicator.CircleIndicator;
 
+import java.io.IOException;
 import java.util.ArrayList;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class HomeFragment extends BaseFragment {
     private final AccountManager.AccountSignInTimeListener listener = info -> {
@@ -38,6 +43,7 @@ public class HomeFragment extends BaseFragment {
         }
         return false;
     };
+    private final String TAG = "HomeFragment";
     private Banner<BannerEntity, ImageUrlBanner> banner;
     private FragmentHomeBinding binding;
     private ArrayList<BannerEntity> imgData;
@@ -58,20 +64,7 @@ public class HomeFragment extends BaseFragment {
         }
 
         // 初始化轮播图和数据
-        banner = binding.homeBanner;
-        initBannerData();
-
-        banner.setAdapter(new ImageUrlBanner(imgData, requireContext()))
-                .setIndicator(new CircleIndicator(inflater.getContext()));
-        banner.start();
-
-        banner.setOnBannerListener((data, position) -> {
-            Toast.makeText(requireContext(), "数据：" + data.getLink(), Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(requireContext(), WebViewActivity.class);
-            intent.putExtra("url", data.getLink());
-            intent.putExtra("showMenu", true);
-            startActivity(intent);
-        });
+        initBannerData(inflater);
 
         binding.search.setOnClickListener(v -> {
             Intent intent = new Intent(inflater.getContext(), SearchActivity.class);
@@ -88,26 +81,41 @@ public class HomeFragment extends BaseFragment {
     }
 
     // 初始化轮播图数据
-    private void initBannerData() {
+    private void initBannerData(LayoutInflater inflater) {
+        banner = binding.homeBanner;
         imgData = new ArrayList<>();
-        // 暂时使用这部分代码模拟后端数据
-        String json = """
-                [
-                            {
-                                image:"https://app.mimeng.fun/images/sz.jpg",
-                                link:"https://www.song3060.top/"
-                            },
-                            {
-                                image:"https://app.mimeng.fun/images/zm.png",
-                                link:"https://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=ygP92i-6Ibak91FyC_9D4qtzId46mEEc&authKey=L8xGeuDo7tEIAWCXovup8OqW1v1%2FYqJk%2B8BdRjovloPm13cv7ZGhQBTo%2BBulaWrS&noverify=0&group_code=826879869"
-                            },
-                            {
-                                image:"https://apicdn.likepoems.com/images/pixiv/6N55222VKDI4249xp5Qw.png",
-                                link:"https://apicdn.likepoems.com/images/pixiv/6N55222VKDI4249xp5Qw.png"
-                            }
-                        ]""";
-        imgData = new Gson().fromJson(json, new TypeToken<>() {
+        ApiRequestManager.DEFAULT.getBannerApi(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) {
+                try {
+                    assert response.body() != null;
+                    String json = response.body().string();
+                    Log.d(TAG, "onResponse: 获取轮播图接口数据 => "+json );
+                    imgData = new Gson().fromJson(json, new TypeToken<>() {
+                    });
+                    requireActivity().runOnUiThread(() -> {
+                        banner.setAdapter(new ImageUrlBanner(imgData, requireContext()))
+                                .setIndicator(new CircleIndicator(inflater.getContext()));
+                        banner.start();
+                        banner.setOnBannerListener((data, position) -> {
+                            Intent intent = new Intent(requireContext(), WebViewActivity.class);
+                            intent.putExtra("url", data.getUrl());
+                            intent.putExtra("showMenu", true);
+                            startActivity(intent);
+                        });
+                    });
+                }catch (Exception e){
+                    Log.e(TAG, "onResponse: 获取轮播图接口错误 => "+e );
+                }
+
+            }
         });
+
 
 
     }
