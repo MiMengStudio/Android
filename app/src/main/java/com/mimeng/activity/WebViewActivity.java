@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.ConsoleMessage;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.ImageView;
@@ -32,8 +33,9 @@ import com.mimeng.utils.AndroidUtils;
 import com.mimeng.utils.ClipboardUtils;
 
 public class WebViewActivity extends BaseActivity {
-    private AgentWeb mAgentWeb;
+
     private final WebViewClient mWebViewClient = new WebViewClient() {
+
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
@@ -45,8 +47,19 @@ public class WebViewActivity extends BaseActivity {
                 Log.d("WebViewActivity", "网页标题: " + title);
             }
         }
+
     };
+
+    private final com.just.agentweb.WebChromeClient client = new com.just.agentweb.WebChromeClient() {
+        @Override
+        public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
+            Log.d("网页log", "onConsoleMessage: => " + consoleMessage.lineNumber() + " --- " + consoleMessage.message());
+            return super.onConsoleMessage(consoleMessage);
+        }
+    };
+
     private String url;
+    private AgentWeb mAgentWeb;
 
     @NonNull
     public static Intent createLoginInIntent(@NonNull Context context) {
@@ -79,15 +92,18 @@ public class WebViewActivity extends BaseActivity {
                 .setAgentWebParent((LinearLayout) webView, new LinearLayout.LayoutParams(-1, -1))
                 .useDefaultIndicator()
                 .setWebViewClient(mWebViewClient)
+                .setWebChromeClient(client)
                 .setAgentWebUIController(new AgentWebUIControllerImplBase())
                 .addJavascriptInterface("android", new AndroidInterface())
                 .createAgentWeb()
                 .ready()
                 .go(this.url); // 加载传递的URL
 
+
         findViewById(R.id.back).setOnClickListener(view -> onBackPressed());
 
         ImageView close = findViewById(R.id.close);
+
         if (!getIntent().getBooleanExtra("showCloseBut", true)) close.setVisibility(View.GONE);
         close.setOnClickListener(view -> finish());
     }

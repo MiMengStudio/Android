@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.reflect.TypeToken;
 import com.mimeng.ApiRequestManager;
 import com.mimeng.App;
+import com.mimeng.ApplicationConfig;
 import com.mimeng.R;
 import com.mimeng.activity.WebViewActivity;
 import com.mimeng.adapters.ArticleRecAdapter;
@@ -68,12 +69,13 @@ public class SearchArticleFragment extends BaseFragment {
             assert account != null;
             String id = account.getID();
             String token = account.getToken();
-            String url = "http://127.0.0.1:5500/index.html?id=" + arId + "&account=" + id + "&token=" + token;
-            Toast.makeText(requireContext(), "参数 " + url, Toast.LENGTH_SHORT).show();
+            String url = ApplicationConfig.HOST_API + "/preview/index.html?id=" + arId + "&account=" + id + "&token=" + token;
+            Log.d(TAG, "onCreateView: 完整网页地址 => " + url);
             Intent i = new Intent(requireContext(), WebViewActivity.class);
             i.putExtra("url", url);
             i.putExtra("showMenu", false);
             i.putExtra("showCloseBut", false);
+            i.putExtra("showProgress", false);
             startActivity(i);
         });
 
