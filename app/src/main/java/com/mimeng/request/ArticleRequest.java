@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.mimeng.ApplicationConfig;
 import com.mimeng.request.annotations.GetParams;
 import com.mimeng.request.annotations.RequestBaseURL;
+import com.mimeng.request.annotations.WithAccountInfo;
 import com.mimeng.request.annotations.WithAction;
 import com.mimeng.request.annotations.WithDefaultGetParams;
 
@@ -21,6 +22,7 @@ public interface ArticleRequest extends AppRequest {
      * @param callback 请求回调
      */
     @WithAction
+    @WithAccountInfo
     @WithDefaultGetParams(name = "sort", value = "hot")
     @WithDefaultGetParams(name = "reverse", value = "false")
     void searchArticle(@GetParams("keyword") String keyword,

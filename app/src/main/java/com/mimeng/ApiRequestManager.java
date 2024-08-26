@@ -38,7 +38,7 @@ public final class ApiRequestManager {
 
     private static Object getProxyInstance(Class<?> clazz) {
         return Proxy.newProxyInstance(ApiRequestManager.class.getClassLoader(), new Class[]{clazz}, (proxy, method, args) -> {
-            if (method.getReturnType() != Void.class) {
+            if (method.getReturnType() != void.class) {
                 Log.e(TAG, "Method " + method + " shouldn't have return value instead of " + method.getReturnType());
                 return null;
             }
@@ -88,7 +88,7 @@ public final class ApiRequestManager {
                 baseUrl = reqUrl.value();
             }
 
-            for (int i = 1; i < method.getParameterCount(); ++i) {
+            for (int i = 0; i < method.getParameterCount() - 1; ++i) {
                 for (Annotation ann : method.getParameterAnnotations()[i]) {
                     if (ann instanceof GetParams getParams) {
                         builder.set(getParams.value(), args[i]);
@@ -102,8 +102,8 @@ public final class ApiRequestManager {
                 if (account != null)
                     req.addHeader("Authorization", "Bearer " + account.getToken());
             }
-
-            client.newCall(req.url(baseUrl + builder).get().build()).enqueue((Callback) args[0]);
+            Log.i(TAG, "Request URL " + (baseUrl + builder));
+            client.newCall(req.url(baseUrl + builder).get().build()).enqueue((Callback) args[args.length - 1]);
             return null;
         });
     }
