@@ -38,7 +38,7 @@ public class ArticleRecAdapter extends RecyclerView.Adapter<ArticleRecAdapter.Vi
     }
 
     public interface setItemChangeInterface{
-        void articleId(String arId);
+        void articleId(int arId);
     }
 
     public void setItemChangeListener(setItemChangeInterface mSetItemChangeInterface){
@@ -118,7 +118,7 @@ public class ArticleRecAdapter extends RecyclerView.Adapter<ArticleRecAdapter.Vi
 
         }
 
-        holder.itemView.setOnClickListener(v -> mSetItemChangeInterface.articleId(indexData.get_id()));
+        holder.itemView.setOnClickListener(v -> mSetItemChangeInterface.articleId(indexData.getId()));
 
     }
 
