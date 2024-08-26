@@ -41,9 +41,7 @@ public class SearchResultActivity extends BaseActivity {
         binding = ActivitySearchResultBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.back.setOnClickListener(view -> {
-            finish();
-        });
+        binding.back.setOnClickListener(view -> finish());
 
         binding.searchEdit.requestFocus();
 
@@ -52,8 +50,7 @@ public class SearchResultActivity extends BaseActivity {
         int[] location = new int[2];
         for (int i = 0; i < parentLayout.getChildCount(); i++) {
             View view = parentLayout.getChildAt(i);
-            if (view instanceof TextView) {
-                TextView tv = (TextView) view;
+            if (view instanceof TextView tv) {
                 // 获取每个TextView的中心点x坐标
 
                 tv.getLocationInWindow(location);
@@ -85,9 +82,9 @@ public class SearchResultActivity extends BaseActivity {
     private void resetIndicator(int index) {
         // 重置文本颜色
         for (TextView tv : typeTextViews) {
-            tv.setTextColor(getResources().getColor(R.color.font_color_grey));
+            tv.setTextColor(getColor(R.color.font_color_grey));
         }
-        typeTextViews.get(index).setTextColor(getResources().getColor(R.color.colorPrimary)); // 选中的颜色
+        typeTextViews.get(index).setTextColor(getColor(R.color.colorPrimary)); // 选中的颜色
 
         // 移动指示器
         int position = textViewXPositions.get(index);

@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
-import com.mimeng.activity.LaunchActivity;
 import com.mimeng.activity.WebViewActivity;
 import com.mimeng.user.AccountManager;
 
@@ -25,8 +24,6 @@ public class App extends Application {
         instance = this;
         AccountManager.tryLoadFromStorage(this);
         if (AccountManager.hasLoggedIn()) {
-            // 必须先初始化
-            ApiRequestManager.DEFAULT.setAccount(AccountManager.get());
             // 先检查token, 再更新签到状态
             AccountManager.validateToken(new AccountManager.ValidateTokenResult() {
                 @Override

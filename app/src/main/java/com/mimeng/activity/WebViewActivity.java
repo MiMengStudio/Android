@@ -98,13 +98,14 @@ public class WebViewActivity extends BaseActivity {
                 .createAgentWeb()
                 .ready()
                 .go(this.url); // 加载传递的URL
-
+        mAgentWeb.getWebCreator().getWebView().getSettings().setUserAgentString("MiMengAndroidAPP");
 
         findViewById(R.id.back).setOnClickListener(view -> onBackPressed());
 
         ImageView close = findViewById(R.id.close);
 
-        if (!getIntent().getBooleanExtra("showCloseBut", true)) close.setVisibility(View.GONE);
+        if (!getIntent().getBooleanExtra("showCloseBut", true))
+            close.setVisibility(View.GONE);
         close.setOnClickListener(view -> finish());
     }
 

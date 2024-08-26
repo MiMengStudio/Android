@@ -129,6 +129,7 @@ public class SearchActivity extends BaseActivity {
                 searchHistory();
                 Toast.makeText(this, "已清空历史记录", Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
+                Log.e("SearchActivity", "Failed to clear history  ", e);
                 Toast.makeText(this, "清空历史记录失败", Toast.LENGTH_SHORT).show();
             }
 

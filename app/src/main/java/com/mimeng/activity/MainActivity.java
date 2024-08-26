@@ -17,14 +17,13 @@ public class MainActivity extends BaseActivity {
     public static final String KEY_FIRST_TIME = "isFirstTime";
 
     private long exitTime = 0;
-    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         blackParentBar();
         setFullScreen(false);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        com.mimeng.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
@@ -70,11 +69,5 @@ public class MainActivity extends BaseActivity {
         } else {
             finish(); // 用户两次点击返回键，退出应用
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        binding = null; // 避免内存泄漏
     }
 }

@@ -94,11 +94,4 @@ public class LaunchActivity extends BaseActivity {
         super.onStop();
         timer.cancel();
     }
-
-    // 避免内存泄漏，确保在Activity销毁时释放binding
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        timer = null;
-    }
 }

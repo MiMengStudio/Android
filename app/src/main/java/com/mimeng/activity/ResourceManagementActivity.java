@@ -134,7 +134,6 @@ public class ResourceManagementActivity extends BaseActivity {
                 imp_state_text.setTextColor(ContextCompat.getColor(this, R.color.md_theme_primary)); // 假设正常文本颜色为主题主色
             } catch (IOException e) {
                 Log.e(TAG, "Error when reading info.json", e);
-                e.printStackTrace();
                 imp_state_text.setText("读取info.json失败");
                 imp_state_text.setTextColor(ContextCompat.getColor(this, R.color.md_theme_error));
             }

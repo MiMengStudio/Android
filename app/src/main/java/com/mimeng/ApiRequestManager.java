@@ -1,189 +1,122 @@
 package com.mimeng;
 
-import android.util.ArrayMap;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import com.mimeng.request.AccountRequest;
+import com.mimeng.request.AppRequest;
+import com.mimeng.request.ArticleRequest;
+import com.mimeng.request.ContentRequest;
+import com.mimeng.request.GetParamsBuilder;
+import com.mimeng.request.annotations.DefaultGetParamList;
+import com.mimeng.request.annotations.GetParams;
+import com.mimeng.request.annotations.RequestBaseURL;
+import com.mimeng.request.annotations.WithAccountInfo;
+import com.mimeng.request.annotations.WithAction;
+import com.mimeng.request.annotations.WithDefaultGetParams;
 import com.mimeng.user.Account;
 import com.mimeng.user.AccountManager;
-import com.mimeng.user.SignInInfo;
 
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Proxy;
+import java.util.Arrays;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
-public final class ApiRequestManager implements AccountManager.AccountSignInTimeListener {
-    @NonNull
-    public static final ApiRequestManager DEFAULT = new ApiRequestManager();
+public final class ApiRequestManager {
     private static final String TAG = "ApiRequestManager";
-    private final OkHttpClient client;
-    @Nullable
-    private Account account;
+    private static final OkHttpClient client = new OkHttpClient();
 
-    ApiRequestManager() {
-        this.client = new OkHttpClient();
-        AccountManager.addSignInDateUpdateListener(this);
+    private static final ConcurrentMap<Class<?>, Object> CACHE = new ConcurrentHashMap<>();
+
+    public static <T extends AppRequest> T get(Class<T> clazz) {
+        return clazz.cast(CACHE.computeIfAbsent(clazz, ApiRequestManager::getProxyInstance));
     }
 
-    private Request buildRequest(String url) {
-        Request.Builder builder = new Request.Builder()
-                .url(url);
-        
-        Log.i(TAG, "Request url " + url);
-        if (account != null) {
-            builder.addHeader("Authorization", "Bearer " + account.getToken());
-            Log.d(TAG, "Using token " + account.getToken() );
-        }
-        return builder.get().build();
-    }
-
-    void setAccount(@NonNull Account account) {
-        this.account = account;
-    }
-
-    /**
-     * 搜索文章
-     * @param word 关键词
-     * @param pager 页数
-     * @param callback 请求回调
-     */
-    public void searchArticle(@NonNull String word, int pager, @NonNull Callback callback) {
-        RequestURLBuilder builder = new RequestURLBuilder(ApplicationConfig.HOST_API + "/search", account)
-                .setAction(RequestURLBuilder.Action.SEARCH_ARTICLE)
-                .set("keyword", word)
-                .set("page", pager)
-                .set("sort", "hot")
-                .set("reverse", "false");
-        String url = builder.toString();
-        Log.d(TAG, "startSearchArticle: 完整API => " + url);
-        client.newCall(buildRequest(url)).enqueue(callback);
-    }
-
-    /**
-     * 获取轮播图
-     * @param callback 请求回调
-     */
-    public void getBannerApi(@NonNull Callback callback){
-        RequestURLBuilder builder = new RequestURLBuilder(ApplicationConfig.HOST_API + "/content", account)
-                .setAction(RequestURLBuilder.Action.AD);
-        String url = builder.toString();
-        Log.d(TAG, "getBannerApi: 完整API => " + url);
-        client.newCall(buildRequest(url)).enqueue(callback);
-    }
-
-    /**
-     * 获取账号数据
-     * @return account实例
-     */
-    public Account getAccountData(){
-        return account;
-    }
-
-    public void performSigningIn(@NonNull Callback callback) {
-        Log.i(TAG, "Performing sign in");
-        client.newCall(buildRequest(
-                new RequestURLBuilder(ApplicationConfig.ACCOUNT_SERVICE_URL, account)
-                        .setAction(RequestURLBuilder.Action.SIGN_IN)
-                        .toString())).enqueue(callback);
-    }
-
-    public void updateAccountSignInTime(@NonNull Callback callback) {
-        Log.i(TAG, "Request to server for sign in info");
-        client.newCall(buildRequest(
-                new RequestURLBuilder(ApplicationConfig.ACCOUNT_SERVICE_URL, account)
-                        .setAction(RequestURLBuilder.Action.IS_SIGNED_IN)
-                        .toString()
-        )).enqueue(callback);
-    }
-
-    public void validateToken(@NonNull Callback callback) {
-        Log.i(TAG, "Request to server for validateToken");
-        client.newCall(buildRequest(
-                new RequestURLBuilder(ApplicationConfig.ACCOUNT_SERVICE_URL, account)
-                        .setAction(RequestURLBuilder.Action.VALIDATE_TOKEN)
-                        .toString()
-        )).enqueue(callback);
-    }
-
-    @Override
-    public boolean onReceive(@NonNull SignInInfo newInfo) {
-        setAccount(AccountManager.get());
-        return false;
-    }
-
-    private final static class RequestURLBuilder {
-        @NonNull
-        private final Map<String, Object> getParams;
-        @NonNull
-        private final String base;
-
-        private RequestURLBuilder(@NonNull String base) {
-            this.getParams = new ArrayMap<>();
-            this.base = base;
-        }
-
-        private RequestURLBuilder(@NonNull String base, @Nullable Account id) {
-            this(base);
-            setIDIfValid(id);
-            setTokenIfValid(id);
-        }
-
-        public RequestURLBuilder setAction(@NonNull String act) {
-            getParams.put("act", act);
-            return this;
-        }
-
-        public RequestURLBuilder setAction(@NonNull Action act) {
-            return setAction(act.toString());
-        }
-
-        public RequestURLBuilder set(@NonNull String key, @NonNull Object value) {
-            getParams.put(key, value);
-            return this;
-        }
-
-        @CanIgnoreReturnValue
-        public RequestURLBuilder setIDIfValid(@Nullable Account account) {
-            return set("id", account != null ? account.getID() : "null");
-        }
-        
-        @CanIgnoreReturnValue
-        public RequestURLBuilder setTokenIfValid(@Nullable Account account) {
-            return set("token", account != null ? account.getToken() : "null");
-        }
-
-        @NonNull
-        @Override
-        public String toString() {
-            return base + getParams.entrySet().stream()
-                    .map((entry) -> entry.getKey() + "=" + entry.getValue())
-                    .collect(Collectors.joining("&", "?", ""));
-        }
-
-        enum Action {
-            SEARCH_ARTICLE("searchArticle"),
-            IS_SIGNED_IN("isSignedIn"),
-            SIGN_IN("signIn"),
-            VALIDATE_TOKEN("validateToken"),
-            AD("getAD");
-            @NonNull
-            private final String act;
-
-            Action(@NonNull String act) {
-                this.act = act;
+    private static Object getProxyInstance(Class<?> clazz) {
+        return Proxy.newProxyInstance(ApiRequestManager.class.getClassLoader(), new Class[]{clazz}, (proxy, method, args) -> {
+            if (method.getReturnType() != Void.class) {
+                Log.e(TAG, "Method " + method + " shouldn't have return value instead of " + method.getReturnType());
+                return null;
             }
 
-            @NonNull
-            @Override
-            public String toString() {
-                return act;
+            Class<?>[] paramsType = method.getParameterTypes();
+            if (paramsType.length == 0 || paramsType[paramsType.length - 1] != Callback.class) {
+                Log.e(TAG, "Method " + method + " don't have Callback");
+                return null;
             }
-        }
+
+            String baseUrl = null;
+            boolean withAccountInfo = false;
+
+            GetParamsBuilder builder = new GetParamsBuilder();
+            Request.Builder req = new Request.Builder();
+
+            // Class
+            for (Annotation annotation : method.getDeclaringClass().getAnnotations()) {
+                if (annotation instanceof RequestBaseURL base) {
+                    baseUrl = base.value();
+                } else if (annotation instanceof WithAccountInfo) {
+                    withAccountInfo = true;
+                }
+            }
+
+            // Method
+            for (Annotation annotation : method.getAnnotations()) {
+                if (annotation instanceof RequestBaseURL base) {
+                    baseUrl = base.value();
+                } else if (annotation instanceof WithAction action) {
+                    builder.set("act", "".equals(action.value()) ? method.getName() : action.value());
+                } else if (annotation instanceof WithDefaultGetParams defaultGetParams) {
+                    builder.set(defaultGetParams.name(), defaultGetParams.value());
+                } else if (annotation instanceof DefaultGetParamList paramList) {
+                    Arrays.stream(paramList.value()).forEach(e -> builder.set(e.name(), e.value()));
+                } else if (annotation instanceof WithAccountInfo) {
+                    withAccountInfo = true;
+                }
+            }
+
+            if (baseUrl == null) {
+                RequestBaseURL reqUrl = method.getDeclaringClass().getAnnotation(RequestBaseURL.class);
+                if (reqUrl == null) {
+                    Log.e(TAG, "Method " + method + " and class " + method.getDeclaringClass() + " didn't define RequestBaseURL");
+                    return null;
+                }
+                baseUrl = reqUrl.value();
+            }
+
+            for (int i = 1; i < method.getParameterCount(); ++i) {
+                for (Annotation ann : method.getParameterAnnotations()[i]) {
+                    if (ann instanceof GetParams getParams) {
+                        builder.set(getParams.value(), args[i]);
+                    }
+                }
+            }
+
+            if (withAccountInfo) {
+                Account account = AccountManager.get();
+                builder.setIDAndTokenIfValid(account);
+                if (account != null)
+                    req.addHeader("Authorization", "Bearer " + account.getToken());
+            }
+
+            client.newCall(req.url(baseUrl + builder).get().build()).enqueue((Callback) args[0]);
+            return null;
+        });
+    }
+
+    public static ArticleRequest getArticle() {
+        return get(ArticleRequest.class);
+    }
+
+    public static ContentRequest getContent() {
+        return get(ContentRequest.class);
+    }
+
+    public static AccountRequest getAccount() {
+        return get(AccountRequest.class);
     }
 }

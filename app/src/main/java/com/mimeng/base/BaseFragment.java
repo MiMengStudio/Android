@@ -67,6 +67,10 @@ public class BaseFragment extends Fragment {
         requireActivity().startActivity(i, options.toBundle());
     }
 
+    protected void runOnUiThread(@NonNull Runnable action) {
+        requireActivity().runOnUiThread(action);
+    }
+
     /**
      * 跳转到其他页面
      *

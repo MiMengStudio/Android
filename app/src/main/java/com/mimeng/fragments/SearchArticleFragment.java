@@ -24,7 +24,8 @@ import com.mimeng.activity.WebViewActivity;
 import com.mimeng.adapters.ArticleRecAdapter;
 import com.mimeng.base.BaseFragment;
 import com.mimeng.databinding.FragmentSearchArticleBinding;
-import com.mimeng.user.Account;
+import com.mimeng.request.GetParamsBuilder;
+import com.mimeng.user.AccountManager;
 import com.mimeng.values.ArticleEntity;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 
@@ -38,7 +39,6 @@ import okhttp3.Response;
 public class SearchArticleFragment extends BaseFragment {
 
     private final String TAG = "SearchArticleFragment";
-    private final Account account = ApiRequestManager.DEFAULT.getAccountData();
     private int count = 1;
     private String keyWord;
     private boolean canRequest = true;
@@ -66,10 +66,12 @@ public class SearchArticleFragment extends BaseFragment {
 
         // 文章点击监听
         adapter.setItemChangeListener(arId -> {
-            assert account != null;
-            String id = account.getID();
-            String token = account.getToken();
-            String url = ApplicationConfig.HOST_API + "/preview/index.html?id=" + arId + "&account=" + id + "&token=" + token;
+            GetParamsBuilder builder = new GetParamsBuilder();
+            builder.set("id", arId);
+            builder.setIDAndTokenIfValid(AccountManager.get());
+
+            String url = ApplicationConfig.HOST_API + "/preview/index.html" + builder;
+
             Log.d(TAG, "onCreateView: 完整网页地址 => " + url);
             Intent i = new Intent(requireContext(), WebViewActivity.class);
             i.putExtra("url", url);
@@ -100,44 +102,68 @@ public class SearchArticleFragment extends BaseFragment {
     }
 
     public void startSearchArticle(String word, boolean isRefresh) {
-        ApiRequestManager.DEFAULT.searchArticle(word, count, new Callback() {
+        if (AccountManager.hasLoggedIn()) {
+            ApiRequestManager.getArticle().searchArticle(word, count, new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    smartRefreshLayout.finishLoadMore();
+                    smartRefreshLayout.finishRefresh();
+                }
+
+                @SuppressLint("NotifyDataSetChanged")
+                @Override
+                public void onResponse(Call call, Response response) {
+                    try {
+                        if (response.code() == 401) {
+                            tryValidateToken();
+                            return;
+                        }
+
+                        assert response.body() != null;
+                        String json = response.body().string();
+                        Log.d(TAG, "onResponse: 返回的数据=> " + json);
+
+                        runOnUiThread(() -> {
+                            smartRefreshLayout.finishLoadMore();
+                            smartRefreshLayout.finishRefresh();
+                            if (isRefresh) {
+                                arData = App.GSON.fromJson(json, new TypeToken<ArrayList<ArticleEntity>>() {
+                                }.getType());
+                            } else {
+                                ArrayList<ArticleEntity> data = App.GSON.fromJson(json, new TypeToken<ArrayList<ArticleEntity>>() {
+                                }.getType());
+                                if (data.isEmpty()) {
+                                    count = Math.max(1, count - 1);
+                                    canRequest = false;
+                                    Toast.makeText(requireContext(), "到底啦！", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                arData.addAll(data);
+                            }
+                            adapter.setData(arData);
+                            adapter.notifyDataSetChanged();
+                        });
+                    } catch (Exception e) {
+                        Log.e(TAG, "onResponse: 搜索文章接口错误=> " + e);
+                    }
+                }
+            });
+        } else {
+            runOnUiThread(() -> Toast.makeText(requireActivity(), R.string.msg_not_signed_in, Toast.LENGTH_SHORT).show());
+        }
+    }
+
+    private void tryValidateToken() {
+        AccountManager.validateToken(new AccountManager.ValidateTokenResult() {
             @Override
-            public void onFailure(Call call, IOException e) {
-                smartRefreshLayout.finishLoadMore();
-                smartRefreshLayout.finishRefresh();
+            public void onSuccess() {
             }
 
-            @SuppressLint("NotifyDataSetChanged")
             @Override
-            public void onResponse(Call call, Response response) {
-                try {
-                    assert response.body() != null;
-                    String json = response.body().string();
-                    Log.d(TAG, "onResponse: 返回的数据=> " + json);
-
-                    requireActivity().runOnUiThread(() -> {
-                        smartRefreshLayout.finishLoadMore();
-                        smartRefreshLayout.finishRefresh();
-                        if (isRefresh) {
-                            arData = App.GSON.fromJson(json, new TypeToken<>() {
-                            });
-                        } else {
-                            ArrayList<ArticleEntity> data = App.GSON.fromJson(json, new TypeToken<>() {
-                            });
-                            if (data.isEmpty()) {
-                                count = count > 1 ? --count : 1;
-                                canRequest = false;
-                                Toast.makeText(requireContext(), "到底啦！", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                            arData.addAll(data);
-                        }
-                        adapter.setData(arData);
-                        adapter.notifyDataSetChanged();
-                    });
-                } catch (Exception e) {
-                    Log.e(TAG, "onResponse: 搜索文章接口错误=> " + e);
-                }
+            public void onFail() {
+                Intent intent = WebViewActivity.createLoginInIntent(requireActivity());
+                intent.putExtra("toast", "登录失效，请重新登录");
+                startActivity(intent);
             }
         });
     }

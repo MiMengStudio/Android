@@ -84,7 +84,7 @@ public class HomeFragment extends BaseFragment {
     private void initBannerData(LayoutInflater inflater) {
         banner = binding.homeBanner;
         imgData = new ArrayList<>();
-        ApiRequestManager.DEFAULT.getBannerApi(new Callback() {
+        ApiRequestManager.getContent().getBannerApi(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
 

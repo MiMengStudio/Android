@@ -9,17 +9,17 @@ import com.mimeng.R;
 import com.mimeng.base.BaseActivity;
 
 public class GuideActivity extends BaseActivity {
-    private final String PREFS_NAME = "MyPrefsFile";
-    private final String KEY_GUIDE_SEEN = "hasSeenGuide";
+    private static final String PREFS_NAME = "MyPrefsFile";
+    private static final String KEY_GUIDE_SEEN = "hasSeenGuide";
     private long exitTime = 0;
-    private Button btnFinishGuide; // 假设按钮的ID是btnFinishGuide
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guide); // 确保这是您的教程界面布局文件名
 
-        btnFinishGuide = findViewById(R.id.btnSkip); // 使用实际的按钮ID
+        // 假设按钮的ID是btnFinishGuide
+        Button btnFinishGuide = findViewById(R.id.btnSkip); // 使用实际的按钮ID
 
         // 设置按钮点击事件
         btnFinishGuide.setOnClickListener(v -> {

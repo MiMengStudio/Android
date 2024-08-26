@@ -122,7 +122,7 @@ public class AccountManager {
      * 向服务器请求，当前账号是否需要签到
      */
     public static void updateAccountSignInTime() {
-        ApiRequestManager.DEFAULT.updateAccountSignInTime(new Callback() {
+        ApiRequestManager.getAccount().updateAccountSignInTime(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.e(TAG, "Failed to GET Account Sign In Info", e);
@@ -166,7 +166,7 @@ public class AccountManager {
 
     public static void performSigningIn() {
         Log.i(TAG, "Performing sign in");
-        ApiRequestManager.DEFAULT.performSigningIn(new Callback() {
+        ApiRequestManager.getAccount().signIn(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.e(TAG, "Failed to GET Account Sign In Info", e);
@@ -215,7 +215,7 @@ public class AccountManager {
     }
 
     public static void validateToken(@NonNull ValidateTokenResult result) {
-        ApiRequestManager.DEFAULT.validateToken(new Callback() {
+        ApiRequestManager.getAccount().validateToken(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.e(TAG, "Failed to validate token ", e);
@@ -236,7 +236,6 @@ public class AccountManager {
                 } catch (Exception e) {
                     Log.e(TAG, "AccountManager -- onResponse: Token校验函数出错 => " + e);
                 }
-
             }
         });
     }
