@@ -62,4 +62,7 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'io.github.scwang90:refresh-layout-kernel:2.1.0'      //刷新框架
     implementation 'io.github.scwang90:refresh-header-classics:2.1.0'    //经典刷新头
+
+    debugImplementation 'io.github.knight-zxw:blockcanary:+'
+    debugImplementation 'io.github.knight-zxw:blockcanary-ui:+'
 }
