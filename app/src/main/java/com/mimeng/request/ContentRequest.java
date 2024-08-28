@@ -10,7 +10,6 @@ import com.mimeng.request.annotations.WithAction;
 import okhttp3.Callback;
 
 @RequestBaseURL(ApplicationConfig.HOST_API + "/content")
-@WithAccountInfo
 public interface ContentRequest extends AppRequest {
 
     /**
@@ -18,6 +17,6 @@ public interface ContentRequest extends AppRequest {
      *
      * @param callback 请求回调
      */
-    @WithAction("ad")
+    @WithAction("getAD")
     void getBannerApi(@NonNull Callback callback);
 }

@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mimeng.ApiRequestManager;
+import com.mimeng.App;
 import com.mimeng.R;
 import com.mimeng.activity.ResourceManagementActivity;
 import com.mimeng.activity.SearchActivity;
@@ -96,9 +97,8 @@ public class HomeFragment extends BaseFragment {
                     assert response.body() != null;
                     String json = response.body().string();
                     Log.d(TAG, "onResponse: 获取轮播图接口数据 => "+json );
-                    imgData = new Gson().fromJson(json, new TypeToken<>() {
-                    });
-                    requireActivity().runOnUiThread(() -> {
+                    imgData = App.GSON.fromJson(json, new TypeToken<ArrayList<BannerEntity>>() {}.getType());
+                    runOnUiThread(() -> {
                         banner.setAdapter(new ImageUrlBanner(imgData, requireContext()))
                                 .setIndicator(new CircleIndicator(inflater.getContext()));
                         banner.start();
