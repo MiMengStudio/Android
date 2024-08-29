@@ -31,6 +31,8 @@ public class ArticlePreviewActivity extends BaseActivity {
         WebSettings webSettings = webview.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDefaultTextEncodingName("UTF-8");
+        webSettings.setAllowFileAccess(true);
+
         webview.setWebViewClient(new WebViewClient() {
 
             @Override
