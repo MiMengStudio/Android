@@ -7,9 +7,11 @@ import com.mimeng.request.AppRequest;
 import com.mimeng.request.ArticleRequest;
 import com.mimeng.request.ContentRequest;
 import com.mimeng.request.GetParamsBuilder;
+import com.mimeng.request.RequestMethods;
 import com.mimeng.request.annotations.DefaultGetParamList;
 import com.mimeng.request.annotations.GetParams;
 import com.mimeng.request.annotations.RequestBaseURL;
+import com.mimeng.request.annotations.RequestMethod;
 import com.mimeng.request.annotations.WithAccountInfo;
 import com.mimeng.request.annotations.WithAction;
 import com.mimeng.request.annotations.WithDefaultGetParams;
@@ -25,6 +27,7 @@ import java.util.concurrent.ConcurrentMap;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 
 public final class ApiRequestManager {
     private static final String TAG = "ApiRequestManager";
@@ -51,6 +54,7 @@ public final class ApiRequestManager {
 
             String baseUrl = null;
             boolean withAccountInfo = false;
+            RequestMethods requestMethod = RequestMethods.GET;
 
             GetParamsBuilder builder = new GetParamsBuilder();
             Request.Builder req = new Request.Builder();
@@ -61,6 +65,8 @@ public final class ApiRequestManager {
                     baseUrl = base.value();
                 } else if (annotation instanceof WithAccountInfo) {
                     withAccountInfo = true;
+                } else if (annotation instanceof RequestMethod me) {
+                    requestMethod = me.value();
                 }
             }
 
@@ -76,6 +82,8 @@ public final class ApiRequestManager {
                     Arrays.stream(paramList.value()).forEach(e -> builder.set(e.name(), e.value()));
                 } else if (annotation instanceof WithAccountInfo) {
                     withAccountInfo = true;
+                } else if (annotation instanceof RequestMethod me) {
+                    requestMethod = me.value();
                 }
             }
 
@@ -88,7 +96,21 @@ public final class ApiRequestManager {
                 baseUrl = reqUrl.value();
             }
 
-            for (int i = 0; i < method.getParameterCount() - 1; ++i) {
+            int invalidateGetParamsCount = 1;
+
+            if (requestMethod.isRequireBody()) {
+                if (paramsType[paramsType.length - 2] != RequestBody.class) {
+                    Log.e(TAG, "Method " + method + " don't have RequestBody");
+                    return null;
+                }
+                invalidateGetParamsCount++;
+
+                req.method(requestMethod.getValue(), (RequestBody) args[args.length - 2]);
+            } else {
+                req.method(requestMethod.getValue(), null);
+            }
+
+            for (int i = 0; i < method.getParameterCount() - invalidateGetParamsCount; ++i) {
                 for (Annotation ann : method.getParameterAnnotations()[i]) {
                     if (ann instanceof GetParams getParams) {
                         builder.set(getParams.value(), args[i]);
@@ -102,8 +124,10 @@ public final class ApiRequestManager {
                 if (account != null)
                     req.addHeader("Authorization", "Bearer " + account.getToken());
             }
+
             Log.i(TAG, "Request URL " + (baseUrl + builder));
-            client.newCall(req.url(baseUrl + builder).get().build()).enqueue((Callback) args[args.length - 1]);
+
+            client.newCall(req.url(baseUrl + builder).build()).enqueue((Callback) args[args.length - 1]);
             return null;
         });
     }

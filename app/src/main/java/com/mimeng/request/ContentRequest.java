@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 
 import com.mimeng.ApplicationConfig;
 import com.mimeng.request.annotations.RequestBaseURL;
-import com.mimeng.request.annotations.WithAccountInfo;
 import com.mimeng.request.annotations.WithAction;
 
 import okhttp3.Callback;
