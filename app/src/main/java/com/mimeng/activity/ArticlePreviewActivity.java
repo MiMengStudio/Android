@@ -2,39 +2,26 @@ package com.mimeng.activity;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import androidx.annotation.Nullable;
 
-import com.mimeng.base.BaseActivity;
+import com.just.agentweb.AgentWeb;
 
 import java.io.IOException;
 
-public class ArticlePreviewActivity extends BaseActivity {
+public final class ArticlePreviewActivity extends WebViewActivity {
+    //  webview.loadUrl("file:///android_asset/article/index.html?id=1");
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        WebView webview = new WebView(this);
-        webview.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        setFullScreen(true);
-
-        WebSettings webSettings = webview.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-        webSettings.setDefaultTextEncodingName("UTF-8");
-        webSettings.setAllowFileAccess(true);
-
-        webview.setWebViewClient(new WebViewClient() {
-
+    protected com.just.agentweb.WebViewClient onCreateWebViewClient() {
+        return new WebActivityWebViewClient() {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
@@ -71,9 +58,13 @@ public class ArticlePreviewActivity extends BaseActivity {
 
                 return null;
             }
-        });
-        webview.loadUrl("file:///android_asset/article/index.html?id=1");
+        };
+    }
 
-        setContentView(webview);
+    @Override
+    protected AgentWeb onCreateAgentWeb(ViewGroup parent, String url) {
+        AgentWeb result = super.onCreateAgentWeb(parent, url);
+        result.getAgentWebSettings().getWebSettings().setAllowFileAccess(true);
+        return result;
     }
 }

@@ -5,20 +5,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.ConsoleMessage;
+import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
 
 import com.just.agentweb.AgentWeb;
 import com.just.agentweb.AgentWebUIControllerImplBase;
@@ -27,6 +25,7 @@ import com.mimeng.App;
 import com.mimeng.ApplicationConfig;
 import com.mimeng.R;
 import com.mimeng.base.BaseActivity;
+import com.mimeng.databinding.ActivityWebViewBinding;
 import com.mimeng.user.Account;
 import com.mimeng.user.AccountManager;
 import com.mimeng.utils.AndroidUtils;
@@ -34,38 +33,32 @@ import com.mimeng.utils.ClipboardUtils;
 
 public class WebViewActivity extends BaseActivity {
 
-    private final WebViewClient mWebViewClient = new WebViewClient() {
+    /**
+     * String value. Mandatory.
+     **/
+    public static final String OPTION_URL = "url";
+    /**
+     * Boolean Value. Default to true.
+     */
+    public static final String OPTION_SHOW_MENU = "showMenu";
+    /**
+     * String value. Default to null. Optional.
+     */
+    public static final String OPTION_EXTRA_TOAST = "toast";
+    /**
+     * Boolean Value. Default to true.
+     */
+    public static final String OPTION_SHOW_CLOSE = "showCloseBut";
 
-        @Override
-        public void onPageFinished(WebView view, String url) {
-            super.onPageFinished(view, url);
-            // 获取网页标题
-            String title = view.getTitle();
-            TextView titleTextView = findViewById(R.id.title);
-            if (title != null) {
-                titleTextView.setText(title);
-                Log.d("WebViewActivity", "网页标题: " + title);
-            }
-        }
-
-    };
-
-    private final com.just.agentweb.WebChromeClient client = new com.just.agentweb.WebChromeClient() {
-        @Override
-        public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
-            Log.d("网页log", "onConsoleMessage: => " + consoleMessage.lineNumber() + " --- " + consoleMessage.message());
-            return super.onConsoleMessage(consoleMessage);
-        }
-    };
-
+    protected ActivityWebViewBinding binding;
     private String url;
     private AgentWeb mAgentWeb;
 
     @NonNull
     public static Intent createLoginInIntent(@NonNull Context context) {
         Intent intent = new Intent(context, WebViewActivity.class);
-        intent.putExtra("url", ApplicationConfig.LOGIN_IN_URL);
-        intent.putExtra("showMenu", false);
+        intent.putExtra(OPTION_URL, ApplicationConfig.LOGIN_IN_URL);
+        intent.putExtra(OPTION_SHOW_MENU, false);
         return intent;
     }
 
@@ -74,46 +67,30 @@ public class WebViewActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         blackParentBar();
         setFullScreen(false);
-        setContentView(R.layout.activity_web_view);
-
-        this.url = getIntent().getStringExtra("url"); // 获取传递的URL参数
+        this.binding = ActivityWebViewBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        this.url = getIntent().getStringExtra(OPTION_URL); // 获取传递的URL参数
 
         String extraToast;
-        if ((extraToast = getIntent().getStringExtra("toast")) != null) {
+        if (!TextUtils.isEmpty(extraToast = getIntent().getStringExtra(OPTION_EXTRA_TOAST))) {
             Toast.makeText(this, extraToast, Toast.LENGTH_SHORT).show();
         }
 
-        Toolbar toolbar = findViewById(R.id.web_activity_toolbar);
-        resetLayoutTopMargin(toolbar, 3);
-        setSupportActionBar(toolbar);
+        resetLayoutTopMargin(binding.webActivityToolbar, 3);
+        setSupportActionBar(binding.webActivityToolbar);
 
-        View webView = findViewById(R.id.web_view);
-        mAgentWeb = AgentWeb.with(this)
-                .setAgentWebParent((LinearLayout) webView, new LinearLayout.LayoutParams(-1, -1))
-                .useDefaultIndicator()
-                .setWebViewClient(mWebViewClient)
-                .setWebChromeClient(client)
-                .setAgentWebUIController(new AgentWebUIControllerImplBase())
-                .addJavascriptInterface("android", new AndroidInterface())
-                .createAgentWeb()
-                .ready()
-                .go(this.url); // 加载传递的URL
-        mAgentWeb.getWebCreator().getWebView().getSettings().setUserAgentString("MiMengAndroidAPP");
+        mAgentWeb = onCreateAgentWeb(binding.webView, url);
 
-        findViewById(R.id.back).setOnClickListener(view -> onBackPressed());
+        binding.back.setOnClickListener(view -> onBackPressed());
 
-        ImageView close = findViewById(R.id.close);
-
-        if (!getIntent().getBooleanExtra("showCloseBut", true))
-            close.setVisibility(View.GONE);
-        close.setOnClickListener(view -> finish());
+        if (!getIntent().getBooleanExtra(OPTION_SHOW_CLOSE, true))
+            binding.close.setVisibility(View.GONE);
+        binding.close.setOnClickListener(view -> finish());
     }
 
     @Override
     public void onBackPressed() {
-        if (mAgentWeb != null && mAgentWeb.getWebCreator().getWebView().canGoBack()) {
-            mAgentWeb.getWebCreator().getWebView().goBack(); // 后退
-        } else {
+        if (mAgentWeb != null && !mAgentWeb.back()) {
             finish(); // 关闭当前页面
         }
     }
@@ -121,7 +98,7 @@ public class WebViewActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // 获取是否显示菜单参数
-        if (getIntent().getBooleanExtra("showMenu", true)) {
+        if (getIntent().getBooleanExtra(OPTION_SHOW_MENU, true)) {
             getMenuInflater().inflate(R.menu.webview_menu, menu);
             return true;
         }
@@ -153,8 +130,38 @@ public class WebViewActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mAgentWeb.getWebLifeCycle().onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mAgentWeb.getWebLifeCycle().onPause();
+    }
+
+    protected WebViewClient onCreateWebViewClient() {
+        return new WebActivityWebViewClient();
+    }
+
+    protected AgentWeb onCreateAgentWeb(ViewGroup parent, String url) {
+        AgentWeb result = AgentWeb.with(this)
+                .setAgentWebParent(parent, new LinearLayout.LayoutParams(-1, -1))
+                .useDefaultIndicator()
+                .setWebViewClient(onCreateWebViewClient())
+                .setAgentWebUIController(new AgentWebUIControllerImplBase())
+                .addJavascriptInterface("android", new AndroidInterface())
+                .createAgentWeb()
+                .ready()
+                .go(url); // 加载传递的URL
+        result.getAgentWebSettings().getWebSettings().setUserAgentString("MiMengAndroidAPP");
+        return result;
+    }
+
     @SuppressWarnings("unused")
-    public class AndroidInterface {
+    protected class AndroidInterface {
         @JavascriptInterface
         public void updateUserInfo(String accountInfo) {
             Log.d("WebViewActivity", "updateUserInfo called from JavaScript");
@@ -170,6 +177,19 @@ public class WebViewActivity extends BaseActivity {
         @JavascriptInterface
         public void share(String text) {
             AndroidUtils.shareText(WebViewActivity.this, text);
+        }
+    }
+
+    protected class WebActivityWebViewClient extends WebViewClient {
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            // 获取网页标题
+            String title = view.getTitle();
+            if (title != null) {
+                binding.title.setText(title);
+                Log.d("WebViewActivity", "网页标题: " + title);
+            }
         }
     }
 }

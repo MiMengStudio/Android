@@ -56,5 +56,10 @@
             android:name=".activity.WebViewActivity"
             android:label=""
             android:theme="@style/WebViewActivity.Theme" />
+
+        <activity
+            android:name=".activity.ArticlePreviewActivity"
+            android:label=""
+            android:theme="@style/WebViewActivity.Theme" />
     </application>
 </manifest>
