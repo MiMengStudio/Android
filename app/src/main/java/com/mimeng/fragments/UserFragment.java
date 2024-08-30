@@ -10,6 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -24,18 +28,25 @@ import com.mimeng.user.SignInInfo;
 import java.util.Locale;
 
 public class UserFragment extends BaseFragment {
-    public static final int REQUEST_LOGIN = 1;
     private FragmentUserBinding binding;
     private final AccountManager.AccountSignInTimeListener listener = this::reloadSignInLayout;
-
+    private final ActivityResultLauncher<Intent> LOGIN_LAUNCHER = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+            if (result.getResultCode() == Activity.RESULT_OK) {
+                loadUserLayout();
+            }
+        }
+    });
+    
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentUserBinding.inflate(inflater, container, false);
 
         binding.userInfo.setOnClickListener(view1 ->
-                startActivityForResult(WebViewActivity.createLoginInIntent(requireActivity()), REQUEST_LOGIN));
-
+                LOGIN_LAUNCHER.launch(WebViewActivity.createLoginInIntent(requireActivity())));
+        
         //价格表
         int[][] priceTable = {{19, 9}, {49, 24}, {178, 84}, {298, 168}};
         View[] vips = {
@@ -102,23 +113,20 @@ public class UserFragment extends BaseFragment {
     private boolean reloadSignInLayout(SignInInfo info) {
         switch (info) {
             case SIGNED_SUCCESSFUL:
-                requireActivity().runOnUiThread(
-                        () -> Toast.makeText(requireActivity(),
+                runOnUiThread(() -> Toast.makeText(requireActivity(),
                                 R.string.sign_signed_successful, Toast.LENGTH_SHORT).show());
                 // 签到成功的同时也更新UserFragment的UI
             case SIGNED_IN: // fall through
-                requireActivity().runOnUiThread(
-                        () -> {
+                runOnUiThread(() -> {
                             // 设置文本颜色
                             binding.fragmentUserSignInTextView.setTextColor(
                                     requireContext().getResources().getColor(R.color.colorPrimary, null));
                             // 设置文本内容
                             binding.fragmentUserSignInTextView.setText(R.string.sign_signed_in);
-                        }
-                );
+                });
                 break;
             case NEED_SIGN_IN:
-                requireActivity().runOnUiThread(
+                runOnUiThread(
                         () -> binding.fragmentUserSignInTextView.setText(R.string.sign_need_sign_in)
                 );
                 break;
@@ -127,7 +135,7 @@ public class UserFragment extends BaseFragment {
             case UNKNOWN_ERROR:
                 break;
             default:
-                requireActivity().runOnUiThread(
+                runOnUiThread(
                         () -> Toast.makeText(requireActivity(),
                                 info.getErrorMsg(), Toast.LENGTH_SHORT).show()
                 );
@@ -148,14 +156,6 @@ public class UserFragment extends BaseFragment {
             }
         } else {
             Log.d("Account", "No Account Info found.");
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_LOGIN && resultCode == Activity.RESULT_OK) {
-            loadUserLayout();
         }
     }
 

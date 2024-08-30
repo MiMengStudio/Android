@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mimeng.ApiRequestManager;
 import com.mimeng.App;
