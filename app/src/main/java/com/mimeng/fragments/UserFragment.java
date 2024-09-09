@@ -10,8 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -30,15 +28,12 @@ import java.util.Locale;
 public class UserFragment extends BaseFragment {
     private FragmentUserBinding binding;
     private final AccountManager.AccountSignInTimeListener listener = this::reloadSignInLayout;
-    private final ActivityResultLauncher<Intent> LOGIN_LAUNCHER = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-        @Override
-        public void onActivityResult(ActivityResult result) {
-            if (result.getResultCode() == Activity.RESULT_OK) {
-                loadUserLayout();
-            }
+    private final ActivityResultLauncher<Intent> LOGIN_LAUNCHER = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        if (result.getResultCode() == Activity.RESULT_OK) {
+            loadUserLayout();
         }
     });
-    
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -46,7 +41,7 @@ public class UserFragment extends BaseFragment {
 
         binding.userInfo.setOnClickListener(view1 ->
                 LOGIN_LAUNCHER.launch(WebViewActivity.createLoginInIntent(requireActivity())));
-        
+
         //价格表
         int[][] priceTable = {{19, 9}, {49, 24}, {178, 84}, {298, 168}};
         View[] vips = {
@@ -59,7 +54,7 @@ public class UserFragment extends BaseFragment {
         for (int vipIndex = 0; vipIndex < vips.length; ++vipIndex) {
             View vip = vips[vipIndex];
             int newPrice = priceTable[vipIndex][1],
-                 oldPrice = priceTable[vipIndex][0];
+                    oldPrice = priceTable[vipIndex][0];
             vips[vipIndex].setOnClickListener(_v -> {
                 vipSelected[0].setBackgroundResource(R.color.background_white);
                 vipSelected[0] = vip;
@@ -113,16 +108,19 @@ public class UserFragment extends BaseFragment {
     private boolean reloadSignInLayout(SignInInfo info) {
         switch (info) {
             case SIGNED_SUCCESSFUL:
-                runOnUiThread(() -> Toast.makeText(requireActivity(),
-                                R.string.sign_signed_successful, Toast.LENGTH_SHORT).show());
-                // 签到成功的同时也更新UserFragment的UI
-            case SIGNED_IN: // fall through
                 runOnUiThread(() -> {
-                            // 设置文本颜色
-                            binding.fragmentUserSignInTextView.setTextColor(
-                                    requireContext().getResources().getColor(R.color.colorPrimary, null));
-                            // 设置文本内容
-                            binding.fragmentUserSignInTextView.setText(R.string.sign_signed_in);
+                    // 设置文本颜色
+                    binding.fragmentUserSignInTextView.setTextColor(requireContext().getResources().getColor(R.color.colorPrimary, null));
+                    binding.fragmentUserSignInTextView.setText(R.string.sign_signed_in);
+                    Toast.makeText(requireActivity(), R.string.sign_signed_successful, Toast.LENGTH_SHORT).show();
+                });
+                // 签到成功的同时也更新UserFragment的UI
+            case SIGNED_IN:
+                runOnUiThread(() -> {
+                    // 设置文本颜色
+                    binding.fragmentUserSignInTextView.setTextColor(requireContext().getResources().getColor(R.color.colorPrimary, null));
+                    // 设置文本内容
+                    binding.fragmentUserSignInTextView.setText(R.string.sign_signed_in);
                 });
                 break;
             case NEED_SIGN_IN:
@@ -135,10 +133,7 @@ public class UserFragment extends BaseFragment {
             case UNKNOWN_ERROR:
                 break;
             default:
-                runOnUiThread(
-                        () -> Toast.makeText(requireActivity(),
-                                info.getErrorMsg(), Toast.LENGTH_SHORT).show()
-                );
+                runOnUiThread(() -> Toast.makeText(requireActivity(), info.getErrorMsg(), Toast.LENGTH_SHORT).show());
         }
         return false;
     }

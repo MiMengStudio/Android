@@ -20,6 +20,7 @@ import com.mimeng.ApiRequestManager;
 import com.mimeng.App;
 import com.mimeng.ApplicationConfig;
 import com.mimeng.R;
+import com.mimeng.activity.ArticlePreviewActivity;
 import com.mimeng.activity.WebViewActivity;
 import com.mimeng.adapters.ArticleRecAdapter;
 import com.mimeng.base.BaseFragment;
@@ -70,10 +71,10 @@ public class SearchArticleFragment extends BaseFragment {
             builder.set("id", arId);
             builder.setIDAndTokenIfValid(AccountManager.get());
 
-            String url = ApplicationConfig.HOST_API + "/preview/index.html" + builder;
+            String url = "file:///android_asset/article/index.html" + builder;
 
             Log.d(TAG, "onCreateView: 完整网页地址 => " + url);
-            Intent i = new Intent(requireContext(), WebViewActivity.class);
+            Intent i = new Intent(requireContext(), ArticlePreviewActivity.class);
             i.putExtra("url", url);
             i.putExtra("showMenu", false);
             i.putExtra("showCloseBut", false);

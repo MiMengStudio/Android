@@ -3,6 +3,8 @@ package com.mimeng.activity;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -11,12 +13,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+
+import com.mimeng.App;
 import com.mimeng.R;
 import com.mimeng.base.BaseActivity;
+import com.mimeng.user.AccountManager;
 
 @SuppressLint("CustomSplashScreen")
 public class LaunchActivity extends BaseActivity {
     private static CountDownTimer timer;
+    private final ActivityResultLauncher<Intent> LOGIN_LAUNCHER = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        if (result.getResultCode() == Activity.RESULT_OK) {
+            toMainActivity(MainActivity.class);
+        }
+    });
 
     @SuppressLint("ObsoleteSdkInt")
     @Override
@@ -41,6 +53,22 @@ public class LaunchActivity extends BaseActivity {
             }
         };
         timer.start();
+
+        AccountManager.tryLoadFromStorage(this);
+        if (AccountManager.hasLoggedIn()) {
+            // 先检查token, 再更新签到状态
+            AccountManager.validateToken(new AccountManager.ValidateTokenResult() {
+                @Override
+                public void onSuccess() {
+                    AccountManager.updateAccountSignInTime();
+                }
+
+                @Override
+                public void onFail() {
+                    LOGIN_LAUNCHER.launch(WebViewActivity.createLoginInIntent(LaunchActivity.this));
+                }
+            });
+        }
 
         // 跳过
         time.setOnClickListener(view -> {
@@ -81,12 +109,6 @@ public class LaunchActivity extends BaseActivity {
     // 覆盖返回按钮，不允许退出程序
     @Override
     public void onBackPressed() {
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        timer.start();
     }
 
     @Override
