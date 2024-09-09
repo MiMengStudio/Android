@@ -47,20 +47,6 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
-        AccountManager.tryLoadFromStorage(this);
-        if (AccountManager.hasLoggedIn()) {
-            // 先检查token, 再更新签到状态
-            AccountManager.validateToken(new AccountManager.ValidateTokenResult() {
-                @Override
-                public void onSuccess() {
-                    AccountManager.updateAccountSignInTime();
-                }
-
-                @Override
-                public void onFail() {
-                }
-            });
-        }
     }
 
     @NonNull
