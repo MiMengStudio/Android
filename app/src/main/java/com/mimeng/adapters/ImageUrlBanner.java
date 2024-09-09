@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.mimeng.R;
 import com.mimeng.values.BannerEntity;
 import com.youth.banner.adapter.BannerAdapter;
 
@@ -36,7 +37,7 @@ public class ImageUrlBanner extends BannerAdapter<BannerEntity, ImageUrlBanner.B
 
     @Override
     public void onBindView(BannerViewHolder holder, BannerEntity data, int position, int size) {
-        Glide.with(context).load(data.getImage()).into(holder.img);
+        Glide.with(context).load(data.getImage()).placeholder(R.mipmap.banner_loading).into(holder.img);
     }
 
     public static class BannerViewHolder extends RecyclerView.ViewHolder {

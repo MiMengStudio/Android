@@ -38,7 +38,7 @@
 
         <activity
             android:name=".activity.MainActivity"
-            android:theme="@style/WebViewActivity.Theme" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.GuideActivity"
             android:theme="@style/AppTheme" />
